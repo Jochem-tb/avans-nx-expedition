@@ -6,7 +6,7 @@ import { Router, RouterModule } from '@angular/router';
 @Component({
     standalone: true,
     imports: [RouterModule],
-    selector: 'avans-nx-workshop-root',
+    selector: 'avans-nx-expedition-root',
     templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {

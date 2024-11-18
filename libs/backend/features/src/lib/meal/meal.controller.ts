@@ -1,9 +1,9 @@
 import { Controller, Logger, Request } from '@nestjs/common';
 import { MealService } from './meal.service';
 import { Get, Param, Post, Body, UseGuards } from '@nestjs/common';
-import { IMeal } from '@avans-nx-workshop/shared/api';
-import { CreateMealDto } from '@avans-nx-workshop/backend/dto';
-import { AuthGuard } from '@avans-nx-workshop/backend/auth';
+import { IMeal } from '@avans-nx-expedition/shared/api';
+import { CreateMealDto } from '@avans-nx-expedition/backend/dto';
+import { AuthGuard } from '@avans-nx-expedition/backend/auth';
 
 @Controller('meal')
 export class MealController {

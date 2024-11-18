@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { MealSort, IUserInfo } from '@avans-nx-workshop/shared/api';
-import { IMeal } from '@avans-nx-workshop/shared/api';
+import { MealSort, IUserInfo } from '@avans-nx-expedition/shared/api';
+import { IMeal } from '@avans-nx-expedition/shared/api';
 import { IsMongoId } from 'class-validator';
 
 export type MealDocument = Meal & Document;

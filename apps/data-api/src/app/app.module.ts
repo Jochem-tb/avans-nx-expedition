@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { BackendFeaturesMealModule } from '@avans-nx-workshop/backend/features';
-import { UsersModule } from '@avans-nx-workshop/backend/user';
-import { AuthModule } from '@avans-nx-workshop/backend/auth';
+import { BackendFeaturesMealModule } from '@avans-nx-expedition/backend/features';
+import { UsersModule } from '@avans-nx-expedition/backend/user';
+import { AuthModule } from '@avans-nx-expedition/backend/auth';
 import { MongooseModule } from '@nestjs/mongoose';
-import { environment } from '@avans-nx-workshop/shared/util-env';
+import { environment } from '@avans-nx-expedition/shared/util-env';
 import { Logger } from '@nestjs/common';
 
 @Module({

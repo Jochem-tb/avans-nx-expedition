@@ -11,7 +11,7 @@ import {
     IUpsertMeal,
     IUserIdentity,
     MealSort
-} from '@avans-nx-workshop/shared/api';
+} from '@avans-nx-expedition/shared/api';
 
 /**
  * Use the `Pick` utility type to extract only the properties we want for

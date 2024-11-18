@@ -7,7 +7,7 @@ import {
     IUser,
     UserGender,
     UserRole
-} from '@avans-nx-workshop/shared/api';
+} from '@avans-nx-expedition/shared/api';
 import { IsMongoId } from 'class-validator';
 
 export type UserDocument = User & Document;

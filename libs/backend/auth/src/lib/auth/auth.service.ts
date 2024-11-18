@@ -7,10 +7,13 @@ import { HttpStatus } from '@nestjs/common/enums';
 import {
     User as UserModel,
     UserDocument
-} from '@avans-nx-workshop/backend/user';
+} from '@avans-nx-expedition/backend/user';
 import { JwtService } from '@nestjs/jwt';
-import { IUserCredentials, IUserIdentity } from '@avans-nx-workshop/shared/api';
-import { CreateUserDto } from '@avans-nx-workshop/backend/dto';
+import {
+    IUserCredentials,
+    IUserIdentity
+} from '@avans-nx-expedition/shared/api';
+import { CreateUserDto } from '@avans-nx-expedition/backend/dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 

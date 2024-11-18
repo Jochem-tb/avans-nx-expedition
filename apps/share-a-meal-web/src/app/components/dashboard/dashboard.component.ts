@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'avans-nx-workshop-dashboard',
+    selector: 'avans-nx-expedition-dashboard',
     templateUrl: './dashboard.component.html',
     styles: []
 })

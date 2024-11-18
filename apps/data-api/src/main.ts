@@ -9,7 +9,7 @@ import {
     AllExceptionsFilter,
     HttpExceptionFilter,
     ApiResponseInterceptor
-} from '@avans-nx-workshop/backend/dto';
+} from '@avans-nx-expedition/backend/dto';
 import { AppModule } from './app/app.module';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 

@@ -8,8 +8,8 @@ import {
     UseGuards
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { IUserInfo, IUser } from '@avans-nx-workshop/shared/api';
-import { CreateUserDto, UpdateUserDto } from '@avans-nx-workshop/backend/dto';
+import { IUserInfo, IUser } from '@avans-nx-expedition/shared/api';
+import { CreateUserDto, UpdateUserDto } from '@avans-nx-expedition/backend/dto';
 import { UserExistGuard } from './user-exists.guard';
 
 @Controller('user')

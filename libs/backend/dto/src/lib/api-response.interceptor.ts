@@ -1,4 +1,4 @@
-import { ApiResponse } from '@avans-nx-workshop/shared/api';
+import { ApiResponse } from '@avans-nx-expedition/shared/api';
 import {
     Injectable,
     NestInterceptor,

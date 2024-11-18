@@ -2,12 +2,12 @@ import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Meal as MealModel, MealDocument } from './meal.schema';
-import { IMeal } from '@avans-nx-workshop/shared/api';
-import { CreateMealDto, UpdateMealDto } from '@avans-nx-workshop/backend/dto';
+import { IMeal } from '@avans-nx-expedition/shared/api';
+import { CreateMealDto, UpdateMealDto } from '@avans-nx-expedition/backend/dto';
 import {
     UserDocument,
     User as UserModel
-} from '@avans-nx-workshop/backend/user';
+} from '@avans-nx-expedition/backend/user';
 
 @Injectable()
 export class MealService {

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'avans-nx-workshop-header',
+    selector: 'avans-nx-expedition-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.css']
 })
