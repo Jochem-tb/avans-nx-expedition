@@ -5,8 +5,10 @@ import {
     IUpsertUser,
     IUserRegistration,
     Id,
+    UserExperienceLevel,
     UserGender,
-    UserRole
+    UserRole,
+    UserSkills
 } from '@avans-nx-expedition/shared/api';
 import { Meal } from '@avans-nx-expedition/backend/features';
 
@@ -39,6 +41,10 @@ export class UpsertUserDto implements IUpsertUser {
     @IsNotEmpty()
     emailAddress!: string;
 
+    @IsString()
+    @IsNotEmpty()
+    phoneNumber!: string;
+
     @IsBoolean()
     @IsNotEmpty()
     isActive!: boolean;
@@ -58,6 +64,14 @@ export class UpsertUserDto implements IUpsertUser {
     @IsString()
     @IsNotEmpty()
     gender: UserGender = UserGender.Unknown;
+
+    @IsString()
+    @IsNotEmpty()
+    ExperienceLevel: UserExperienceLevel = UserExperienceLevel.Unknown;
+
+    @IsString()
+    @IsNotEmpty()
+    Skills: UserSkills[] = [];
 }
 
 export class UpdateUserDto implements IUpdateUser {
