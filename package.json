@@ -5,8 +5,8 @@
     "scripts": {
         "deploy": "nx run share-a-meal-web:build",
         "build": "nx run-many -t build",
-        "build:my-app": "nx run my-app:build:production",
-        "build:prod": "nx build --configuartion=production",
+        "build:my-app": "nx run my-app:build:production --skip-nx-cache",
+        "build:prod": "nx build --configuartion=production --skip-nx-cache",
         "test": "nx run-many -t test"
     },
     "private": true,
