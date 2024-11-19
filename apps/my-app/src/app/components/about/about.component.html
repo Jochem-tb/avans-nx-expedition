@@ -1,1 +1,226 @@
-<p>about works!</p>
+<div
+    class="container text-white"
+    style="
+        background: linear-gradient(135deg, #002855 0%, #4da1ff 100%);
+        padding: 2rem;
+        border-radius: 8px;
+    "
+>
+    <div
+        class="d-flex justify-content-between align-items-center mb-4"
+        style="font-size: 1.2rem; color: #ffffff"
+    >
+        <p class="fw-semibold"><strong>Name:</strong> Jochem ter Braak</p>
+        <p class="fw-semibold"><strong>Student Number:</strong> 2214876</p>
+    </div>
+    <hr class="bg-light" />
+    <div
+        class="card mb-4"
+        style="background-color: #1c2331; color: white; border: none"
+    >
+        <div class="card-body">
+            <h2 class="card-title fw-bold">Casus: Expedition Planner</h2>
+            <p class="card-text" style="line-height: 1.6">
+                De applicatie helpt gebruikers om expedities en outdoor
+                avonturen te plannen en organiseren. Gebruikers kunnen
+                expedities aanmaken, deelnemers beheren, taken toewijzen, een
+                uitrusting checklijst opstellen, en activiteiten plannen.
+                <br />
+                <br />
+                Dankzij handige functies zoals het beheren van rollen binnen een
+                team, het maken van routes en het bijhouden van Gear, wordt het
+                plannen van uitdagende avonturen eenvoudig en overzichtelijk.
+                <br />
+                <br />
+                De overzicht-detail structuur geeft gebruikers een heldere kijk
+                op hun expedities en laat ze direct inzoomen op details zoals
+                activiteiten, uitrusting en deelnemers (inclusief rol binnen
+                expeditie).
+                <br />
+                Het doel van de applicatie is om een complete,
+                gebruiksvriendelijke tool te bieden voor avonturiers en
+                teamleiders die graag overzicht willen houden tijdens de
+                voorbereiding en uitvoering van expedities.
+            </p>
+            <ul
+                class="list-group list-group-flush border"
+                style="background-color: #1c2331; color: white"
+            >
+                <li
+                    class="list-group-item"
+                    style="
+                        background-color: #1c2331;
+                        border: none;
+                        color: white;
+                    "
+                >
+                    <strong>Expeditiebeheer:</strong> Gebruikers kunnen
+                    expedities toevoegen, bewerken, bekijken en verwijderen.
+                </li>
+                <li
+                    class="list-group-item"
+                    style="
+                        background-color: #1c2331;
+                        border: none;
+                        color: white;
+                    "
+                >
+                    <strong>Rollen:</strong> Gebruikers kunnen rollen aan
+                    deelnemers koppelen met specifieke verantwoordelijkheden.
+                </li>
+                <li
+                    class="list-group-item"
+                    style="
+                        background-color: #1c2331;
+                        border: none;
+                        color: white;
+                    "
+                >
+                    <strong>Checklijsten:</strong> Gebruikers kunnen uitrusting
+                    en benodigdheden voor de expeditie bijhouden.
+                </li>
+                <li
+                    class="list-group-item"
+                    style="
+                        background-color: #1c2331;
+                        border: none;
+                        color: white;
+                    "
+                >
+                    <strong>Overzicht-Detail Structuur:</strong> Gebruikers zien
+                    een overzicht van expedities en kunnen doorklikken naar
+                    details.
+                </li>
+                <li
+                    class="list-group-item"
+                    style="
+                        background-color: #1c2331;
+                        border: none;
+                        color: white;
+                    "
+                >
+                    <strong>Activiteiten:</strong> Plannen en beheren van
+                    dagelijkse routes en mijlpalen.
+                </li>
+            </ul>
+        </div>
+    </div>
+    <hr class="bg-light" />
+    <div
+        style="
+            background-color: #1c2331;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+        "
+        class="mb-4"
+    >
+        <h3 class="fw-bold">"Entity Relationship Diagram" + "Class diagram"</h3>
+        <img
+            src="../../../assets/ExpeditionPlanner.png"
+            alt="ERD Diagram for Expedition Planner"
+            class="img-fluid rounded"
+            style="max-width: 100%; border: 1px solid #4da1ff"
+        />
+    </div>
+    <hr class="bg-light" />
+    <div
+        style="
+            background-color: #1c2331;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+        "
+    >
+        <h3 class="fw-bold">Functional Requirements (FR)</h3>
+        <table class="table table-dark table-bordered">
+            <thead>
+                <tr style="background-color: #004080">
+                    <th>ID</th>
+                    <th>Fuctionele Vereisten (User Story)</th>
+                    <th>Acceptatie Criteria</th>
+                    <th>Prioriteit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>FR-01</td>
+                    <td>
+                        Als gebruiker wil ik een expeditie kunnen aanmaken,
+                        zodat ik georganiseerd op avontuur kan gaan.
+                    </td>
+                    <td>
+                        Een gebruiker kan een expeditie met titel, locatie, en
+                        start- en eind- datums. De expeditie verschijnt in het
+                        overzicht.
+                    </td>
+                    <td class="text-success">Must-have</td>
+                </tr>
+                <tr>
+                    <td>FR-02</td>
+                    <td>
+                        Als gebruiker wil ik rollen toekennen aan deelnemers,
+                        zodat iedereen een verantwoordelijkheid heeft.
+                    </td>
+                    <td>
+                        De gebruiker kan rollen zoals "Driver" en "Medic"
+                        aanmaken, en vervolgens aan deelnemers toewijzen. Deze
+                        verschijnen in de teamlijst.
+                    </td>
+                    <td class="text-success">Must-have</td>
+                </tr>
+                <tr>
+                    <td>FR-03</td>
+                    <td>
+                        Als gebruiker wil ik activiteiten kunnen aanmaken en
+                        koppelen aan een expeditie, zodat ik een complexe
+                        expeditie kan organiseren.
+                    </td>
+                    <td>
+                        Gebruikers kunnen activiteiten met titels,
+                        beschrijvingen, en datums toevoegen. De taken
+                        verschijnen in bij de gekoppelde expedities.
+                    </td>
+                    <td class="text-success">Must-have</td>
+                </tr>
+                <tr>
+                    <td>FR-04</td>
+                    <td>
+                        Als gebruiker wil ik een uitrustingslijst beheren, zodat
+                        alle benodigdheden georganiseerd zijn.
+                    </td>
+                    <td>
+                        Gebruikers kunnen items toevoegen met namen,
+                        hoeveelheden, en statussen (bijvoorbeeld "ingepakt" of
+                        "ontbrekend").
+                    </td>
+                    <td class="text-warning">Could-have</td>
+                </tr>
+                <tr>
+                    <td>FR-05</td>
+                    <td>
+                        Als gebruiker wil ik kunnen aanmelden en afmelden voor
+                        een expeditie
+                    </td>
+                    <td>
+                        Gebruikers kunnen op een gemakkelijke manier deelnemen
+                        aan een expeditie, ook kunnen ze zichzelf afmelden.
+                    </td>
+                    <td class="text-success">Must-have</td>
+                </tr>
+                <tr>
+                    <td>FR-06</td>
+                    <td>
+                        Als bezoeker wil ik een About-pagina kunnen bekijken,
+                        zodat ik meer kan leren over de applicatie.
+                    </td>
+                    <td>
+                        De About-pagina bevat een beschrijving van de casus, een
+                        ERD, en een lijst met functionele requirements.
+                    </td>
+                    <td class="text-success">Must-have</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

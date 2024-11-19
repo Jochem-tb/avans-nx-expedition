@@ -16,6 +16,31 @@ export enum UserGender {
     Unknown = 'Unknown'
 }
 
+export enum UserExperienceLevel {
+    Beginner = 'Beginner',
+    Intermediate = 'Intermediate',
+    Advanced = 'Advanced',
+    Expert = 'Expert',
+    Unknown = 'Unknown'
+}
+
+export enum UserSkills {
+    First_Aid = 'First aid',
+    Navigation = 'Navigation',
+    Cooking = 'Cooking',
+    Shelter_Building = 'Shelter building',
+    Fire_Making = 'Fire making',
+    Fishing = 'Fishing',
+    Hunting = 'Hunting',
+    Trapping = 'Trapping',
+    Foraging = 'Foraging',
+    Water_Purification = 'Water purification',
+    Knot_Tying = 'Knot tying',
+    Climbing = 'Climbing',
+    Swimming = 'Swimming',
+    Unknown = 'Unknown'
+}
+
 /**
  * Minimal user information
  */
@@ -34,7 +59,10 @@ export interface IUserIdentity extends IEntity {
 export interface IUserInfo extends IUserRegistration {
     _id: Id;
     profileImgUrl: string;
+    phoneNumber: string;
     role: UserRole;
+    ExperienceLevel: UserExperienceLevel;
+    Skills: UserSkills[];
     gender: UserGender;
     isActive: boolean;
 }
