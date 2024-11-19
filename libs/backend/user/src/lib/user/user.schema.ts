@@ -5,8 +5,10 @@ import isEmail from 'validator/lib/isEmail';
 import {
     IMeal,
     IUser,
+    UserExperienceLevel,
     UserGender,
-    UserRole
+    UserRole,
+    UserSkills
 } from '@avans-nx-expedition/shared/api';
 import { IsMongoId } from 'class-validator';
 
@@ -51,6 +53,12 @@ export class User implements IUser {
 
     @Prop({
         required: false,
+        type: String
+    })
+    phoneNumber!: string;
+
+    @Prop({
+        required: false,
         type: String,
         default: UserRole.Guest
     })
@@ -76,6 +84,20 @@ export class User implements IUser {
         ref: 'Meal'
     })
     meals: IMeal[] = [];
+
+    @Prop({
+        default: [UserExperienceLevel.Unknown],
+        type: [MongooseSchema.Types.ObjectId],
+        ref: 'ExperienceLevel'
+    })
+    ExperienceLevel: UserExperienceLevel = UserExperienceLevel.Unknown;
+
+    @Prop({
+        default: [],
+        type: [MongooseSchema.Types.ObjectId],
+        ref: 'Skills'
+    })
+    Skills: UserSkills[] = [];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
