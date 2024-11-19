@@ -1,9 +1,0 @@
-[build]
-    base = "my-app"
-    command = "npm run build:prod"
-    publish = "dist/apps/"
-
-    [[redirects]]
-    from = "/*"
-    to = "/index.html"
-    status = 200
