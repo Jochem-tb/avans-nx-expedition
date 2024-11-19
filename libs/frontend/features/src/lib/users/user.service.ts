@@ -176,7 +176,7 @@ export class UserService {
 
     getUsersAsync(): Observable<IUser[]> {
         console.log('getUsersAsync() aanroepen');
-        return of(this.users).pipe(delay(2000));
+        return of(this.users).pipe(delay(500));
     }
 
     getUserById(id: string | null): IUser {

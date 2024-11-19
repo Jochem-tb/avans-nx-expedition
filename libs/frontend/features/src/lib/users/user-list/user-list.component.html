@@ -34,7 +34,10 @@
                 <td>{{ user.Skills.length }}</td>
                 <td>{{ user.ExperienceLevel }}</td>
                 <td>
-                    <a routerLink="{{ user._id }}/edit" class="btn btn-primary">
+                    <a
+                        routerLink="{{ user._id }}/edit"
+                        class="btn btn-primary disabled"
+                    >
                         Edit
                     </a>
                 </td>
