@@ -1788,7 +1788,7 @@ tslib_1.__decorate([
     (0, mongoose_1.Prop)({
         required: true,
         type: String,
-        default: 'https://www.flaticon.com/free-icon/savannah_3175209'
+        default: 'https://cdn-icons-png.flaticon.com/512/3175/3175209.png'
     }),
     tslib_1.__metadata("design:type", String)
 ], Expedition.prototype, "imageUrl", void 0);

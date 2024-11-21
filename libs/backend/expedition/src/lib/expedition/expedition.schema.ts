@@ -52,7 +52,7 @@ export class Expedition implements IExpedition {
     @Prop({
         required: true,
         type: String,
-        default: 'https://www.flaticon.com/free-icon/savannah_3175209'
+        default: 'https://cdn-icons-png.flaticon.com/512/3175/3175209.png'
     })
     imageUrl!: string;
 
