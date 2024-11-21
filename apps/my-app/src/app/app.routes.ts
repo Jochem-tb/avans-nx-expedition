@@ -9,7 +9,7 @@ import { UserEditComponent } from '../../../../libs/frontend/features/src/lib/us
 
 //Expeditions
 import { ExpeditionListComponent } from '../../../../libs/frontend/features/src/lib/expeditions/expedition-list/expedition-list.component';
-// import { UserDetailsComponent } from '../../../../libs/frontend/features/src/lib/users/user-details/user-details.component';
+import { ExpeditionDetailsComponent } from '../../../../libs/frontend/features/src/lib/expeditions/expedition-details/expedition-details.component';
 // import { UserEditComponent } from '../../../../libs/frontend/features/src/lib/users/user-edit/user-edit.component';
 
 export const appRoutes: Route[] = [
@@ -24,7 +24,7 @@ export const appRoutes: Route[] = [
     { path: 'users/:id/edit', component: UserEditComponent },
 
     { path: 'expeditions', component: ExpeditionListComponent },
-    { path: 'expeditions/:id', component: UserDetailsComponent },
+    { path: 'expeditions/:id', component: ExpeditionDetailsComponent },
     { path: 'expeditions/new', component: UserEditComponent },
     { path: 'expeditions/:id/edit', component: UserEditComponent },
 

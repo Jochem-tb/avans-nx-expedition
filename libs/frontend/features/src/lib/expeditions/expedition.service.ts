@@ -27,4 +27,23 @@ export class ExpeditionService {
             `http://localhost:3000/api/expedition/${id}`
         );
     }
+
+    getExpeditionById(id: string | null): Observable<IExpedition | undefined> {
+        console.log('getExpeditionById aanroepen');
+        console.log('Expeditions:', this.expeditions);
+        if (this.expeditions.length === 0) {
+            return this.getExpeditionsAsyncApi().pipe(
+                map((expeditions) => {
+                    this.expeditions = expeditions;
+                    return this.expeditions.find(
+                        (expedition) => expedition._id === id
+                    );
+                })
+            );
+        } else {
+            return of(
+                this.expeditions.find((expedition) => expedition._id === id)
+            );
+        }
+    }
 }

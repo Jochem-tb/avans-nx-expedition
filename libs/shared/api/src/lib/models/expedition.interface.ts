@@ -28,7 +28,7 @@ export enum ContinentEnum {
 export interface ILocation {
     latitude: number;
     longitude: number;
-    address: string;
+    name: string;
     continent: ContinentEnum;
 }
 

@@ -1,0 +1,150 @@
+<div
+    class="container mt-5"
+    style="
+        background: linear-gradient(135deg, #002855 0%, #4da1ff 100%);
+        padding: 2rem;
+        border-radius: 8px;
+    "
+>
+    <div class="row">
+        <div class="col-md-12 text-center mb-4">
+            <button
+                routerLink="/expeditions"
+                class="btn btn-light btn-sm p-2 pe-3"
+                style="
+                    border: 1px solid #4da1ff;
+                    border-radius: 5px;
+                    position: relative;
+                    top: 23px;
+                    float: left;
+                "
+            >
+                <i class="bi bi-arrow-left me-2"></i> Back
+            </button>
+            <h1 class="display-4 text-white fw-bold">Expedition Details</h1>
+        </div>
+    </div>
+    <div
+        class="card bg-dark text-white"
+        style="border: none; border-radius: 8px"
+    >
+        <div
+            class="card-body bg-dark text-white"
+            style="border-radius: 0 0 12px 12px"
+        >
+            <!-- Expedition Image and Title -->
+            <div class="d-flex flex-column align-items-center mb-4">
+                <img
+                    [src]="
+                        expedition?.imageUrl || 'assets/default-expedition.png'
+                    "
+                    alt="Expedition Image"
+                    class="img-thumbnail rounded-circle shadow-sm mb-3"
+                    style="max-width: 150px; border: 4px solid #4da1ff"
+                />
+                <h3 class="card-title fw-semibold text-center">
+                    {{ expedition?.title }}
+                </h3>
+            </div>
+            <hr />
+
+            <div class="row">
+                <div class="col">
+                    <!-- Expedition Information -->
+                    <p class="card-text mt-4">
+                        <strong>Description:</strong>
+                        {{ expedition?.description }}
+                    </p>
+                    <p class="card-text">
+                        <strong>Start Date:</strong>
+                        {{ expedition?.startDate | date }}
+                    </p>
+                    <p class="card-text">
+                        <strong>End Date:</strong>
+                        {{ expedition?.endDate | date }}
+                    </p>
+                    <p class="card-text">
+                        <strong>Difficulty Level:</strong>
+                        {{ expedition?.difficultyLevel }}
+                    </p>
+                    <p class="card-text">
+                        <strong>Status:</strong>
+                        <span
+                            [class]="
+                                expedition?.status === 'Closed'
+                                    ? 'text-danger'
+                                    : expedition?.status === 'Open'
+                                    ? 'text-success'
+                                    : ''
+                            "
+                        >
+                            {{ expedition?.status }}
+                        </span>
+                    </p>
+                </div>
+                <div class="col">
+                    <!-- Location Section -->
+                    <div class="mt-4">
+                        <h5 class="fw-bold">Location</h5>
+                        <p class="card-text">
+                            <strong>Name:</strong>
+                            {{ expedition?.location?.name }}
+                        </p>
+                        <p class="card-text">
+                            <strong>Latitude:</strong>
+                            {{ expedition?.location?.latitude }}
+                        </p>
+                        <p class="card-text">
+                            <strong>Longitude:</strong>
+                            {{ expedition?.location?.longitude }}
+                        </p>
+                        <p class="card-text">
+                            <strong>Continent:</strong>
+                            {{ expedition?.location?.continent }}
+                        </p>
+                        <br />
+                        <h5 class="fw-bold">Participants</h5>
+                        <ul
+                            class="list-group list-group-flush"
+                            style="background-color: #1c2331; color: white"
+                        >
+                            <li
+                                class="list-group-item"
+                                *ngFor="
+                                    let participant of expedition?.participants
+                                "
+                                style="
+                                    background-color: #1c2331;
+                                    border: none;
+                                    color: white;
+                                "
+                            >
+                                <i
+                                    class="bi bi-person-circle text-primary me-2"
+                                ></i>
+                                {{ participant }}
+                            </li>
+                            <li
+                                *ngIf="
+                                    (expedition?.participants || []).length ===
+                                    0
+                                "
+                                class="list-group-item"
+                                style="
+                                    background-color: #1c2331;
+                                    border: none;
+                                    color: white;
+                                "
+                            >
+                                <i
+                                    class="bi bi-info-circle text-warning me-2"
+                                ></i>
+                                No participants yet.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

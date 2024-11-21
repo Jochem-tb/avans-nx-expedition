@@ -12,7 +12,7 @@ import { UserEditComponent } from './users/user-edit/user-edit.component';
 
 //Expeditions
 import { ExpeditionService } from './expeditions/expedition.service';
-// import { UserDetailsComponent } from './users/user-details/user-details.component';
+import { ExpeditionDetailsComponent } from './expeditions/expedition-details/expedition-details.component';
 import { ExpeditionListComponent } from './expeditions/expedition-list/expedition-list.component';
 // import { UserEditComponent } from './users/user-edit/user-edit.component';
 
@@ -23,6 +23,7 @@ import { ExpeditionListComponent } from './expeditions/expedition-list/expeditio
         UserListComponent,
         UserEditComponent,
 
+        ExpeditionDetailsComponent,
         ExpeditionListComponent
     ],
     exports: [UserDetailsComponent, UserListComponent, UserEditComponent],
