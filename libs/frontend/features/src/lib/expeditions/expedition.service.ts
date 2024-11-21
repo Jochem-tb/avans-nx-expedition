@@ -30,7 +30,6 @@ export class ExpeditionService {
 
     getExpeditionById(id: string | null): Observable<IExpedition | undefined> {
         console.log('getExpeditionById aanroepen');
-        console.log('Expeditions:', this.expeditions);
         if (this.expeditions.length === 0) {
             return this.getExpeditionsAsyncApi().pipe(
                 map((expeditions) => {
