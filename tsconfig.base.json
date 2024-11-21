@@ -30,6 +30,9 @@
             "@avans-nx-expedition/backend/user": [
                 "libs/backend/user/src/index.ts"
             ],
+            "@avans-nx-expedition/backend/expedition": [
+                "libs/backend/expedition/src/index.ts"
+            ],
             "@avans-nx-expedition/common": [
                 "libs/frontend/common/src/index.ts"
             ],
