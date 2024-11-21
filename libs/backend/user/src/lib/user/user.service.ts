@@ -5,8 +5,9 @@ import { User as UserModel, UserDocument } from './user.schema';
 import { IUser, IUserInfo } from '@avans-nx-expedition/shared/api';
 // import { Meal, MealDocument } from '@avans-nx-expedition/backend/features';
 import { CreateUserDto, UpdateUserDto } from '@avans-nx-expedition/backend/dto';
+import { Observable, from, map } from 'rxjs';
 
-@Injectable()
+@Injectable({})
 export class UserService {
     private readonly logger: Logger = new Logger(UserService.name);
 
@@ -18,6 +19,37 @@ export class UserService {
         this.logger.log(`Finding all items`);
         const items = await this.userModel.find();
         return items;
+    }
+
+    findAllInternal(): Observable<IUserInfo[]> {
+        this.logger.log('Finding all items');
+
+        // Use .lean() to get plain objects and map to IUserInfo
+        return from(
+            this.userModel
+                .find()
+                .lean()
+                .then((users) => {
+                    return users.map((user) => {
+                        // Transform the MongoDB document into IUserInfo
+                        return {
+                            _id: user._id.toString(),
+                            name: user.name,
+                            password: user.password,
+                            emailAddress: user.emailAddress,
+                            phoneNumber: user.phoneNumber,
+                            profileImgUrl: user.profileImgUrl,
+                            ExperienceLevel: user.ExperienceLevel,
+                            Skills: user.Skills,
+                            role: user.role,
+                            gender: user.gender,
+                            isActive: user.isActive
+
+                            // You can add more fields from your MongoDB model as needed
+                        };
+                    });
+                })
+        );
     }
 
     async findOne(_id: string): Promise<IUser | null> {
@@ -36,6 +68,16 @@ export class UserService {
             .select('-password')
             .exec();
         return item;
+    }
+
+    async findManyByExperienceLevel(
+        experienceLevel: string
+    ): Promise<IUserInfo[]> {
+        this.logger.log(
+            `Finding users with experience level ${experienceLevel}`
+        );
+        const items = this.userModel.find({ experienceLevel }).exec();
+        return items;
     }
 
     async create(user: CreateUserDto): Promise<IUserInfo> {

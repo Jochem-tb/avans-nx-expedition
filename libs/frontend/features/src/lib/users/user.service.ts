@@ -6,7 +6,7 @@ import {
     UserExperienceLevel,
     UserSkills
 } from '../../../../../../libs/shared/api/src';
-import { delay, Observable, of } from 'rxjs';
+import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -24,7 +24,6 @@ export class UserService {
             gender: UserGender.Male,
             password: 'secret',
             isActive: true,
-            meals: [],
             Skills: [UserSkills.Foraging, UserSkills.Navigation],
             ExperienceLevel: UserExperienceLevel.Intermediate
         },
@@ -38,7 +37,6 @@ export class UserService {
             gender: UserGender.Female,
             password: 'secret',
             isActive: true,
-            meals: [],
             Skills: [UserSkills.Cooking, UserSkills.First_Aid],
             ExperienceLevel: UserExperienceLevel.Beginner
         },
@@ -52,7 +50,6 @@ export class UserService {
             gender: UserGender.Male,
             password: 'secret',
             isActive: true,
-            meals: [],
             Skills: [
                 UserSkills.Fire_Making,
                 UserSkills.Fishing,
@@ -71,7 +68,6 @@ export class UserService {
             gender: UserGender.Female,
             password: 'supersecure',
             isActive: true,
-            meals: [],
             Skills: [UserSkills.Knot_Tying, UserSkills.Shelter_Building],
             ExperienceLevel: UserExperienceLevel.Advanced
         },
@@ -85,7 +81,6 @@ export class UserService {
             gender: UserGender.Male,
             password: '1234password',
             isActive: false,
-            meals: [],
             Skills: [UserSkills.Cooking, UserSkills.Fire_Making],
             ExperienceLevel: UserExperienceLevel.Intermediate
         },
@@ -99,7 +94,6 @@ export class UserService {
             gender: UserGender.Female,
             password: 'mypassword123',
             isActive: true,
-            meals: [],
             Skills: [UserSkills.Cooking, UserSkills.Foraging],
             ExperienceLevel: UserExperienceLevel.Beginner
         },
@@ -113,7 +107,6 @@ export class UserService {
             gender: UserGender.Male,
             password: 'topsecret',
             isActive: true,
-            meals: [],
             Skills: [UserSkills.Hunting, UserSkills.Trapping],
             ExperienceLevel: UserExperienceLevel.Advanced
         },
@@ -127,7 +120,6 @@ export class UserService {
             gender: UserGender.Female,
             password: 'secureme',
             isActive: true,
-            meals: [],
             Skills: [
                 UserSkills.First_Aid,
                 UserSkills.Water_Purification,
@@ -145,7 +137,6 @@ export class UserService {
             gender: UserGender.Male,
             password: 'letmein123',
             isActive: false,
-            meals: [],
             Skills: [UserSkills.Navigation, UserSkills.Fishing],
             ExperienceLevel: UserExperienceLevel.Expert
         },
@@ -159,13 +150,12 @@ export class UserService {
             gender: UserGender.Female,
             password: 'mypassword',
             isActive: true,
-            meals: [],
             Skills: [UserSkills.Cooking, UserSkills.Foraging],
             ExperienceLevel: UserExperienceLevel.Beginner
         }
     ];
 
-    constructor() {
+    constructor(private httpClient: HttpClient) {
         console.log('Service constructor aanroepen');
     }
 
@@ -177,6 +167,12 @@ export class UserService {
     getUsersAsync(): Observable<IUser[]> {
         console.log('getUsersAsync() aanroepen');
         return of(this.users).pipe(delay(500));
+    }
+
+    getUsersAsyncApi(): Observable<IUser[]> {
+        return this.httpClient
+            .get<{ results: IUser[] }>('http://localhost:3000/api/user')
+            .pipe(map((response) => response.results)); // Extract 'results' array
     }
 
     getUserById(id: string | null): IUser {
