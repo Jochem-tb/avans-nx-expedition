@@ -1,0 +1,120 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h3 class="modal-header text-center">Edit Expedition</h3>
+            <form
+                #expeditionForm="ngForm"
+                (ngSubmit)="onSubmit(expeditionForm.value)"
+            >
+                <mat-form-field>
+                    <mat-label>Title</mat-label>
+                    <input matInput type="text" name="title" ngModel required />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Description</mat-label>
+                    <textarea
+                        matInput
+                        name="description"
+                        ngModel
+                        required
+                    ></textarea>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Start Date</mat-label>
+                    <input
+                        matInput
+                        type="date"
+                        name="startDate"
+                        ngModel
+                        required
+                    />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>End Date</mat-label>
+                    <input
+                        matInput
+                        type="date"
+                        name="endDate"
+                        ngModel
+                        required
+                    />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Difficulty Level</mat-label>
+                    <mat-select name="difficultyLevel" ngModel required>
+                        <mat-option value="Easy">Easy</mat-option>
+                        <mat-option value="Moderate">Moderate</mat-option>
+                        <mat-option value="Hard">Hard</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Status</mat-label>
+                    <mat-select name="status" ngModel required>
+                        <mat-option value="Planned">Planned</mat-option>
+                        <mat-option value="Ongoing">Ongoing</mat-option>
+                        <mat-option value="Completed">Completed</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Max Participants</mat-label>
+                    <input
+                        matInput
+                        type="number"
+                        name="maxParticipants"
+                        ngModel
+                        required
+                    />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Participants (Comma Separated)</mat-label>
+                    <input matInput type="text" name="participants" ngModel />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Organizer</mat-label>
+                    <input
+                        matInput
+                        type="text"
+                        name="organizer"
+                        ngModel
+                        required
+                    />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Location</mat-label>
+                    <input
+                        matInput
+                        type="text"
+                        name="location"
+                        ngModel
+                        required
+                    />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Image URL</mat-label>
+                    <input matInput type="url" name="imageUrl" ngModel />
+                </mat-form-field>
+
+                <div class="text-center">
+                    <button
+                        mat-flat-button
+                        color="primary"
+                        type="button"
+                        (click)="onSubmit(expeditionForm.value)"
+                    >
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

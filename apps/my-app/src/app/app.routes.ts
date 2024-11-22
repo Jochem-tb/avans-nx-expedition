@@ -10,6 +10,7 @@ import { UserEditComponent } from '../../../../libs/frontend/features/src/lib/us
 //Expeditions
 import { ExpeditionListComponent } from '../../../../libs/frontend/features/src/lib/expeditions/expedition-list/expedition-list.component';
 import { ExpeditionDetailsComponent } from '../../../../libs/frontend/features/src/lib/expeditions/expedition-details/expedition-details.component';
+import { ExpeditionEditComponent } from '../../../../libs/frontend/features/src/lib/expeditions/expedition-edit/expedition-edit.component';
 // import { UserEditComponent } from '../../../../libs/frontend/features/src/lib/users/user-edit/user-edit.component';
 
 export const appRoutes: Route[] = [
@@ -25,8 +26,8 @@ export const appRoutes: Route[] = [
 
     { path: 'expeditions', component: ExpeditionListComponent },
     { path: 'expeditions/:id', component: ExpeditionDetailsComponent },
-    { path: 'expeditions/new', component: UserEditComponent },
-    { path: 'expeditions/:id/edit', component: UserEditComponent },
+    { path: 'expeditions/new', component: ExpeditionEditComponent },
+    { path: 'expeditions/:id/edit', component: ExpeditionEditComponent },
 
     { path: '**', redirectTo: 'dashboard' }
 ];

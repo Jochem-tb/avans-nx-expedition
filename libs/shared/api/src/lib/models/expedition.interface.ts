@@ -49,10 +49,7 @@ export interface IExpedition {
     updatedAt: Date;
 }
 
-export type ICreateExpedition = Omit<
-    IExpedition,
-    '_id' | 'createdAt' | 'updatedAt'
->;
+export type ICreateExpedition = Omit<IExpedition, '_id' | 'updatedAt'>;
 
 export type IUpdateExpedition = Partial<Omit<IExpedition, 'id'>>;
 export type IUpsertExpedition = IExpedition;

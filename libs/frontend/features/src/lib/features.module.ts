@@ -1,6 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
+// Angular Material Modules
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Required for Angular Material
+
 import { use } from 'passport';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
@@ -14,19 +23,40 @@ import { UserEditComponent } from './users/user-edit/user-edit.component';
 import { ExpeditionService } from './expeditions/expedition.service';
 import { ExpeditionDetailsComponent } from './expeditions/expedition-details/expedition-details.component';
 import { ExpeditionListComponent } from './expeditions/expedition-list/expedition-list.component';
-// import { UserEditComponent } from './users/user-edit/user-edit.component';
+import { ExpeditionEditComponent } from './expeditions/expedition-edit/expedition-edit.component';
 
 @NgModule({
-    imports: [CommonModule, RouterModule, HttpClientModule],
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        HttpClientModule,
+
+        //Forms
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatSelectModule,
+        BrowserAnimationsModule
+    ],
     declarations: [
         UserDetailsComponent,
         UserListComponent,
         UserEditComponent,
 
         ExpeditionDetailsComponent,
-        ExpeditionListComponent
+        ExpeditionListComponent,
+        ExpeditionEditComponent
     ],
-    exports: [UserDetailsComponent, UserListComponent, UserEditComponent],
+    exports: [
+        UserDetailsComponent,
+        UserListComponent,
+        UserEditComponent,
+
+        ExpeditionDetailsComponent,
+        ExpeditionListComponent,
+        ExpeditionEditComponent
+    ],
     providers: [UserService, ExpeditionService]
 })
 export class FeaturesModule {}

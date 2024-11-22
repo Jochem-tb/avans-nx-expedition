@@ -1665,34 +1665,6 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
         const items = await this.expeditionModel.find();
         return items;
     }
-    // findAllInternal(): Observable<IExpedition[]> {
-    //     this.logger.log('Finding all items');
-    //     // Use .lean() to get plain objects and map to IUserInfo
-    //     return from(
-    //         this.expeditionModel
-    //             .find()
-    //             .lean()
-    //             .then((users) => {
-    //                 return users.map((user) => {
-    //                     // Transform the MongoDB document into IUserInfo
-    //                     return {
-    //                         _id: user._id.toString(),
-    //                         name: user.name,
-    //                         password: user.password,
-    //                         emailAddress: user.emailAddress,
-    //                         phoneNumber: user.phoneNumber,
-    //                         profileImgUrl: user.profileImgUrl,
-    //                         ExperienceLevel: user.ExperienceLevel,
-    //                         Skills: user.Skills,
-    //                         role: user.role,
-    //                         gender: user.gender,
-    //                         isActive: user.isActive
-    //                         // You can add more fields from your MongoDB model as needed
-    //                     };
-    //                 });
-    //             })
-    //     );
-    // }
     async findOne(_id) {
         this.logger.log(`finding expedition with id ${_id}`);
         const item = await this.expeditionModel.findOne({ _id }).exec();
@@ -1708,11 +1680,14 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
     }
     async create(expedition) {
         this.logger.log(`Create expedition with title:  ${expedition.title}`);
+        expedition.createdAt = new Date();
+        expedition.updatedAt = new Date();
         const createdItem = this.expeditionModel.create(expedition);
         return createdItem;
     }
     async update(_id, expedition) {
         this.logger.log(`Update expedition ${expedition.title}`);
+        expedition.updatedAt = new Date();
         return this.expeditionModel.findByIdAndUpdate({ _id }, expedition);
     }
 };

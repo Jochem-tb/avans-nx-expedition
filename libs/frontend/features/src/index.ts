@@ -8,6 +8,6 @@ export * from './lib/users/user.service';
 
 //Expeditions
 // export * from './lib/expeditions/expedition-list/expedition-list.component';
-// export * from './lib/expeditions/expedition-details/expedition-details.component';
+export * from './lib/expeditions/expedition-details/expedition-details.component';
 // export * from './lib/expeditions/expedition-edit/expedition-edit.component';
 export * from './lib/expeditions/expedition.service';

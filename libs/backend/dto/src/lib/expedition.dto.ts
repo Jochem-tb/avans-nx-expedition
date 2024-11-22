@@ -37,6 +37,8 @@ export class CreateExpeditionDto implements ICreateExpedition {
     organizer!: string;
     location!: ILocation;
     imageUrl!: string;
+    createdAt!: Date;
+    updatedAt!: Date;
 }
 
 export class UpsertExpeditionDto implements IUpsertExpedition {
@@ -90,6 +92,7 @@ export class UpsertExpeditionDto implements IUpsertExpedition {
 
 export class UpdateExpeditionDto implements IUpdateExpedition {
     _id?: string | undefined;
+    updatedAt?: Date | undefined;
 
     @IsString()
     @IsOptional()

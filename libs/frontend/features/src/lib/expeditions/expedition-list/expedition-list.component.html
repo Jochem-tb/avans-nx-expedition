@@ -8,14 +8,12 @@
         <thead class="thead-dark">
             <tr>
                 <th>Img</th>
-                <th>title</th>
+                <!-- <th>title</th> -->
+                <th>Modify</th>
             </tr>
         </thead>
         <tbody>
-            <tr
-                *ngFor="let expedition of expeditions"
-                routerLink="{{ expedition._id }}"
-            >
+            <tr *ngFor="let expedition of expeditions">
                 <td>
                     <img
                         [src]="expedition.imageUrl"
@@ -24,10 +22,15 @@
                         style="width: 50px; height: 50px"
                     />
                 </td>
-                <td>
+                <!-- <td>
                     <a routerLink="{{ expedition._id }}">
                         {{ expedition.title }}
                     </a>
+                </td> -->
+                <td>
+                    <button mat-button (click)="openDialog()" class="button">
+                        Edit Expedition
+                    </button>
                 </td>
             </tr>
         </tbody>
