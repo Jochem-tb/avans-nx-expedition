@@ -37,7 +37,7 @@ jobs:
       # Build your app
       - name: Build your app
         run: npm run build:my-app
-        working-directory: './apps/my-app'  # Specify the path to your app in the monorepo
+        working-directory: '/apps/my-app'  # Specify the path to your app in the monorepo
 
       # Deploy to Azure Static Web Apps
       - name: Deploy to Azure Static Web Apps
@@ -45,9 +45,9 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GENTLE_WATER }}
           action: 'upload'
-          app_location: './apps/my-app'  # Update the path to your app's source folder
+          app_location: '/apps/my-app'  # Update the path to your app's source folder
           api_location: '' # Specify if you have an API folder; otherwise, leave empty
-          output_location: './dist/apps/my-app'  # Adjust to the build output folder in your monorepo
+          output_location: '/dist/apps/my-app'  # Adjust to the build output folder in your monorepo
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
