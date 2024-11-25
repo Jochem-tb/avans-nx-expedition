@@ -23,7 +23,7 @@ on:
 env:
   APP_LOCATION: "./apps/my-app" # location of your client code
   API_LOCATION: "" # location of your api source code - optional
-  APP_ARTIFACT_LOCATION: "./dist/apps/my-app" # location of client code build output
+  APP_ARTIFACT_LOCATION: "dist/apps/my-app" # location of client code build output
   AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GENTLE_WATER }} # secret containing deployment token for your static web app
 
 permissions:
@@ -46,6 +46,8 @@ jobs:
         run: npm install
       - name: Build Application
         run: npm run build:my-app
+      - name: List Files in Artifact Directory
+        run: ls -R dist/apps/my-app
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
