@@ -1,0 +1,61 @@
+name: Azure Static Web Apps CI/CD
+
+on:
+  push:
+    branches:
+      - release
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - release
+
+jobs:
+  build_and_deploy_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
+
+      # Set up Node.js environment if needed
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Adjust the Node version if needed
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Build your app
+      - name: Build your app
+        run: npm run build:my-app
+        working-directory: './path/to/your/app'  # Specify the path to your app in the monorepo
+
+      # Deploy to Azure Static Web Apps
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GENTLE_WATER }}
+          action: 'upload'
+          app_location: './path/to/your/app'  # Update the path to your app's source folder
+          api_location: '' # Specify if you have an API folder; otherwise, leave empty
+          output_location: './path/to/your/app/dist'  # Adjust to the build output folder in your monorepo
+
+  close_pull_request_job:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request Job
+    steps:
+      - name: Close Pull Request
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GENTLE_WATER_030D91C1E }}
+          action: 'close'
