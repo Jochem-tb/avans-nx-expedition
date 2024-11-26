@@ -1789,26 +1789,37 @@ exports.ExpeditionSchema = mongoose_1.SchemaFactory.createForClass(Expedition);
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const tslib_1 = __webpack_require__(4);
 tslib_1.__exportStar(__webpack_require__(50), exports);
-tslib_1.__exportStar(__webpack_require__(51), exports);
+tslib_1.__exportStar(__webpack_require__(52), exports);
 
 
 /***/ }),
 /* 50 */
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.environment = void 0;
+const process_1 = __webpack_require__(51);
 exports.environment = {
-    production: false,
-    ROOT_DOMAIN_URL: 'http://localhost:3000',
-    dataApiUrl: 'http://localhost:3000/api',
-    MONGO_DB_CONNECTION_STRING: 'mongodb://localhost:27017/expeditionPlanner'
+    production: true,
+    ROOT_DOMAIN_URL: 'NOT_IMPLEMENTED_YET',
+    dataApiUrl: 'NOT_IMPLEMENTED_YET',
+    MONGO_DB_CONNECTION_STRING: 'mongodb+srv://' +
+        process_1.env.MONGO_DB_USERNAME +
+        ':' +
+        process_1.env.MONGO_DB_PASSWORD +
+        '@expeditionwebapp.guoil.mongodb.net/?retryWrites=true&w=majority&appName=ExpeditionWebApp'
 };
 
 
 /***/ }),
 /* 51 */
+/***/ ((module) => {
+
+module.exports = require("process");
+
+/***/ }),
+/* 52 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
