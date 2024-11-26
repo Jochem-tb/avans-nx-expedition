@@ -6,11 +6,12 @@ import { UserEditComponent } from './users/user-edit/user-edit.component';
 import { RouterModule } from '@angular/router';
 import { use } from 'passport';
 import { UserService } from './users/user.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, HttpClientModule],
     declarations: [UserDetailsComponent, UserListComponent, UserEditComponent],
     exports: [UserDetailsComponent, UserListComponent, UserEditComponent],
-    providers: [ UserService ]
+    providers: [UserService]
 })
 export class FeaturesModule {}

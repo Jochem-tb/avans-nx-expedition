@@ -8,7 +8,11 @@ import {
     UseGuards
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { IUserInfo, IUser } from '@avans-nx-expedition/shared/api';
+import {
+    IUserInfo,
+    IUser,
+    UserExperienceLevel
+} from '@avans-nx-expedition/shared/api';
 import { CreateUserDto, UpdateUserDto } from '@avans-nx-expedition/backend/dto';
 import { UserExistGuard } from './user-exists.guard';
 
@@ -17,8 +21,15 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Get()
-    async findAll(): Promise<IUserInfo[]> {
-        return this.userService.findAll();
+    async findAll() {
+        return await this.userService.findAll();
+    }
+
+    @Get('exp/:experience')
+    async findByExperience(
+        @Param('experience') experience: UserExperienceLevel
+    ): Promise<IUserInfo[]> {
+        return this.userService.findManyByExperienceLevel(experience);
     }
 
     // this method should precede the general getOne method, otherwise it never matches
