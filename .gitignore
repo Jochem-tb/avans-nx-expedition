@@ -4,6 +4,7 @@
 # dist We use Netlify for deployment So we need the DIST on GITHUB
 tmp
 /out-tsc
+.env
 
 # dependencies
 node_modules
