@@ -3,7 +3,6 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 // import { v4 as uuid } from 'uuid';
 import isEmail from 'validator/lib/isEmail';
 import {
-    IMeal,
     IUser,
     UserExperienceLevel,
     UserGender,
@@ -79,22 +78,15 @@ export class User implements IUser {
     isActive = true;
 
     @Prop({
-        default: [],
-        type: [MongooseSchema.Types.ObjectId],
-        ref: 'Meal'
-    })
-    meals: IMeal[] = [];
-
-    @Prop({
         default: [UserExperienceLevel.Unknown],
-        type: [MongooseSchema.Types.ObjectId],
+        type: String,
         ref: 'ExperienceLevel'
     })
     ExperienceLevel: UserExperienceLevel = UserExperienceLevel.Unknown;
 
     @Prop({
         default: [],
-        type: [MongooseSchema.Types.ObjectId],
+        type: [String],
         ref: 'Skills'
     })
     Skills: UserSkills[] = [];

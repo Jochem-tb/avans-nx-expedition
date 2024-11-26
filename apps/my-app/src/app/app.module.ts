@@ -8,7 +8,7 @@ import { AboutComponent } from './components/about/about.component';
 import { HeaderComponent } from './components/ui/header/header.component';
 import { FooterComponent } from './components/ui/footer/footer.component';
 import { FeaturesModule } from '../../../../libs/frontend/features/src';
-
+// import { UserService } from '@avans-nx-expedition/backend/user';
 
 @NgModule({
     imports: [

@@ -6,166 +6,16 @@ import {
     UserExperienceLevel,
     UserSkills
 } from '../../../../../../libs/shared/api/src';
-import { delay, Observable, of } from 'rxjs';
+import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService {
-    readonly users: IUser[] = [
-        {
-            _id: '1',
-            name: 'Isaac Gibson',
-            emailAddress: 'isaac.gibson@example.com',
-            phoneNumber: '06-123456',
-            profileImgUrl: 'https://randomuser.me/api/portraits/men/16.jpg',
-            role: UserRole.Unknown,
-            gender: UserGender.Male,
-            password: 'secret',
-            isActive: true,
-            meals: [],
-            Skills: [UserSkills.Foraging, UserSkills.Navigation],
-            ExperienceLevel: UserExperienceLevel.Intermediate
-        },
-        {
-            _id: '2',
-            name: 'Anne Williams',
-            emailAddress: 'anne.williams@example.com',
-            phoneNumber: '06-1234562',
-            profileImgUrl: 'https://randomuser.me/api/portraits/women/40.jpg',
-            role: UserRole.Unknown,
-            gender: UserGender.Female,
-            password: 'secret',
-            isActive: true,
-            meals: [],
-            Skills: [UserSkills.Cooking, UserSkills.First_Aid],
-            ExperienceLevel: UserExperienceLevel.Beginner
-        },
-        {
-            _id: '3',
-            name: 'Peter Post',
-            emailAddress: 'peter.post@example.com',
-            phoneNumber: '06-123456',
-            profileImgUrl: 'https://randomuser.me/api/portraits/men/18.jpg',
-            role: UserRole.Guest,
-            gender: UserGender.Male,
-            password: 'secret',
-            isActive: true,
-            meals: [],
-            Skills: [
-                UserSkills.Fire_Making,
-                UserSkills.Fishing,
-                UserSkills.Hunting,
-                UserSkills.Navigation
-            ],
-            ExperienceLevel: UserExperienceLevel.Expert
-        },
-        {
-            _id: '4',
-            name: 'Lucy Harper',
-            emailAddress: 'lucy.harper@example.com',
-            phoneNumber: '06-987654',
-            profileImgUrl: 'https://randomuser.me/api/portraits/women/22.jpg',
-            role: UserRole.Admin,
-            gender: UserGender.Female,
-            password: 'supersecure',
-            isActive: true,
-            meals: [],
-            Skills: [UserSkills.Knot_Tying, UserSkills.Shelter_Building],
-            ExperienceLevel: UserExperienceLevel.Advanced
-        },
-        {
-            _id: '5',
-            name: 'Daniel Grant',
-            emailAddress: 'daniel.grant@example.com',
-            phoneNumber: '06-555432',
-            profileImgUrl: 'https://randomuser.me/api/portraits/men/30.jpg',
-            role: UserRole.Unknown,
-            gender: UserGender.Male,
-            password: '1234password',
-            isActive: false,
-            meals: [],
-            Skills: [UserSkills.Cooking, UserSkills.Fire_Making],
-            ExperienceLevel: UserExperienceLevel.Intermediate
-        },
-        {
-            _id: '6',
-            name: 'Emily Clarke',
-            emailAddress: 'emily.clarke@example.com',
-            phoneNumber: '06-654321',
-            profileImgUrl: 'https://randomuser.me/api/portraits/women/60.jpg',
-            role: UserRole.Unknown,
-            gender: UserGender.Female,
-            password: 'mypassword123',
-            isActive: true,
-            meals: [],
-            Skills: [UserSkills.Cooking, UserSkills.Foraging],
-            ExperienceLevel: UserExperienceLevel.Beginner
-        },
-        {
-            _id: '7',
-            name: 'Oliver Scott',
-            emailAddress: 'oliver.scott@example.com',
-            phoneNumber: '06-111222',
-            profileImgUrl: 'https://randomuser.me/api/portraits/men/44.jpg',
-            role: UserRole.Unknown,
-            gender: UserGender.Male,
-            password: 'topsecret',
-            isActive: true,
-            meals: [],
-            Skills: [UserSkills.Hunting, UserSkills.Trapping],
-            ExperienceLevel: UserExperienceLevel.Advanced
-        },
-        {
-            _id: '8',
-            name: 'Sophia Brown',
-            emailAddress: 'sophia.brown@example.com',
-            phoneNumber: '06-999888',
-            profileImgUrl: 'https://randomuser.me/api/portraits/women/29.jpg',
-            role: UserRole.Unknown,
-            gender: UserGender.Female,
-            password: 'secureme',
-            isActive: true,
-            meals: [],
-            Skills: [
-                UserSkills.First_Aid,
-                UserSkills.Water_Purification,
-                UserSkills.Swimming
-            ],
-            ExperienceLevel: UserExperienceLevel.Intermediate
-        },
-        {
-            _id: '9',
-            name: 'Ethan Bennett',
-            emailAddress: 'ethan.bennett@example.com',
-            phoneNumber: '06-333777',
-            profileImgUrl: 'https://randomuser.me/api/portraits/men/50.jpg',
-            role: UserRole.Admin,
-            gender: UserGender.Male,
-            password: 'letmein123',
-            isActive: false,
-            meals: [],
-            Skills: [UserSkills.Navigation, UserSkills.Fishing],
-            ExperienceLevel: UserExperienceLevel.Expert
-        },
-        {
-            _id: '10',
-            name: 'Mia Anderson',
-            emailAddress: 'mia.anderson@example.com',
-            phoneNumber: '06-444555',
-            profileImgUrl: 'https://randomuser.me/api/portraits/women/35.jpg',
-            role: UserRole.Guest,
-            gender: UserGender.Female,
-            password: 'mypassword',
-            isActive: true,
-            meals: [],
-            Skills: [UserSkills.Cooking, UserSkills.Foraging],
-            ExperienceLevel: UserExperienceLevel.Beginner
-        }
-    ];
+    private users: IUser[] = [];
 
-    constructor() {
+    constructor(private httpClient: HttpClient) {
         console.log('Service constructor aanroepen');
     }
 
@@ -179,19 +29,30 @@ export class UserService {
         return of(this.users).pipe(delay(500));
     }
 
-    getUserById(id: string | null): IUser {
-        console.log('getUserById aanroepen');
-        return this.users.filter((user) => user._id === id)[0];
+    getUsersAsyncApi(): Observable<IUser[]> {
+        return this.httpClient
+            .get<{ results: IUser[] }>('http://localhost:3000/api/user')
+            .pipe(map((response) => response.results)); // Extract 'results' array
     }
 
-    /**
-     * Asynchrone versie voor het ophalen van 1 user nij gegeven Id.
-     * @param id
-     * @returns
-     */
+    getUserByIdApi(id: string | null): Observable<IUser> {
+        console.log('getUserById aanroepen');
+        return this.httpClient.get<IUser>(
+            `http://localhost:3000/api/user/${id}`
+        );
+    }
 
-    getUserByIdAsync(id: string | null): Observable<IUser> {
-        console.log('getUserByIdAsync aanroepen');
-        return of(this.getUserById(id)).pipe(delay(2000));
+    getUserById(id: string | null): Observable<IUser | undefined> {
+        console.log('getUserById aanroepen');
+        if (this.users.length === 0) {
+            return this.getUsersAsyncApi().pipe(
+                map((users) => {
+                    this.users = users;
+                    return this.users.find((user) => user._id === id);
+                })
+            );
+        } else {
+            return of(this.users.find((user) => user._id === id));
+        }
     }
 }
