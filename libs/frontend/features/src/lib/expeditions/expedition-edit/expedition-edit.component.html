@@ -1,120 +1,209 @@
-<div class="container">
+<div
+    class="container mt-5"
+    style="
+        background: linear-gradient(135deg, #002855 0%, #4da1ff 100%);
+        padding: 2rem;
+        border-radius: 8px;
+    "
+>
     <div class="row">
-        <div class="col-12">
-            <h3 class="modal-header text-center">Edit Expedition</h3>
-            <form
-                #expeditionForm="ngForm"
-                (ngSubmit)="onSubmit(expeditionForm.value)"
+        <div class="col-md-12 text-center mb-4">
+            <button
+                routerLink="/expeditions"
+                class="btn btn-light btn-sm p-2 pe-3"
+                style="
+                    border: 1px solid #4da1ff;
+                    border-radius: 5px;
+                    position: relative;
+                    top: 23px;
+                    float: left;
+                "
             >
-                <mat-form-field>
-                    <mat-label>Title</mat-label>
-                    <input matInput type="text" name="title" ngModel required />
-                </mat-form-field>
+                <i class="bi bi-arrow-left me-2"></i> Back
+            </button>
+            <h1 class="display-4 text-white fw-bold">Expedition Details</h1>
+        </div>
+    </div>
 
-                <mat-form-field>
-                    <mat-label>Description</mat-label>
-                    <textarea
-                        matInput
-                        name="description"
-                        ngModel
-                        required
-                    ></textarea>
-                </mat-form-field>
+    <div
+        class="card bg-dark text-white"
+        style="border: none; border-radius: 8px"
+    >
+        <div
+            class="card-body bg-dark text-white"
+            style="border-radius: 0 0 12px 12px"
+        >
+            <!-- Expedition Image and Title -->
+            <div class="d-flex flex-column align-items-center mb-4">
+                <input
+                    type="file"
+                    class="form-control mb-3"
+                    style="max-width: 150px; border: 4px solid #4da1ff"
+                    id="expeditionImage"
+                />
+                <input
+                    type="text"
+                    class="form-control mb-3"
+                    placeholder="Enter Expedition Title"
+                    id="expeditionTitle"
+                />
+            </div>
+            <hr />
 
-                <mat-form-field>
-                    <mat-label>Start Date</mat-label>
-                    <input
-                        matInput
-                        type="date"
-                        name="startDate"
-                        ngModel
-                        required
-                    />
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>End Date</mat-label>
-                    <input
-                        matInput
-                        type="date"
-                        name="endDate"
-                        ngModel
-                        required
-                    />
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Difficulty Level</mat-label>
-                    <mat-select name="difficultyLevel" ngModel required>
-                        <mat-option value="Easy">Easy</mat-option>
-                        <mat-option value="Moderate">Moderate</mat-option>
-                        <mat-option value="Hard">Hard</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Status</mat-label>
-                    <mat-select name="status" ngModel required>
-                        <mat-option value="Planned">Planned</mat-option>
-                        <mat-option value="Ongoing">Ongoing</mat-option>
-                        <mat-option value="Completed">Completed</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Max Participants</mat-label>
-                    <input
-                        matInput
-                        type="number"
-                        name="maxParticipants"
-                        ngModel
-                        required
-                    />
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Participants (Comma Separated)</mat-label>
-                    <input matInput type="text" name="participants" ngModel />
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Organizer</mat-label>
-                    <input
-                        matInput
-                        type="text"
-                        name="organizer"
-                        ngModel
-                        required
-                    />
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Location</mat-label>
-                    <input
-                        matInput
-                        type="text"
-                        name="location"
-                        ngModel
-                        required
-                    />
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>Image URL</mat-label>
-                    <input matInput type="url" name="imageUrl" ngModel />
-                </mat-form-field>
-
-                <div class="text-center">
-                    <button
-                        mat-flat-button
-                        color="primary"
-                        type="button"
-                        (click)="onSubmit(expeditionForm.value)"
-                    >
-                        Save
-                    </button>
+            <div class="row">
+                <div class="col">
+                    <!-- Expedition Information -->
+                    <div class="mb-3">
+                        <label for="expeditionDescription" class="form-label"
+                            >Description:</label
+                        >
+                        <textarea
+                            class="form-control"
+                            id="expeditionDescription"
+                            rows="3"
+                            placeholder="Enter Expedition Description"
+                        ></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expeditionStartDate" class="form-label"
+                            >Start Date:</label
+                        >
+                        <input
+                            type="date"
+                            class="form-control"
+                            id="expeditionStartDate"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="expeditionEndDate" class="form-label"
+                            >End Date:</label
+                        >
+                        <input
+                            type="date"
+                            class="form-control"
+                            id="expeditionEndDate"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label
+                            for="expeditionDifficultyLevel"
+                            class="form-label"
+                            >Difficulty Level:</label
+                        >
+                        <select
+                            class="form-select"
+                            id="expeditionDifficultyLevel"
+                        >
+                            <option
+                                *ngFor="let level of difficultyLevels"
+                                [value]="level"
+                            >
+                                {{ level }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expeditionStatus" class="form-label"
+                            >Status:</label
+                        >
+                        <select class="form-select" id="expeditionStatus">
+                            <option
+                                *ngFor="let status of statusus"
+                                [value]="status"
+                            >
+                                {{ status }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
-            </form>
+
+                <div class="col">
+                    <!-- Location Section -->
+                    <div class="mt-4">
+                        <h5 class="fw-bold">Location</h5>
+                        <div class="mb-3">
+                            <label
+                                for="expeditionLocationName"
+                                class="form-label"
+                                >Location Name:</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="expeditionLocationName"
+                                placeholder="Enter Location Name"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <label for="expeditionLatitude" class="form-label"
+                                >Latitude:</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="expeditionLatitude"
+                                placeholder="Enter Latitude"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <label for="expeditionLongitude" class="form-label"
+                                >Longitude:</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="expeditionLongitude"
+                                placeholder="Enter Longitude"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <label for="expeditionContinent" class="form-label"
+                                >Continent:</label
+                            >
+                            <select
+                                class="form-select"
+                                id="expeditionContinent"
+                            >
+                                <option
+                                    *ngFor="let continent of continents"
+                                    [value]="continent"
+                                >
+                                    {{ continent }}
+                                </option>
+                            </select>
+                        </div>
+                        <br />
+                        <h5 class="fw-bold">Participants</h5>
+                        <div class="mb-3">
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="participantName"
+                                placeholder="Enter Participant Name"
+                            />
+                            <button
+                                class="btn btn-success mt-2"
+                                style="width: 100%"
+                                id="addParticipantButton"
+                            >
+                                Add Participant
+                            </button>
+                        </div>
+                        <ul
+                            class="list-group list-group-flush"
+                            style="background-color: #1c2331; color: white"
+                            id="participantsList"
+                        >
+                            <!-- Dynamic participants will be listed here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <div class="text-center mt-4">
+                <button class="btn btn-primary">Save Expedition</button>
+            </div>
         </div>
     </div>
 </div>

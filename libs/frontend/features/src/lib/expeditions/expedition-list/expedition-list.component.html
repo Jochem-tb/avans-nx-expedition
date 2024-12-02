@@ -28,9 +28,20 @@
                     </a>
                 </td> -->
                 <td>
-                    <button mat-button (click)="openDialog()" class="button">
-                        Edit Expedition
-                    </button>
+                    <a
+                        routerLink="{{ expedition._id }}"
+                        class="btn btn-primary"
+                    >
+                        Details
+                    </a>
+                </td>
+                <td>
+                    <a
+                        routerLink="{{ expedition._id }}/edit"
+                        class="btn btn-primary"
+                    >
+                        Edit
+                    </a>
                 </td>
             </tr>
         </tbody>
