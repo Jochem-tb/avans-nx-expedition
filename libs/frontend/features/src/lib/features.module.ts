@@ -24,6 +24,7 @@ import { ExpeditionService } from './expeditions/expedition.service';
 import { ExpeditionDetailsComponent } from './expeditions/expedition-details/expedition-details.component';
 import { ExpeditionListComponent } from './expeditions/expedition-list/expedition-list.component';
 import { ExpeditionEditComponent } from './expeditions/expedition-edit/expedition-edit.component';
+import { ExpeditionCreateComponent } from './expeditions/expedition-create/expedition-create.component';
 
 @NgModule({
     imports: [
@@ -46,7 +47,8 @@ import { ExpeditionEditComponent } from './expeditions/expedition-edit/expeditio
 
         ExpeditionDetailsComponent,
         ExpeditionListComponent,
-        ExpeditionEditComponent
+        ExpeditionEditComponent,
+        ExpeditionCreateComponent
     ],
     exports: [
         UserDetailsComponent,
@@ -55,7 +57,8 @@ import { ExpeditionEditComponent } from './expeditions/expedition-edit/expeditio
 
         ExpeditionDetailsComponent,
         ExpeditionListComponent,
-        ExpeditionEditComponent
+        ExpeditionEditComponent,
+        ExpeditionCreateComponent
     ],
     providers: [UserService, ExpeditionService]
 })

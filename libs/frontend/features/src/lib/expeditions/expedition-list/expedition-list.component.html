@@ -3,12 +3,16 @@
 } @else if(expeditions && expeditions.length === 0) {
 <p>Nu expeditions where found.</p>
 } @else {
+<div>
+    <h1>Expeditions</h1>
+    <a routerLink="new" class="btn btn-primary"> Create Expedition </a>
+</div>
 <div class="container p-3">
     <table class="table table-striped table-bordered">
         <thead class="thead-dark">
             <tr>
-                <th>Img</th>
-                <!-- <th>title</th> -->
+                <th>Image</th>
+                <th>title</th>
                 <th>Modify</th>
             </tr>
         </thead>
@@ -22,17 +26,9 @@
                         style="width: 50px; height: 50px"
                     />
                 </td>
-                <!-- <td>
+                <td>
                     <a routerLink="{{ expedition._id }}">
                         {{ expedition.title }}
-                    </a>
-                </td> -->
-                <td>
-                    <a
-                        routerLink="{{ expedition._id }}"
-                        class="btn btn-primary"
-                    >
-                        Details
                     </a>
                 </td>
                 <td>

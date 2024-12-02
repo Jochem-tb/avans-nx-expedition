@@ -19,20 +19,6 @@ export class ExpeditionListComponent implements OnInit, OnDestroy {
         public dialog: MatDialog
     ) {}
 
-    openDialog(): void {
-        const dialogRef = this.dialog.open(ExpeditionEditComponent, {
-            width: '400px', // Customize dialog size
-            panelClass: 'expedition-edit-dialog' // Customize dialog style
-            // data: expedition // Pass the data into the dialog component
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                console.log('Dialog Result:', result);
-            }
-        });
-    }
-
     ngOnInit(): void {
         console.log('ExpeditionListComponent.ngOnInit() aangeroepen');
         this.sub.add(

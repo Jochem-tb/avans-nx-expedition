@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IExpedition } from '../../../../../shared/api/src';
+import { ICreateExpedition, IExpedition } from '../../../../../shared/api/src';
 import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -31,6 +31,15 @@ export class ExpeditionService {
     updateExpedition(expedition: IExpedition): Observable<IExpedition> {
         return this.httpClient.put<IExpedition>(
             `http://localhost:3000/api/expedition/${expedition._id}`,
+            expedition
+        );
+    }
+
+    createExpedition(
+        expedition: ICreateExpedition
+    ): Observable<ICreateExpedition> {
+        return this.httpClient.post<ICreateExpedition>(
+            `http://localhost:3000/api/expedition`,
             expedition
         );
     }

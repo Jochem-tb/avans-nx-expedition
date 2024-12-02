@@ -11,7 +11,7 @@ import { UserEditComponent } from '../../../../libs/frontend/features/src/lib/us
 import { ExpeditionListComponent } from '../../../../libs/frontend/features/src/lib/expeditions/expedition-list/expedition-list.component';
 import { ExpeditionDetailsComponent } from '../../../../libs/frontend/features/src/lib/expeditions/expedition-details/expedition-details.component';
 import { ExpeditionEditComponent } from '../../../../libs/frontend/features/src/lib/expeditions/expedition-edit/expedition-edit.component';
-// import { UserEditComponent } from '../../../../libs/frontend/features/src/lib/users/user-edit/user-edit.component';
+import { ExpeditionCreateComponent } from '../../../../libs/frontend/features/src/lib/expeditions/expedition-create/expedition-create.component';
 
 export const appRoutes: Route[] = [
     // HIer komen onze URL's te staan
@@ -25,8 +25,8 @@ export const appRoutes: Route[] = [
     { path: 'users/:id/edit', component: UserEditComponent },
 
     { path: 'expeditions', component: ExpeditionListComponent },
+    { path: 'expeditions/new', component: ExpeditionCreateComponent },
     { path: 'expeditions/:id', component: ExpeditionDetailsComponent },
-    { path: 'expeditions/new', component: ExpeditionEditComponent },
     { path: 'expeditions/:id/edit', component: ExpeditionEditComponent },
 
     { path: '**', redirectTo: 'dashboard' }
