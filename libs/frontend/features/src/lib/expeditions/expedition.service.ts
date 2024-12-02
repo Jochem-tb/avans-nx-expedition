@@ -28,6 +28,13 @@ export class ExpeditionService {
         );
     }
 
+    updateExpedition(expedition: IExpedition): Observable<IExpedition> {
+        return this.httpClient.put<IExpedition>(
+            `http://localhost:3000/api/expedition/${expedition._id}`,
+            expedition
+        );
+    }
+
     getExpeditionById(id: string | null): Observable<IExpedition | undefined> {
         console.log('getExpeditionById aanroepen');
         if (this.expeditions.length === 0) {

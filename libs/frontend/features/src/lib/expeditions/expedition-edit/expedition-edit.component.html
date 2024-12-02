@@ -38,13 +38,13 @@
             >
                 <!-- Expedition Image and Title -->
                 <div class="d-flex flex-column align-items-center mb-4">
-                    <input
+                    <!-- <input
                         type="file"
                         class="form-control mb-3"
                         style="max-width: 150px; border: 4px solid #4da1ff"
                         id="expeditionImage"
                         [value]="expedition?.imageUrl"
-                    />
+                    /> -->
                     <input
                         type="text"
                         class="form-control mb-3"
@@ -226,7 +226,9 @@
 
                 <!-- Save Button -->
                 <div class="text-center mt-4">
-                    <button class="btn btn-primary">Save Expedition</button>
+                    <button class="btn btn-primary" (click)="saveExpedition()">
+                        Save Expedition
+                    </button>
                 </div>
             </div>
         </div>

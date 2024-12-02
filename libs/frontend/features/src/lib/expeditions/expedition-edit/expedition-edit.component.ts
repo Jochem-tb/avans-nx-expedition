@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExpeditionService } from '../expedition.service';
 import { Expedition } from '@avans-nx-expedition/backend/expedition';
 import { Subscription } from 'rxjs';
@@ -25,7 +25,8 @@ export class ExpeditionEditComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private expeditionService: ExpeditionService
+        private expeditionService: ExpeditionService,
+        private router: Router
     ) {}
 
     ngOnInit(): void {
@@ -43,5 +44,26 @@ export class ExpeditionEditComponent implements OnInit {
 
     ngOnDestroy(): void {
         this.sub.unsubscribe();
+    }
+
+    saveExpedition(): void {
+        // Ensure that the expedition object has been properly filled
+        if (this.expedition) {
+            this.expeditionService.updateExpedition(this.expedition).subscribe(
+                (updatedExpedition) => {
+                    // Handle success (e.g., navigate back, show success message)
+                    console.log(
+                        'Expedition saved successfully',
+                        updatedExpedition
+                    );
+                    this.router.navigate(['/expeditions']);
+                    // You can navigate back or show a success message here
+                },
+                (error) => {
+                    // Handle error (e.g., show error message)
+                    console.error('Error saving expedition', error);
+                }
+            );
+        }
     }
 }
