@@ -17,6 +17,7 @@ import {
 export class ExpeditionEditComponent implements OnInit {
     expeditionId: string | null = null;
     expedition: Expedition | undefined;
+
     difficultyLevels = Object.values(DifficultyLevel);
     statusus = Object.values(ExpeditionStatus);
     continents = Object.values(ContinentEnum);
@@ -30,6 +31,7 @@ export class ExpeditionEditComponent implements OnInit {
     ngOnInit(): void {
         this.route.paramMap.subscribe((params) => {
             this.expeditionId = params.get('id');
+            console.log('Expedition ID:', this.expeditionId);
             this.expeditionService
                 .getExpeditionById(String(this.expeditionId))
                 .subscribe((expedition) => {
@@ -42,12 +44,4 @@ export class ExpeditionEditComponent implements OnInit {
     ngOnDestroy(): void {
         this.sub.unsubscribe();
     }
-
-    // removeParticipant(participantId: string): void {
-    //     this.expeditionService
-    //         .removeParticipant(this.expeditionId, participantId)
-    //         .subscribe((expedition) => {
-    //             this.expedition = expedition;
-    //         });
-    // }
 }

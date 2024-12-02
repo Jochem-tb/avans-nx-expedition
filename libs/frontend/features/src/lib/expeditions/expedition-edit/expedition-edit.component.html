@@ -1,208 +1,233 @@
-<div
-    class="container mt-5"
-    style="
-        background: linear-gradient(135deg, #002855 0%, #4da1ff 100%);
-        padding: 2rem;
-        border-radius: 8px;
-    "
->
-    <div class="row">
-        <div class="col-md-12 text-center mb-4">
-            <button
-                routerLink="/expeditions"
-                class="btn btn-light btn-sm p-2 pe-3"
-                style="
-                    border: 1px solid #4da1ff;
-                    border-radius: 5px;
-                    position: relative;
-                    top: 23px;
-                    float: left;
-                "
-            >
-                <i class="bi bi-arrow-left me-2"></i> Back
-            </button>
-            <h1 class="display-4 text-white fw-bold">Expedition Details</h1>
-        </div>
-    </div>
-
+<div *ngIf="expedition">
+    <!-- Check if expedition is defined -->
     <div
-        class="card bg-dark text-white"
-        style="border: none; border-radius: 8px"
+        class="container mt-5"
+        style="
+            background: linear-gradient(135deg, #002855 0%, #4da1ff 100%);
+            padding: 2rem;
+            border-radius: 8px;
+        "
     >
-        <div
-            class="card-body bg-dark text-white"
-            style="border-radius: 0 0 12px 12px"
-        >
-            <!-- Expedition Image and Title -->
-            <div class="d-flex flex-column align-items-center mb-4">
-                <input
-                    type="file"
-                    class="form-control mb-3"
-                    style="max-width: 150px; border: 4px solid #4da1ff"
-                    id="expeditionImage"
-                />
-                <input
-                    type="text"
-                    class="form-control mb-3"
-                    placeholder="Enter Expedition Title"
-                    id="expeditionTitle"
-                />
+        <!-- Expedition Edit Form -->
+        <div class="row">
+            <div class="col-md-12 text-center mb-4">
+                <button
+                    routerLink="/expeditions"
+                    class="btn btn-light btn-sm p-2 pe-3"
+                    style="
+                        border: 1px solid #4da1ff;
+                        border-radius: 5px;
+                        position: relative;
+                        top: 23px;
+                        float: left;
+                    "
+                >
+                    <i class="bi bi-arrow-left me-2"></i> Back
+                </button>
+                <h1 class="display-4 text-white fw-bold">Expedition Edit</h1>
             </div>
-            <hr />
+        </div>
 
-            <div class="row">
-                <div class="col">
-                    <!-- Expedition Information -->
-                    <div class="mb-3">
-                        <label for="expeditionDescription" class="form-label"
-                            >Description:</label
-                        >
-                        <textarea
-                            class="form-control"
-                            id="expeditionDescription"
-                            rows="3"
-                            placeholder="Enter Expedition Description"
-                        ></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="expeditionStartDate" class="form-label"
-                            >Start Date:</label
-                        >
-                        <input
-                            type="date"
-                            class="form-control"
-                            id="expeditionStartDate"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="expeditionEndDate" class="form-label"
-                            >End Date:</label
-                        >
-                        <input
-                            type="date"
-                            class="form-control"
-                            id="expeditionEndDate"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label
-                            for="expeditionDifficultyLevel"
-                            class="form-label"
-                            >Difficulty Level:</label
-                        >
-                        <select
-                            class="form-select"
-                            id="expeditionDifficultyLevel"
-                        >
-                            <option
-                                *ngFor="let level of difficultyLevels"
-                                [value]="level"
-                            >
-                                {{ level }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="expeditionStatus" class="form-label"
-                            >Status:</label
-                        >
-                        <select class="form-select" id="expeditionStatus">
-                            <option
-                                *ngFor="let status of statusus"
-                                [value]="status"
-                            >
-                                {{ status }}
-                            </option>
-                        </select>
-                    </div>
+        <div
+            class="card bg-dark text-white"
+            style="border: none; border-radius: 8px"
+        >
+            <div
+                class="card-body bg-dark text-white"
+                style="border-radius: 0 0 12px 12px"
+            >
+                <!-- Expedition Image and Title -->
+                <div class="d-flex flex-column align-items-center mb-4">
+                    <input
+                        type="file"
+                        class="form-control mb-3"
+                        style="max-width: 150px; border: 4px solid #4da1ff"
+                        id="expeditionImage"
+                        [value]="expedition?.imageUrl"
+                    />
+                    <input
+                        type="text"
+                        class="form-control mb-3"
+                        placeholder="Enter Expedition Title"
+                        id="expeditionTitle"
+                        [(ngModel)]="expedition.title"
+                    />
                 </div>
+                <hr />
 
-                <div class="col">
-                    <!-- Location Section -->
-                    <div class="mt-4">
-                        <h5 class="fw-bold">Location</h5>
+                <div class="row">
+                    <div class="col">
+                        <!-- Expedition Information -->
                         <div class="mb-3">
                             <label
-                                for="expeditionLocationName"
+                                for="expeditionDescription"
                                 class="form-label"
-                                >Location Name:</label
+                                >Description:</label
+                            >
+                            <textarea
+                                class="form-control"
+                                id="expeditionDescription"
+                                rows="3"
+                                placeholder="Enter Expedition Description"
+                                [(ngModel)]="expedition.description"
+                            ></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="expeditionStartDate" class="form-label"
+                                >Start Date:</label
                             >
                             <input
-                                type="text"
+                                type="date"
                                 class="form-control"
-                                id="expeditionLocationName"
-                                placeholder="Enter Location Name"
+                                id="expeditionStartDate"
+                                [(ngModel)]="expedition.startDate"
                             />
                         </div>
                         <div class="mb-3">
-                            <label for="expeditionLatitude" class="form-label"
-                                >Latitude:</label
+                            <label for="expeditionEndDate" class="form-label"
+                                >End Date:</label
                             >
                             <input
-                                type="text"
+                                type="date"
                                 class="form-control"
-                                id="expeditionLatitude"
-                                placeholder="Enter Latitude"
+                                id="expeditionEndDate"
+                                [(ngModel)]="expedition.endDate"
                             />
                         </div>
                         <div class="mb-3">
-                            <label for="expeditionLongitude" class="form-label"
-                                >Longitude:</label
-                            >
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="expeditionLongitude"
-                                placeholder="Enter Longitude"
-                            />
-                        </div>
-                        <div class="mb-3">
-                            <label for="expeditionContinent" class="form-label"
-                                >Continent:</label
+                            <label
+                                for="expeditionDifficultyLevel"
+                                class="form-label"
+                                >Difficulty Level:</label
                             >
                             <select
                                 class="form-select"
-                                id="expeditionContinent"
+                                id="expeditionDifficultyLevel"
+                                [(ngModel)]="expedition.difficultyLevel"
                             >
                                 <option
-                                    *ngFor="let continent of continents"
-                                    [value]="continent"
+                                    *ngFor="let level of difficultyLevels"
+                                    [value]="level"
                                 >
-                                    {{ continent }}
+                                    {{ level }}
                                 </option>
                             </select>
                         </div>
-                        <br />
-                        <h5 class="fw-bold">Participants</h5>
                         <div class="mb-3">
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="participantName"
-                                placeholder="Enter Participant Name"
-                            />
-                            <button
-                                class="btn btn-success mt-2"
-                                style="width: 100%"
-                                id="addParticipantButton"
+                            <label for="expeditionStatus" class="form-label"
+                                >Status:</label
                             >
-                                Add Participant
-                            </button>
+                            <select
+                                class="form-select"
+                                id="expeditionStatus"
+                                [(ngModel)]="expedition.status"
+                            >
+                                <option
+                                    *ngFor="let status of statusus"
+                                    [value]="status"
+                                >
+                                    {{ status }}
+                                </option>
+                            </select>
                         </div>
-                        <ul
-                            class="list-group list-group-flush"
-                            style="background-color: #1c2331; color: white"
-                            id="participantsList"
-                        >
-                            <!-- Dynamic participants will be listed here -->
-                        </ul>
+                    </div>
+
+                    <div class="col">
+                        <!-- Location Section -->
+                        <div class="mt-4">
+                            <h5 class="fw-bold">Location</h5>
+                            <div class="mb-3">
+                                <label
+                                    for="expeditionLocationName"
+                                    class="form-label"
+                                    >Location Name:</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="expeditionLocationName"
+                                    placeholder="Enter Location Name"
+                                    [(ngModel)]="expedition.location.name"
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label
+                                    for="expeditionLatitude"
+                                    class="form-label"
+                                    >Latitude:</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="expeditionLatitude"
+                                    placeholder="Enter Latitude"
+                                    [(ngModel)]="expedition.location.latitude"
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label
+                                    for="expeditionLongitude"
+                                    class="form-label"
+                                    >Longitude:</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="expeditionLongitude"
+                                    placeholder="Enter Longitude"
+                                    [(ngModel)]="expedition.location.longitude"
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label
+                                    for="expeditionContinent"
+                                    class="form-label"
+                                    >Continent:</label
+                                >
+                                <select
+                                    class="form-select"
+                                    id="expeditionContinent"
+                                    [(ngModel)]="expedition.location.continent"
+                                >
+                                    <option
+                                        *ngFor="let continent of continents"
+                                        [value]="continent"
+                                    >
+                                        {{ continent }}
+                                    </option>
+                                </select>
+                            </div>
+                            <br />
+                            <h5 class="fw-bold">Participants</h5>
+                            <ul
+                                class="list-group list-group-flush"
+                                style="background-color: #1c2331; color: white"
+                                id="participantsList"
+                            >
+                                <li
+                                    *ngFor="
+                                        let person of expedition.participants
+                                    "
+                                    class="list-group-item"
+                                    style="
+                                        background-color: #1c2331;
+                                        border: none;
+                                    "
+                                >
+                                    <i
+                                        class="bi bi-person-circle text-primary me-2"
+                                    ></i
+                                    >{{ person }}
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Save Button -->
-            <div class="text-center mt-4">
-                <button class="btn btn-primary">Save Expedition</button>
+                <!-- Save Button -->
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary">Save Expedition</button>
+                </div>
             </div>
         </div>
     </div>
