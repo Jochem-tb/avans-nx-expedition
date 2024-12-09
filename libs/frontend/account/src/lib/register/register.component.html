@@ -97,7 +97,7 @@
                                 <div class="col-md-4">
                                     <div class="form-floating mb-3">
                                         <select
-                                            formControlName="genderId"
+                                            formControlName="gender"
                                             class="form-select"
                                             aria-required="true"
                                         >
@@ -106,12 +106,12 @@
                                             </option>
                                             <option
                                                 *ngFor="let gender of genders"
-                                                [value]="gender.id"
+                                                [value]="gender"
                                             >
-                                                {{ gender.name }}
+                                                {{ gender }}
                                             </option>
                                         </select>
-                                        <label for="genderId">Gender</label>
+                                        <label for="gender">Gender</label>
                                         <div
                                             class="text-danger"
                                             *ngIf="
@@ -140,6 +140,19 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="form-floating mb-3">
+                                <input
+                                    formControlName="phoneNumber"
+                                    class="form-control"
+                                    placeholder="Phone number"
+                                    aria-required="true"
+                                />
+                                <label for="phoneNumber">Phone Number</label>
+                            </div>
+
+                            <h3>Credentials</h3>
+                            <hr />
 
                             <div class="form-floating mb-3">
                                 <input
@@ -183,91 +196,57 @@
                                 >
                             </div>
 
-                            <h3>Extra Info</h3>
+                            <h3>Skills</h3>
                             <hr />
 
                             <div class="form-floating mb-3">
-                                <input
-                                    formControlName="phoneNumber"
-                                    class="form-control"
-                                    placeholder="Phone number"
+                                <select
+                                    formControlName="experienceLevel"
+                                    class="form-select"
                                     aria-required="true"
-                                />
-                                <label for="phoneNumber">Phone Number</label>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="form-floating mb-3">
-                                        <input
-                                            formControlName="street"
-                                            class="form-control"
-                                            placeholder="Street"
-                                            aria-required="true"
-                                        />
-                                        <label for="street">Street</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-floating mb-3">
-                                        <input
-                                            formControlName="houseNr"
-                                            class="form-control"
-                                            placeholder="House Nr"
-                                            aria-required="true"
-                                        />
-                                        <label for="houseNr">House Nr</label>
-                                    </div>
+                                >
+                                    <option value="" disabled>
+                                        Select your experience
+                                    </option>
+                                    <option
+                                        *ngFor="let level of experienceLevel"
+                                        [value]="level"
+                                    >
+                                        {{ level }}
+                                    </option>
+                                </select>
+                                <label for="level">Experience</label>
+                                <div
+                                    class="text-danger"
+                                    *ngIf="
+                                        registerForm.get('level')?.invalid &&
+                                        registerForm.get('level')?.touched
+                                    "
+                                >
+                                    ExperienceLevel is required
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-floating mb-3">
-                                        <input
-                                            formControlName="postalCode"
-                                            class="form-control"
-                                            placeholder="Postal Code"
-                                            aria-required="true"
-                                        />
-                                        <label for="postalCode"
-                                            >Postal Code</label
-                                        >
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-floating mb-3">
-                                        <input
-                                            formControlName="city"
-                                            class="form-control"
-                                            placeholder="City"
-                                            aria-required="true"
-                                        />
-                                        <label for="city">City</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <h3>Food Options</h3>
                             <hr />
 
                             <div class="row">
                                 <div class="col-md-5">
-                                    <!-- Food Options Checkbox -->
-                                    <div
-                                        class="form-check"
-                                        *ngFor="let option of foodOptions"
-                                    >
+                                    <!-- Iterate over the userSkills array and bind each checkbox to the checked attribute -->
+                                    <div *ngFor="let skill of userSkills">
                                         <input
                                             type="checkbox"
-                                            class="form-check-input"
-                                            [formControlName]="
-                                                'foodOption_' + option.id
+                                            [checked]="
+                                                selectedSkills.includes(skill)
                                             "
+                                            (change)="
+                                                onSkillChange(skill, $event)
+                                            "
+                                            id="{{ skill }}"
                                         />
-                                        <label class="form-check-label">{{
-                                            option.name
-                                        }}</label>
+                                        <label class="ms-2" for="{{ skill }}">
+                                            {{ skill }}</label
+                                        >
+                                        <!-- Display the skill name -->
                                     </div>
                                 </div>
                             </div>

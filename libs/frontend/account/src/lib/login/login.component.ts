@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserExperienceLevel } from '../../../../../shared/api/src/lib/models/user.interface';
 
 @Component({
     selector: 'avans-nx-expedition-login',
