@@ -2,6 +2,10 @@ import { Route } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AboutComponent } from './components/about/about.component';
 
+//Account
+import { RegisterComponent } from '../../../../libs/frontend//account/src/lib/register/register.component';
+import { LoginComponent } from '../../../../libs/frontend//account/src/lib/login/login.component';
+
 //Users
 import { UserListComponent } from '../../../../libs/frontend/features/src/lib/users/user-list/user-list.component';
 import { UserDetailsComponent } from '../../../../libs/frontend/features/src/lib/users/user-details/user-details.component';
@@ -18,6 +22,8 @@ export const appRoutes: Route[] = [
     { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'about', component: AboutComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
 
     { path: 'users', component: UserListComponent },
     { path: 'users/:id', component: UserDetailsComponent },
