@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BackendFeaturesMealModule } from '@avans-nx-expedition/backend/features';
 import { UsersModule } from '@avans-nx-expedition/backend/user';
+import { ExpeditionModule } from '@avans-nx-expedition/backend/expedition';
 import { AuthModule } from '@avans-nx-expedition/backend/auth';
 import { MongooseModule } from '@nestjs/mongoose';
 import { environment } from '@avans-nx-expedition/shared/util-env';
@@ -22,7 +23,8 @@ import { Logger } from '@nestjs/common';
                 return connection;
             }
         }),
-        UsersModule
+        UsersModule,
+        ExpeditionModule
     ],
     controllers: [],
     providers: []
