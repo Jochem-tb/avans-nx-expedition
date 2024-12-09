@@ -1,1 +1,287 @@
-<h1>THIS IS REGISTER COMPONENT</h1>
+<div class="row justify-content-center align-items-center bg-light">
+    <div class="col-8 mt-5">
+        <div class="card shadow-sm border-0 login-register-card">
+            <div class="card-header bg-transparent border-1 pb-1">
+                <ul
+                    class="nav nav-tabs card-header-tabs justify-content-center text-center"
+                >
+                    <li class="nav-item col-6">
+                        <a class="nav-link text-muted" routerLink="/login">
+                            Log in
+                        </a>
+                    </li>
+                    <li class="nav-item col-6">
+                        <a
+                            class="nav-link text-muted active"
+                            routerLink="/register"
+                        >
+                            Register
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="row justify-content-center">
+                    <div class="col-12 my-4">
+                        <h1>Register</h1>
+
+                        <form
+                            [formGroup]="registerForm"
+                            (ngSubmit)="onSubmit()"
+                            id="registerForm"
+                        >
+                            <h2>Create a new account.</h2>
+                            <hr />
+                            <div
+                                *ngIf="formErrors.length"
+                                class="text-danger"
+                                role="alert"
+                            >
+                                <ul>
+                                    <li *ngFor="let error of formErrors">
+                                        {{ error }}
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-floating mb-3">
+                                        <input
+                                            formControlName="firstName"
+                                            class="form-control"
+                                            placeholder="First name"
+                                            aria-required="true"
+                                        />
+                                        <label for="firstName"
+                                            >First Name</label
+                                        >
+                                        <div
+                                            class="text-danger"
+                                            *ngIf="
+                                                registerForm.get('firstName')
+                                                    ?.invalid &&
+                                                registerForm.get('firstName')
+                                                    ?.touched
+                                            "
+                                        >
+                                            First Name is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-floating mb-3">
+                                        <input
+                                            formControlName="lastName"
+                                            class="form-control"
+                                            placeholder="Last name"
+                                            aria-required="true"
+                                        />
+                                        <label for="lastName">Last Name</label>
+                                        <div
+                                            class="text-danger"
+                                            *ngIf="
+                                                registerForm.get('lastName')
+                                                    ?.invalid &&
+                                                registerForm.get('lastName')
+                                                    ?.touched
+                                            "
+                                        >
+                                            Last Name is required
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3">
+                                        <select
+                                            formControlName="genderId"
+                                            class="form-select"
+                                            aria-required="true"
+                                        >
+                                            <option value="" disabled>
+                                                Select gender
+                                            </option>
+                                            <option
+                                                *ngFor="let gender of genders"
+                                                [value]="gender.id"
+                                            >
+                                                {{ gender.name }}
+                                            </option>
+                                        </select>
+                                        <label for="genderId">Gender</label>
+                                        <div
+                                            class="text-danger"
+                                            *ngIf="
+                                                registerForm.get('genderId')
+                                                    ?.invalid &&
+                                                registerForm.get('genderId')
+                                                    ?.touched
+                                            "
+                                        >
+                                            Gender is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-floating mb-3">
+                                        <input
+                                            formControlName="dateOfBirth"
+                                            type="date"
+                                            class="form-control"
+                                            aria-required="true"
+                                            placeholder="Date of birth"
+                                        />
+                                        <label for="dateOfBirth"
+                                            >Date of Birth</label
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input
+                                    formControlName="email"
+                                    class="form-control"
+                                    placeholder="name@example.com"
+                                    aria-required="true"
+                                />
+                                <label for="email">Email</label>
+                                <div
+                                    class="text-danger"
+                                    *ngIf="
+                                        registerForm.get('email')?.invalid &&
+                                        registerForm.get('email')?.touched
+                                    "
+                                >
+                                    Valid Email is required
+                                </div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input
+                                    formControlName="password"
+                                    type="password"
+                                    class="form-control"
+                                    placeholder="password"
+                                    aria-required="true"
+                                />
+                                <label for="password">Password</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input
+                                    formControlName="confirmPassword"
+                                    type="password"
+                                    class="form-control"
+                                    placeholder="password"
+                                    aria-required="true"
+                                />
+                                <label for="confirmPassword"
+                                    >Confirm Password</label
+                                >
+                            </div>
+
+                            <h3>Extra Info</h3>
+                            <hr />
+
+                            <div class="form-floating mb-3">
+                                <input
+                                    formControlName="phoneNumber"
+                                    class="form-control"
+                                    placeholder="Phone number"
+                                    aria-required="true"
+                                />
+                                <label for="phoneNumber">Phone Number</label>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-floating mb-3">
+                                        <input
+                                            formControlName="street"
+                                            class="form-control"
+                                            placeholder="Street"
+                                            aria-required="true"
+                                        />
+                                        <label for="street">Street</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating mb-3">
+                                        <input
+                                            formControlName="houseNr"
+                                            class="form-control"
+                                            placeholder="House Nr"
+                                            aria-required="true"
+                                        />
+                                        <label for="houseNr">House Nr</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3">
+                                        <input
+                                            formControlName="postalCode"
+                                            class="form-control"
+                                            placeholder="Postal Code"
+                                            aria-required="true"
+                                        />
+                                        <label for="postalCode"
+                                            >Postal Code</label
+                                        >
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3">
+                                        <input
+                                            formControlName="city"
+                                            class="form-control"
+                                            placeholder="City"
+                                            aria-required="true"
+                                        />
+                                        <label for="city">City</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3>Food Options</h3>
+                            <hr />
+
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <!-- Food Options Checkbox -->
+                                    <div
+                                        class="form-check"
+                                        *ngFor="let option of foodOptions"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            class="form-check-input"
+                                            [formControlName]="
+                                                'foodOption_' + option.id
+                                            "
+                                        />
+                                        <label class="form-check-label">{{
+                                            option.name
+                                        }}</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
+                                type="submit"
+                                class="mt-3 w-100 btn btn-lg btn-primary"
+                            >
+                                Register
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

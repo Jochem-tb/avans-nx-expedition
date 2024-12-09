@@ -1,7 +1,7 @@
 {
-    "name": "common",
+    "name": "account",
     "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "libs/frontend/common/src",
+    "sourceRoot": "libs/frontend/account/src",
     "prefix": "avans-nx-expedition",
     "tags": [],
     "projectType": "library",
@@ -10,7 +10,7 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
             "options": {
-                "jestConfig": "libs/frontend/common/jest.config.ts",
+                "jestConfig": "libs/frontend/account/jest.config.ts",
                 "passWithNoTests": true
             },
             "configurations": {
@@ -25,8 +25,8 @@
             "outputs": ["{options.outputFile}"],
             "options": {
                 "lintFilePatterns": [
-                    "libs/frontend/common/**/*.ts",
-                    "libs/frontend/common/**/*.html"
+                    "libs/frontend/account/**/*.ts",
+                    "libs/frontend/account/**/*.html"
                 ]
             }
         }
