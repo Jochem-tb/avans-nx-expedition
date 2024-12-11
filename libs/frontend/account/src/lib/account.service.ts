@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import {
     ICreateUser,
     IUserIdentity,
+    IUserCredentials,
     IUserInfo
 } from '@avans-nx-expedition/shared/api';
 
@@ -12,25 +13,31 @@ import {
 })
 export class AccountService {
     private loggedInUser: IUserIdentity | null = null;
-    private apiToken: string | null = null;
+    private apiToken: string | undefined = undefined;
 
     constructor(private httpClient: HttpClient) {
         console.log('Service constructor aanroepen');
     }
 
-    login(email: string, password: string): Observable<IUserIdentity> {
-        return this.httpClient
-            .post<IUserIdentity>('http://localhost:3000/api/auth/register', {
-                email,
-                password
+    login(credentials: IUserCredentials): Observable<IUserIdentity> {
+        const reponse = this.httpClient.post<IUserIdentity>(
+            'http://localhost:3000/api/auth/login',
+            credentials
+        );
+
+        console.log('reponse', reponse);
+
+        return reponse.pipe(
+            map((user) => {
+                const { token, ...userWithoutToken } = user;
+                this.loggedInUser = userWithoutToken;
+                this.apiToken = token;
+
+                console.debug('Logged in user', userWithoutToken);
+                console.debug('Token', token);
+                return userWithoutToken;
             })
-            .pipe(
-                delay(1000),
-                map((user) => {
-                    this.loggedInUser = user;
-                    return user;
-                })
-            );
+        );
     }
 
     logout(): Observable<void> {
@@ -38,6 +45,7 @@ export class AccountService {
             delay(1000),
             map(() => {
                 this.loggedInUser = null;
+                this.apiToken = undefined;
             })
         );
     }

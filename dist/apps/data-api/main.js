@@ -1389,7 +1389,8 @@ let AuthService = AuthService_1 = class AuthService {
         return null;
     }
     async login(credentials) {
-        this.logger.log('login ' + credentials.emailAddress);
+        // this.logger.debug(`Credentials: ${JSON.stringify(credentials)}`);
+        this.logger.log(`login ${credentials.emailAddress}`);
         return await this.userModel
             .findOne({
             emailAddress: credentials.emailAddress
@@ -1401,6 +1402,7 @@ let AuthService = AuthService_1 = class AuthService {
                 const payload = {
                     user_id: user._id
                 };
+                console.log('User found', user);
                 return {
                     _id: user._id,
                     name: user.name,
