@@ -39,8 +39,8 @@ export class UserService {
                             emailAddress: user.emailAddress,
                             phoneNumber: user.phoneNumber,
                             profileImgUrl: user.profileImgUrl,
-                            ExperienceLevel: user.ExperienceLevel,
-                            Skills: user.Skills,
+                            experienceLevel: user.experienceLevel,
+                            skills: user.skills,
                             role: user.role,
                             gender: user.gender,
                             isActive: user.isActive

@@ -12,6 +12,7 @@ import {
 })
 export class AccountService {
     private loggedInUser: IUserIdentity | null = null;
+    private apiToken: string | null = null;
 
     constructor(private httpClient: HttpClient) {
         console.log('Service constructor aanroepen');
@@ -19,7 +20,10 @@ export class AccountService {
 
     login(email: string, password: string): Observable<IUserIdentity> {
         return this.httpClient
-            .post<IUserIdentity>('/api/login', { email, password })
+            .post<IUserIdentity>('http://localhost:3000/api/auth/register', {
+                email,
+                password
+            })
             .pipe(
                 delay(1000),
                 map((user) => {
@@ -43,9 +47,10 @@ export class AccountService {
     }
 
     register(user: ICreateUser): Observable<IUserInfo> {
-        debugger;
+        // debugger;
+        console.log('Registering user', user);
         return this.httpClient.post<IUserInfo>(
-            'http://localhost:3000/api/auth/register',
+            `http://localhost:3000/api/auth/register`,
             user
         );
     }

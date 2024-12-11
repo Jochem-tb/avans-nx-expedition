@@ -61,8 +61,8 @@ export interface IUserInfo extends IUserRegistration {
     profileImgUrl: string;
     phoneNumber: string;
     role: UserRole;
-    ExperienceLevel: UserExperienceLevel;
-    Skills: UserSkills[];
+    experienceLevel: UserExperienceLevel;
+    skills: UserSkills[];
     gender: UserGender;
     isActive: boolean;
 }
