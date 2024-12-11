@@ -8,6 +8,7 @@ import {
     UserSkills
 } from '@avans-nx-expedition/shared/api';
 import { AccountService } from '../account.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'avans-nx-expedition-register',
@@ -26,7 +27,8 @@ export class RegisterComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private accountService: AccountService
+        private accountService: AccountService,
+        private router: Router
     ) {}
 
     ngOnInit(): void {
@@ -66,12 +68,12 @@ export class RegisterComponent implements OnInit {
         console.log('onSubmit', this.registerForm.value);
         this.formErrors = [];
 
-        // If you want to validate the form before submitting
-        // if (this.registerForm.invalid) {
-        //     this.registerForm.markAllAsTouched();
-        //     this.collectErrors();
-        //     return;
-        // }
+        //Validate before submitting
+        if (this.registerForm.invalid) {
+            this.registerForm.markAllAsTouched();
+            this.collectErrors();
+            return;
+        }
 
         const formValue = this.registerForm.value;
 
@@ -97,14 +99,15 @@ export class RegisterComponent implements OnInit {
         this.accountService.register(data).subscribe(
             (response) => {
                 console.log('User registered successfully:', response);
+                this.router.navigate(['/']);
             },
             (error) => {
                 console.error('Error during registration:', error);
+                const errorMessage =
+                    error?.error?.message || 'An unexpected error occurred.';
+                this.formErrors.push(`Something went wrong: ${errorMessage}`);
             }
         );
-
-        console.log('Form Submitted', data);
-        // Handle form submission (e.g., send to backend API)
     }
 
     collectErrors() {
@@ -124,6 +127,13 @@ export class RegisterComponent implements OnInit {
                     );
                 }
             }
+        }
+
+        if (
+            this.registerForm.value.password !==
+            this.registerForm.value.confirmPassword
+        ) {
+            this.formErrors.push('Passwords do not match.');
         }
     }
 }
