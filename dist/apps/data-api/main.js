@@ -294,7 +294,7 @@ const class_validator_1 = __webpack_require__(7);
 const api_1 = __webpack_require__(8);
 class CreateUserDto {
     constructor() {
-        this.Skills = [];
+        this.skills = [];
     }
 }
 exports.CreateUserDto = CreateUserDto;
@@ -319,8 +319,8 @@ class UpsertUserDto {
         this.meals = [];
         this.role = api_1.UserRole.Unknown;
         this.gender = api_1.UserGender.Unknown;
-        this.ExperienceLevel = api_1.UserExperienceLevel.Unknown;
-        this.Skills = [];
+        this.experienceLevel = api_1.UserExperienceLevel.Unknown;
+        this.skills = [];
     }
 }
 exports.UpsertUserDto = UpsertUserDto;
@@ -373,12 +373,12 @@ tslib_1.__decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     tslib_1.__metadata("design:type", typeof (_c = typeof api_1.UserExperienceLevel !== "undefined" && api_1.UserExperienceLevel) === "function" ? _c : Object)
-], UpsertUserDto.prototype, "ExperienceLevel", void 0);
+], UpsertUserDto.prototype, "experienceLevel", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     tslib_1.__metadata("design:type", Array)
-], UpsertUserDto.prototype, "Skills", void 0);
+], UpsertUserDto.prototype, "skills", void 0);
 class UpdateUserDto {
 }
 exports.UpdateUserDto = UpdateUserDto;
@@ -1055,8 +1055,8 @@ let UserService = UserService_1 = class UserService {
                     emailAddress: user.emailAddress,
                     phoneNumber: user.phoneNumber,
                     profileImgUrl: user.profileImgUrl,
-                    ExperienceLevel: user.ExperienceLevel,
-                    Skills: user.Skills,
+                    experienceLevel: user.experienceLevel,
+                    skills: user.skills,
                     role: user.role,
                     gender: user.gender,
                     isActive: user.isActive
@@ -1123,8 +1123,8 @@ let User = class User {
         this.role = api_1.UserRole.Guest;
         this.gender = api_1.UserGender.Unknown;
         this.isActive = true;
-        this.ExperienceLevel = api_1.UserExperienceLevel.Unknown;
-        this.Skills = [];
+        this.experienceLevel = api_1.UserExperienceLevel.Unknown;
+        this.skills = [];
     }
 };
 exports.User = User;
@@ -1206,7 +1206,7 @@ tslib_1.__decorate([
         ref: 'ExperienceLevel'
     }),
     tslib_1.__metadata("design:type", typeof (_c = typeof api_1.UserExperienceLevel !== "undefined" && api_1.UserExperienceLevel) === "function" ? _c : Object)
-], User.prototype, "ExperienceLevel", void 0);
+], User.prototype, "experienceLevel", void 0);
 tslib_1.__decorate([
     (0, mongoose_1.Prop)({
         default: [],
@@ -1214,7 +1214,7 @@ tslib_1.__decorate([
         ref: 'Skills'
     }),
     tslib_1.__metadata("design:type", Array)
-], User.prototype, "Skills", void 0);
+], User.prototype, "skills", void 0);
 exports.User = User = tslib_1.__decorate([
     (0, mongoose_1.Schema)()
 ], User);
@@ -1389,7 +1389,8 @@ let AuthService = AuthService_1 = class AuthService {
         return null;
     }
     async login(credentials) {
-        this.logger.log('login ' + credentials.emailAddress);
+        // this.logger.debug(`Credentials: ${JSON.stringify(credentials)}`);
+        this.logger.log(`login ${credentials.emailAddress}`);
         return await this.userModel
             .findOne({
             emailAddress: credentials.emailAddress
@@ -1401,6 +1402,7 @@ let AuthService = AuthService_1 = class AuthService {
                 const payload = {
                     user_id: user._id
                 };
+                console.log('User found', user);
                 return {
                     _id: user._id,
                     name: user.name,
@@ -1520,7 +1522,295 @@ exports.AuthGuard = AuthGuard = AuthGuard_1 = tslib_1.__decorate([
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const tslib_1 = __webpack_require__(4);
+tslib_1.__exportStar(__webpack_require__(45), exports);
+tslib_1.__exportStar(__webpack_require__(48), exports);
+tslib_1.__exportStar(__webpack_require__(47), exports);
 
+
+/***/ }),
+/* 45 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ExpeditionModule = void 0;
+const tslib_1 = __webpack_require__(4);
+const common_1 = __webpack_require__(1);
+const expedition_controller_1 = __webpack_require__(46);
+const expediton_service_1 = __webpack_require__(47);
+const mongoose_1 = __webpack_require__(27);
+const expedition_schema_1 = __webpack_require__(48);
+// import { Meal, MealSchema } from '@avans-nx-expedition/backend/features';
+let ExpeditionModule = class ExpeditionModule {
+};
+exports.ExpeditionModule = ExpeditionModule;
+exports.ExpeditionModule = ExpeditionModule = tslib_1.__decorate([
+    (0, common_1.Module)({
+        imports: [
+            mongoose_1.MongooseModule.forFeature([
+                { name: expedition_schema_1.Expedition.name, schema: expedition_schema_1.ExpeditionSchema }
+            ])
+        ],
+        controllers: [expedition_controller_1.ExpeditionController],
+        providers: [expediton_service_1.ExpeditionService],
+        exports: [expediton_service_1.ExpeditionService]
+    })
+], ExpeditionModule);
+
+
+/***/ }),
+/* 46 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a, _b, _c, _d, _e, _f, _g, _h;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ExpeditionController = void 0;
+const tslib_1 = __webpack_require__(4);
+const common_1 = __webpack_require__(1);
+const expediton_service_1 = __webpack_require__(47);
+const api_1 = __webpack_require__(8);
+const dto_1 = __webpack_require__(3);
+let ExpeditionController = class ExpeditionController {
+    constructor(expeditionService) {
+        this.expeditionService = expeditionService;
+    }
+    async findAll() {
+        return await this.expeditionService.findAll();
+    }
+    async findByDifficulty(difficulty) {
+        return this.expeditionService.findManyByDifficultyLevel(difficulty);
+    }
+    // this method should precede the general getOne method, otherwise it never matches
+    // @Get('self')
+    // async getSelf(@InjectToken() token: Token): Promise<Iexpedition> {
+    //     const result = await this.expeditionService.getOne(token.id);
+    //     return result;
+    // }
+    async findOne(id) {
+        return this.expeditionService.findOne(id);
+    }
+    // @UseGuards(expeditionExistGuard) NOT IMPLEMENTED YET
+    create(expedition) {
+        return this.expeditionService.create(expedition);
+    }
+    update(id, expedition) {
+        return this.expeditionService.update(id, expedition);
+    }
+};
+exports.ExpeditionController = ExpeditionController;
+tslib_1.__decorate([
+    (0, common_1.Get)(),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", []),
+    tslib_1.__metadata("design:returntype", Promise)
+], ExpeditionController.prototype, "findAll", null);
+tslib_1.__decorate([
+    (0, common_1.Get)('diff/:difficulty'),
+    tslib_1.__param(0, (0, common_1.Param)('difficulty')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [typeof (_b = typeof api_1.DifficultyLevel !== "undefined" && api_1.DifficultyLevel) === "function" ? _b : Object]),
+    tslib_1.__metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+], ExpeditionController.prototype, "findByDifficulty", null);
+tslib_1.__decorate([
+    (0, common_1.Get)(':id'),
+    tslib_1.__param(0, (0, common_1.Param)('id')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String]),
+    tslib_1.__metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
+], ExpeditionController.prototype, "findOne", null);
+tslib_1.__decorate([
+    (0, common_1.Post)('')
+    // @UseGuards(expeditionExistGuard) NOT IMPLEMENTED YET
+    ,
+    tslib_1.__param(0, (0, common_1.Body)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [typeof (_e = typeof dto_1.CreateExpeditionDto !== "undefined" && dto_1.CreateExpeditionDto) === "function" ? _e : Object]),
+    tslib_1.__metadata("design:returntype", typeof (_f = typeof Promise !== "undefined" && Promise) === "function" ? _f : Object)
+], ExpeditionController.prototype, "create", null);
+tslib_1.__decorate([
+    (0, common_1.Put)(':id'),
+    tslib_1.__param(0, (0, common_1.Param)('id')),
+    tslib_1.__param(1, (0, common_1.Body)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String, typeof (_g = typeof dto_1.UpdateExpeditionDto !== "undefined" && dto_1.UpdateExpeditionDto) === "function" ? _g : Object]),
+    tslib_1.__metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
+], ExpeditionController.prototype, "update", null);
+exports.ExpeditionController = ExpeditionController = tslib_1.__decorate([
+    (0, common_1.Controller)('expedition'),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof expediton_service_1.ExpeditionService !== "undefined" && expediton_service_1.ExpeditionService) === "function" ? _a : Object])
+], ExpeditionController);
+
+
+/***/ }),
+/* 47 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var ExpeditionService_1;
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ExpeditionService = void 0;
+const tslib_1 = __webpack_require__(4);
+const common_1 = __webpack_require__(1);
+const mongoose_1 = __webpack_require__(26);
+const mongoose_2 = __webpack_require__(27);
+const expedition_schema_1 = __webpack_require__(48);
+let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
+    constructor(expeditionModel // @InjectModel(Meal.name) private meetupModel: Model<MealDocument>
+    ) {
+        this.expeditionModel = expeditionModel;
+        this.logger = new common_1.Logger(ExpeditionService_1.name);
+    }
+    async findAll() {
+        this.logger.log(`Finding all items`);
+        const items = await this.expeditionModel.find();
+        return items;
+    }
+    async findOne(_id) {
+        this.logger.log(`finding expedition with id ${_id}`);
+        const item = await this.expeditionModel.findOne({ _id }).exec();
+        if (!item) {
+            this.logger.debug('Item not found');
+        }
+        return item;
+    }
+    async findManyByDifficultyLevel(difficultyLevel) {
+        this.logger.log(`Finding expeditions with difficulty level ${difficultyLevel}`);
+        const items = this.expeditionModel.find({ difficultyLevel }).exec();
+        return items;
+    }
+    async create(expedition) {
+        this.logger.log(`Create expedition with title:  ${expedition.title}`);
+        expedition.createdAt = new Date();
+        expedition.updatedAt = new Date();
+        const createdItem = this.expeditionModel.create(expedition);
+        return createdItem;
+    }
+    async update(_id, expedition) {
+        this.logger.log(`Update expedition ${expedition.title}`);
+        expedition.updatedAt = new Date();
+        return this.expeditionModel.findByIdAndUpdate({ _id }, expedition);
+    }
+};
+exports.ExpeditionService = ExpeditionService;
+exports.ExpeditionService = ExpeditionService = ExpeditionService_1 = tslib_1.__decorate([
+    (0, common_1.Injectable)({}),
+    tslib_1.__param(0, (0, mongoose_2.InjectModel)(expedition_schema_1.Expedition.name)),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof mongoose_1.Model !== "undefined" && mongoose_1.Model) === "function" ? _a : Object])
+], ExpeditionService);
+
+
+/***/ }),
+/* 48 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a, _b, _c, _d, _e, _f, _g;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ExpeditionSchema = exports.Expedition = void 0;
+const tslib_1 = __webpack_require__(4);
+const mongoose_1 = __webpack_require__(27);
+// import { v4 as uuid } from 'uuid';
+const api_1 = __webpack_require__(8);
+const class_validator_1 = __webpack_require__(7);
+let Expedition = class Expedition {
+};
+exports.Expedition = Expedition;
+tslib_1.__decorate([
+    (0, class_validator_1.IsMongoId)(),
+    tslib_1.__metadata("design:type", String)
+], Expedition.prototype, "_id", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: String }),
+    tslib_1.__metadata("design:type", String)
+], Expedition.prototype, "title", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: String }),
+    tslib_1.__metadata("design:type", String)
+], Expedition.prototype, "description", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: Date }),
+    tslib_1.__metadata("design:type", typeof (_a = typeof Date !== "undefined" && Date) === "function" ? _a : Object)
+], Expedition.prototype, "startDate", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: Date }),
+    tslib_1.__metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
+], Expedition.prototype, "endDate", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: String }),
+    tslib_1.__metadata("design:type", typeof (_c = typeof api_1.DifficultyLevel !== "undefined" && api_1.DifficultyLevel) === "function" ? _c : Object)
+], Expedition.prototype, "difficultyLevel", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: String }),
+    tslib_1.__metadata("design:type", typeof (_d = typeof api_1.ExpeditionStatus !== "undefined" && api_1.ExpeditionStatus) === "function" ? _d : Object)
+], Expedition.prototype, "status", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: Number }),
+    tslib_1.__metadata("design:type", Number)
+], Expedition.prototype, "maxParticipants", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: [String] }),
+    tslib_1.__metadata("design:type", Array)
+], Expedition.prototype, "participants", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: String }),
+    tslib_1.__metadata("design:type", String)
+], Expedition.prototype, "organizer", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: Object }),
+    tslib_1.__metadata("design:type", typeof (_e = typeof api_1.ILocation !== "undefined" && api_1.ILocation) === "function" ? _e : Object)
+], Expedition.prototype, "location", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({
+        required: true,
+        type: String,
+        default: 'https://cdn-icons-png.flaticon.com/512/3175/3175209.png'
+    }),
+    tslib_1.__metadata("design:type", String)
+], Expedition.prototype, "imageUrl", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: Date, default: new Date() }),
+    tslib_1.__metadata("design:type", typeof (_f = typeof Date !== "undefined" && Date) === "function" ? _f : Object)
+], Expedition.prototype, "createdAt", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: Date, default: new Date() }),
+    tslib_1.__metadata("design:type", typeof (_g = typeof Date !== "undefined" && Date) === "function" ? _g : Object)
+], Expedition.prototype, "updatedAt", void 0);
+exports.Expedition = Expedition = tslib_1.__decorate([
+    (0, mongoose_1.Schema)()
+], Expedition);
+exports.ExpeditionSchema = mongoose_1.SchemaFactory.createForClass(Expedition);
+
+
+/***/ }),
+/* 49 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const tslib_1 = __webpack_require__(4);
+tslib_1.__exportStar(__webpack_require__(50), exports);
+tslib_1.__exportStar(__webpack_require__(51), exports);
+
+
+/***/ }),
+/* 50 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.environment = void 0;
+exports.environment = {
+    production: false,
+    ROOT_DOMAIN_URL: 'http://localhost:3000',
+    dataApiUrl: 'http://localhost:3000/api',
+    MONGO_DB_CONNECTION_STRING: 'mongodb://localhost:27017/expeditionPlanner'
+};
+
+
+/***/ }),
+/* 51 */
 /***/ ((__unused_webpack_module, exports) => {
 
 

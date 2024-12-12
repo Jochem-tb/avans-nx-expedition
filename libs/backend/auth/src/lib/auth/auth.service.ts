@@ -39,7 +39,9 @@ export class AuthService {
     }
 
     async login(credentials: IUserCredentials): Promise<IUserIdentity> {
-        this.logger.log('login ' + credentials.emailAddress);
+        // this.logger.debug(`Credentials: ${JSON.stringify(credentials)}`);
+
+        this.logger.log(`login ${credentials.emailAddress}`);
         return await this.userModel
             .findOne({
                 emailAddress: credentials.emailAddress
@@ -51,6 +53,7 @@ export class AuthService {
                     const payload = {
                         user_id: user._id
                     };
+                    console.log('User found', user);
                     return {
                         _id: user._id,
                         name: user.name,

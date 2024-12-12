@@ -82,14 +82,14 @@ export class User implements IUser {
         type: String,
         ref: 'ExperienceLevel'
     })
-    ExperienceLevel: UserExperienceLevel = UserExperienceLevel.Unknown;
+    experienceLevel: UserExperienceLevel = UserExperienceLevel.Unknown;
 
     @Prop({
         default: [],
         type: [String],
         ref: 'Skills'
     })
-    Skills: UserSkills[] = [];
+    skills: UserSkills[] = [];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
