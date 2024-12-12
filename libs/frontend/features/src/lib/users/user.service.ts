@@ -4,7 +4,8 @@ import {
     UserRole,
     UserGender,
     UserExperienceLevel,
-    UserSkills
+    UserSkills,
+    IUpdateUser
 } from '../../../../../../libs/shared/api/src';
 import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -54,5 +55,12 @@ export class UserService {
         } else {
             return of(this.users.find((user) => user._id === id));
         }
+    }
+
+    updateUser(user: IUpdateUser): Observable<IUser> {
+        return this.httpClient.put<IUser>(
+            `http://localhost:3000/api/user/${user._id}`,
+            user
+        );
     }
 }

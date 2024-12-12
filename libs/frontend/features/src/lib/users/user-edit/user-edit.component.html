@@ -1,1 +1,189 @@
-<p>user-edit works!</p>
+<div *ngIf="user">
+    <div
+        class="container mt-5"
+        style="
+            background: linear-gradient(135deg, #002855 0%, #4da1ff 100%);
+            padding: 2rem;
+            border-radius: 8px;
+        "
+    >
+        <div class="row">
+            <div class="col-md-12 text-center mb-4">
+                <button
+                    routerLink="/users"
+                    class="btn btn-light btn-sm p-2 pe-3"
+                    style="
+                        border: 1px solid #4da1ff;
+                        border-radius: 5px;
+                        position: relative;
+                        top: 23px;
+                        float: left;
+                    "
+                >
+                    <i class="bi bi-arrow-left me-2"></i> Back
+                </button>
+                <h1 class="display-4 text-white fw-bold">Edit User</h1>
+            </div>
+        </div>
+
+        <div
+            class="card bg-dark text-white"
+            style="border: none; border-radius: 8px"
+        >
+            <div
+                class="card-body bg-dark text-white"
+                style="border-radius: 0 0 12px 12px"
+            >
+                <!-- User Image and Name -->
+                <div class="d-flex flex-column align-items-center mb-4">
+                    <input
+                        type="file"
+                        class="form-control mb-3"
+                        style="max-width: 150px; border: 4px solid #4da1ff"
+                        id="userImage"
+                    />
+                    <input
+                        type="text"
+                        class="form-control mb-3"
+                        placeholder="Enter User Name"
+                        id="userName"
+                        [(ngModel)]="user.name"
+                    />
+                </div>
+                <hr />
+
+                <div class="row">
+                    <div class="col">
+                        <!-- User Information -->
+                        <div class="mb-3">
+                            <label for="userEmail" class="form-label"
+                                >Email:</label
+                            >
+                            <input
+                                type="email"
+                                class="form-control"
+                                id="userEmail"
+                                placeholder="Enter Email Address"
+                                [(ngModel)]="user.emailAddress"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <label for="userPhoneNumber" class="form-label"
+                                >Phone Number:</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="userPhoneNumber"
+                                placeholder="Enter Phone Number"
+                                [(ngModel)]="user.phoneNumber"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <label for="userRole" class="form-label"
+                                >Role:</label
+                            >
+                            <select
+                                class="form-select"
+                                id="userRole"
+                                [(ngModel)]="user.role"
+                            >
+                                <option
+                                    *ngFor="let role of userRoles"
+                                    [value]="role"
+                                >
+                                    {{ role }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userGender" class="form-label"
+                                >Gender:</label
+                            >
+                            <select
+                                class="form-select"
+                                id="userGender"
+                                [(ngModel)]="user.gender"
+                            >
+                                <option
+                                    *ngFor="let gender of userGenders"
+                                    [value]="gender"
+                                >
+                                    {{ gender }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                id="userIsActive"
+                                [(ngModel)]="user.isActive"
+                            />
+                            <label class="form-check-label" for="userIsActive">
+                                Active
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <!-- Skills Section -->
+                        <div class="mt-4">
+                            <div class="mb-3">
+                                <label
+                                    for="userExperienceLevel"
+                                    class="form-label"
+                                    >Experience Level:</label
+                                >
+                                <select
+                                    class="form-select"
+                                    id="userExperienceLevel"
+                                    [(ngModel)]="user.experienceLevel"
+                                >
+                                    <option
+                                        *ngFor="let level of experienceLevels"
+                                        [value]="level"
+                                    >
+                                        {{ level }}
+                                    </option>
+                                </select>
+                            </div>
+                            <h5 class="fw-bold">Skills</h5>
+                            <div class="form-group">
+                                <div
+                                    *ngFor="
+                                        let skill of availableSkills;
+                                        let i = index
+                                    "
+                                    class="form-check mb-2"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        class="form-check-input"
+                                        [id]="'skill-' + i"
+                                        [value]="skill"
+                                        [checked]="user.skills.includes(skill)"
+                                        (change)="onSkillChange($event, skill)"
+                                    />
+                                    <label
+                                        class="form-check-label"
+                                        [for]="'skill-' + i"
+                                    >
+                                        {{ skill }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary" (click)="saveUser()">
+                        Save User
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
