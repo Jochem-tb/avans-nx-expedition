@@ -20,21 +20,32 @@ export class AccountService {
     }
 
     login(credentials: IUserCredentials): Observable<IUserIdentity> {
-        const reponse = this.httpClient.post<IUserIdentity>(
-            'http://localhost:3000/api/auth/login',
-            credentials
-        );
+        const response = this.httpClient.post<{
+            results: IUserIdentity;
+            info: any;
+        }>('http://localhost:3000/api/auth/login', credentials);
 
-        console.log('reponse', reponse);
+        console.log('response', response);
 
-        return reponse.pipe(
-            map((user) => {
-                const { token, ...userWithoutToken } = user;
+        return response.pipe(
+            map((apiResponse) => {
+                console.log('return from logging in', apiResponse);
+
+                // Extracting the 'results' object from the response
+                const { results, info } = apiResponse;
+
+                // Now 'results' should match your IUserIdentity interface
+                const { token, ...userWithoutToken } = results;
+
                 this.loggedInUser = userWithoutToken;
                 this.apiToken = token;
 
-                console.debug('Logged in user', userWithoutToken);
-                console.debug('Token', token);
+                // Save token in a cookie
+                console.log('Setting cookie', `apiToken=${token}; path=/;`);
+                document.cookie = `apiToken=${token}; path=/;`;
+
+                console.log('Logged in user', this.loggedInUser);
+                console.log('Token', this.apiToken);
                 return userWithoutToken;
             })
         );
@@ -46,6 +57,10 @@ export class AccountService {
             map(() => {
                 this.loggedInUser = null;
                 this.apiToken = undefined;
+
+                // Remove the token cookie
+                document.cookie =
+                    'apiToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
             })
         );
     }

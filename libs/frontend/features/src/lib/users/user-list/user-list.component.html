@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let user of users" routerLink="{{ user._id }}">
+            <tr *ngFor="let user of users">
                 <td>
                     <img
                         [src]="user.profileImgUrl"
@@ -36,6 +36,11 @@
                 <td>
                     <a routerLink="{{ user._id }}/edit" class="btn btn-primary">
                         Edit
+                    </a>
+                </td>
+                <td>
+                    <a (click)="deleteUser(user._id)" class="btn btn-primary">
+                        Delete
                     </a>
                 </td>
             </tr>

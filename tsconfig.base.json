@@ -27,6 +27,10 @@
             "@avans-nx-expedition/backend/neo4j": [
                 "libs/backend/neo4j/src/index.ts"
             ],
+            "@avans-nx-expedition/backend/shared": [
+                "libs/backend/shared/src/index.ts"
+            ],
+
             "@avans-nx-expedition/backend/user": [
                 "libs/backend/user/src/index.ts"
             ],

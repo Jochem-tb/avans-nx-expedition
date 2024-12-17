@@ -10,6 +10,8 @@ import { HeaderComponent } from './components/ui/header/header.component';
 import { FooterComponent } from './components/ui/footer/footer.component';
 import { FeaturesModule } from '../../../../libs/frontend/features/src';
 import { AccountModule } from '../../../../libs/frontend/account/src';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './components/Auth/auth.interceptor';
 // import { UserService } from '@avans-nx-expedition/backend/user';
 
 @NgModule({
@@ -22,7 +24,13 @@ import { AccountModule } from '../../../../libs/frontend/account/src';
         FeaturesModule,
         AccountModule
     ],
-    providers: [],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        }
+    ],
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,

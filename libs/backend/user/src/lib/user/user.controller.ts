@@ -5,6 +5,7 @@ import {
     Param,
     Post,
     Put,
+    Delete,
     UseGuards
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -15,6 +16,8 @@ import {
 } from '@avans-nx-expedition/shared/api';
 import { CreateUserDto, UpdateUserDto } from '@avans-nx-expedition/backend/dto';
 import { UserExistGuard } from './user-exists.guard';
+import { AdminRightsGuard } from './admin-rights.guard';
+import { TokenGuard } from '@avans-nx-expedition/backend/shared';
 
 @Controller('user')
 export class UserController {
@@ -56,5 +59,12 @@ export class UserController {
         @Body() user: UpdateUserDto
     ): Promise<IUserInfo | null> {
         return this.userService.update(id, user);
+    }
+
+    @Delete(':id')
+    @UseGuards(TokenGuard, AdminRightsGuard)
+    delete(@Param('id') id: string): any {
+        console.log('FAKE delete user with id', id);
+        // return this.userService.delete(id);
     }
 }

@@ -2,15 +2,15 @@ import { Module } from '@nestjs/common';
 import { BackendFeaturesMealModule } from '@avans-nx-expedition/backend/features';
 import { UsersModule } from '@avans-nx-expedition/backend/user';
 import { ExpeditionModule } from '@avans-nx-expedition/backend/expedition';
-import { AuthModule } from '@avans-nx-expedition/backend/auth';
+import { AuthGuard, AuthModule } from '@avans-nx-expedition/backend/auth';
 import { MongooseModule } from '@nestjs/mongoose';
 import { environment } from '@avans-nx-expedition/shared/util-env';
 import { Logger } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthService } from 'libs/backend/auth/src/lib/auth/auth.service';
 
 @Module({
     imports: [
-        BackendFeaturesMealModule,
-        AuthModule,
         MongooseModule.forRoot(environment.MONGO_DB_CONNECTION_STRING, {
             connectionFactory: (connection) => {
                 connection.on('connected', () => {
@@ -24,9 +24,16 @@ import { Logger } from '@nestjs/common';
             }
         }),
         UsersModule,
-        ExpeditionModule
+        ExpeditionModule,
+        BackendFeaturesMealModule,
+        AuthModule
     ],
     controllers: [],
-    providers: []
+    providers: [
+        {
+            provide: APP_GUARD,
+            useValue: AuthGuard
+        }
+    ]
 })
 export class AppModule {}

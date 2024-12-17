@@ -63,4 +63,10 @@ export class UserService {
             user
         );
     }
+
+    deleteUser(userId: string): Observable<void> {
+        return this.httpClient.delete<void>(
+            `http://localhost:3000/api/user/${userId}`
+        );
+    }
 }

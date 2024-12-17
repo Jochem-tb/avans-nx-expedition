@@ -9,8 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
-    private readonly logger = new Logger(AuthGuard.name);
+export class TokenGuard implements CanActivate {
+    private readonly logger = new Logger(TokenGuard.name);
 
     constructor(private jwtService: JwtService) {}
 
@@ -20,19 +20,19 @@ export class AuthGuard implements CanActivate {
         const token = this.extractTokenFromHeader(request);
         if (!token) {
             this.logger.log('No token found');
-            throw new UnauthorizedException();
+        } else {
+            try {
+                const payload = await this.jwtService.verifyAsync(token, {
+                    secret: process.env['JWT_SECRET'] || 'secretstring'
+                });
+                this.logger.log('payload', payload);
+                // Assign the payload to the request object
+                request['user'] = payload;
+            } catch (error) {
+                this.logger.log('Invalid token');
+            }
         }
-        try {
-            const payload = await this.jwtService.verifyAsync(token, {
-                secret: process.env['JWT_SECRET'] || 'secretstring'
-            });
-            this.logger.log('payload', payload);
-            // 💡 We're assigning the payload to the request object here
-            // so that we can access it in our route handlers
-            request['user'] = payload;
-        } catch {
-            throw new UnauthorizedException();
-        }
+        // Always return true to allow access
         return true;
     }
 

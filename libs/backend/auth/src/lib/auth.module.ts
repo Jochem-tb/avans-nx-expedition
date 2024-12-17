@@ -8,6 +8,7 @@ import {
     UsersModule
 } from '@avans-nx-expedition/backend/user';
 import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth/auth.guards';
 
 @Module({
     imports: [
@@ -19,7 +20,7 @@ import { AuthService } from './auth/auth.service';
         })
     ],
     controllers: [AuthController],
-    providers: [AuthService],
+    providers: [AuthService, AuthGuard],
     exports: [AuthService]
 })
 export class AuthModule {}

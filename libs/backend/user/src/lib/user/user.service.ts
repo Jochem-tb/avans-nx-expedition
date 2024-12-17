@@ -90,4 +90,9 @@ export class UserService {
         this.logger.log(`Update user ${user.name}`);
         return this.userModel.findByIdAndUpdate({ _id }, user);
     }
+
+    async delete(_id: string): Promise<IUser | null> {
+        this.logger.log(`Delete user with id ${_id}`);
+        return this.userModel.findByIdAndDelete({ _id });
+    }
 }
