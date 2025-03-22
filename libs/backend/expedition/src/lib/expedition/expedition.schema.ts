@@ -8,7 +8,8 @@ import {
     IUpsertExpedition,
     DifficultyLevel,
     ExpeditionStatus,
-    ILocation
+    ILocation,
+    IUser
 } from '@avans-nx-expedition/shared/api';
 import { IsMongoId } from 'class-validator';
 
@@ -41,10 +42,10 @@ export class Expedition implements IExpedition {
     maxParticipants!: number;
 
     @Prop({ required: true, type: [String] })
-    participants!: string[];
+    participants!: IUser[];
 
     @Prop({ required: true, type: String })
-    organizer!: string;
+    organizer!: IUser;
 
     @Prop({ required: true, type: Object })
     location!: ILocation;

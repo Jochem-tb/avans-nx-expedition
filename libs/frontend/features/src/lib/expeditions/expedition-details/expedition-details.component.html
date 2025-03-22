@@ -32,8 +32,37 @@
             class="card-body bg-dark text-white"
             style="border-radius: 0 0 12px 12px"
         >
+            <div class="d-flex justify-content-end">
+                <!-- Edit Button -->
+                <button
+                    *ngIf="(expedition?.organizer)!._id === loggedUserId"
+                    class="btn btn-outline-light me-2"
+                    style="border: 1px solid #4da1ff"
+                >
+                    Edit
+                </button>
+            </div>
+            <div class="d-flex justify-content-center">
+                <!-- Join/Leave Button -->
+                <button
+                    *ngIf="!isUserParticipant(expedition, loggedUserId)"
+                    class="btn btn-outline-primary"
+                    (click)="joinExpedition()"
+                >
+                    Join
+                </button>
+                <button
+                    *ngIf="!isUserParticipant(expedition, loggedUserId)"
+                    class="btn btn-outline-danger"
+                    (click)="leaveExpedition()"
+                >
+                    Leave
+                </button>
+            </div>
+
+            <hr />
             <!-- Expedition Image and Title -->
-            <div class="d-flex flex-column align-items-center mb-4">
+            <div class="d-flex flex-column align-items-center mb-4 mt-4">
                 <img
                     [src]="
                         expedition?.imageUrl || 'assets/default-expedition.png'

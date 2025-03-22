@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ICreateExpedition, IExpedition } from '../../../../../shared/api/src';
 import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Logger } from '@nestjs/common';
 
 @Injectable({
     providedIn: 'root'
@@ -29,6 +30,7 @@ export class ExpeditionService {
     }
 
     updateExpedition(expedition: IExpedition): Observable<IExpedition> {
+        console.log('updateExpedition aanroepen');
         return this.httpClient.put<IExpedition>(
             `http://localhost:3000/api/expedition/${expedition._id}`,
             expedition
@@ -60,5 +62,27 @@ export class ExpeditionService {
                 this.expeditions.find((expedition) => expedition._id === id)
             );
         }
+    }
+
+    joinExpedition(
+        id: string,
+        userId: string
+    ): Observable<IExpedition | undefined> {
+        console.log('joinExpedition aanroepen');
+        return this.httpClient.post<IExpedition>(
+            `http://localhost:3000/api/expedition/${id}/join`,
+            userId
+        );
+    }
+
+    leaveExpedition(
+        id: string,
+        userId: string
+    ): Observable<IExpedition | undefined> {
+        console.log('joinExpedition aanroepen');
+        return this.httpClient.post<IExpedition>(
+            `http://localhost:3000/api/expedition/${id}/leave`,
+            userId
+        );
     }
 }

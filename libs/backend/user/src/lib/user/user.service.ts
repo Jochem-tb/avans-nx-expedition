@@ -3,7 +3,6 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User as UserModel, UserDocument } from './user.schema';
 import { IUser, IUserInfo } from '@avans-nx-expedition/shared/api';
-// import { Meal, MealDocument } from '@avans-nx-expedition/backend/features';
 import { CreateUserDto, UpdateUserDto } from '@avans-nx-expedition/backend/dto';
 import { Observable, from, map } from 'rxjs';
 
@@ -19,6 +18,12 @@ export class UserService {
         this.logger.log(`Finding all items`);
         const items = await this.userModel.find();
         return items;
+    }
+
+    async findByUsername(userName: string): Promise<UserModel | null> {
+        return this.userModel.findOne({
+            userName: { $regex: new RegExp(`^${userName}$`, "i") }, 
+        }).exec();
     }
 
     findAllInternal(): Observable<IUserInfo[]> {

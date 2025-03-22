@@ -1,3 +1,5 @@
+import { IUser } from './user.interface';
+
 export enum DifficultyLevel {
     Easy = 'Easy',
     Moderate = 'Moderate',
@@ -41,8 +43,8 @@ export interface IExpedition {
     difficultyLevel: DifficultyLevel;
     status: ExpeditionStatus;
     maxParticipants: number;
-    participants: string[];
-    organizer: string;
+    participants: IUser[];
+    organizer: IUser;
     location: ILocation;
     imageUrl: string;
     createdAt: Date;

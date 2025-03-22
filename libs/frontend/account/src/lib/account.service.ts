@@ -12,11 +12,20 @@ import {
     providedIn: 'root'
 })
 export class AccountService {
+    private loggedInUserId: string | null = null;
     private loggedInUser: IUserIdentity | null = null;
     private apiToken: string | undefined = undefined;
 
     constructor(private httpClient: HttpClient) {
         console.log('Service constructor aanroepen');
+    }
+
+    isLoggedIn(): boolean {
+        if (this.loggedInUser) {
+            alert('You are already logged in');
+            console.log('You are already logged in');
+        }
+        return this.loggedInUser !== null;
     }
 
     login(credentials: IUserCredentials): Observable<IUserIdentity> {
@@ -39,6 +48,7 @@ export class AccountService {
 
                 this.loggedInUser = userWithoutToken;
                 this.apiToken = token;
+                this.loggedInUserId = userWithoutToken._id;
 
                 // Save token in a cookie
                 console.log('Setting cookie', `apiToken=${token}; path=/;`);
@@ -57,6 +67,7 @@ export class AccountService {
             map(() => {
                 this.loggedInUser = null;
                 this.apiToken = undefined;
+                this.loggedInUserId = null;
 
                 // Remove the token cookie
                 document.cookie =
@@ -66,7 +77,11 @@ export class AccountService {
     }
 
     getLoggedInUser(): Observable<IUserIdentity | null> {
-        return of(this.loggedInUser).pipe(delay(1000));
+        return of(this.loggedInUser).pipe(delay(10));
+    }
+
+    getLoggedInUserId(): Observable<string | null> {
+        return of(this.loggedInUserId).pipe(delay(10));
     }
 
     register(user: ICreateUser): Observable<IUserInfo> {

@@ -1,46 +1,42 @@
-@if(!expeditions) {
+@if (!expeditions) {
 <p>Loading data...</p>
-} @else if(expeditions && expeditions.length === 0) {
-<p>Nu expeditions where found.</p>
+} @else if (expeditions && expeditions.length === 0) {
+<p>No expeditions were found.</p>
 } @else {
-<div>
-    <h1>Expeditions</h1>
-    <a routerLink="new" class="btn btn-primary"> Create Expedition </a>
-</div>
+
 <div class="container p-3">
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th>Image</th>
-                <th>title</th>
-                <th>Modify</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let expedition of expeditions">
-                <td>
-                    <img
-                        [src]="expedition.imageUrl"
-                        alt="{{ expedition.title }}"
-                        class="img-thumbnail"
-                        style="width: 50px; height: 50px"
-                    />
-                </td>
-                <td>
-                    <a routerLink="{{ expedition._id }}">
-                        {{ expedition.title }}
-                    </a>
-                </td>
-                <td>
-                    <a
-                        routerLink="{{ expedition._id }}/edit"
-                        class="btn btn-primary"
+    <h1>Expeditions</h1>
+    <a routerLink="new" class="btn btn-primary mb-3">Create Expedition</a>
+    <div class="row">
+        <div class="col-md-4 mb-4" *ngFor="let expedition of expeditions">
+            <div class="card shadow-sm">
+                <img
+                    [src]="expedition.imageUrl"
+                    alt="{{ expedition.title }}"
+                    class="card-img-top"
+                    style="height: 200px; object-fit: cover"
+                />
+                <div class="card-body p-4">
+                    <h5 class="card-title">{{ expedition.title }}</h5>
+                    <div
+                        class="d-flex justify-content-between align-items-center"
                     >
-                        Edit
-                    </a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                        <a
+                            routerLink="{{ expedition._id }}"
+                            class="btn btn-outline-primary"
+                        >
+                            Details
+                        </a>
+                        <a
+                            routerLink="{{ expedition._id }}/edit"
+                            class="btn btn-primary"
+                        >
+                            Edit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 }

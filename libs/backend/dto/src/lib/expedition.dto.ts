@@ -16,6 +16,7 @@ import {
     IUpdateUser,
     IUpsertExpedition,
     IUpsertUser,
+    IUser,
     IUserRegistration,
     Id,
     UserExperienceLevel,
@@ -33,8 +34,8 @@ export class CreateExpeditionDto implements ICreateExpedition {
     difficultyLevel!: DifficultyLevel;
     status!: ExpeditionStatus;
     maxParticipants!: number;
-    participants!: string[];
-    organizer!: string;
+    participants!: IUser[];
+    organizer!: IUser;
     location!: ILocation;
     imageUrl!: string;
     createdAt!: Date;
@@ -74,11 +75,11 @@ export class UpsertExpeditionDto implements IUpsertExpedition {
     maxParticipants!: number;
 
     @IsString({ each: true })
-    participants!: string[];
+    participants!: IUser[];
 
     @IsString()
     @IsNotEmpty()
-    organizer!: string;
+    organizer!: IUser;
 
     @IsNotEmpty()
     location!: ILocation;

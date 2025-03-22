@@ -9,7 +9,7 @@ import { IUserCredentials } from '@avans-nx-expedition/shared/api';
     templateUrl: './login.component.html',
     styles: []
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     formErrors: string[] = [];
 
@@ -25,12 +25,17 @@ export class LoginComponent {
         });
     }
 
+    ngOnInit(): void {
+        if (this.accountService.isLoggedIn()) {
+            this.router.navigate(['/']);
+        }
+    }
+
     onSubmit(): void {
         this.formErrors = [];
         if (this.loginForm.invalid) {
             this.collectErrors();
         } else {
-            // Handle successful form submission here
             const credentials: IUserCredentials = {
                 emailAddress: this.loginForm.value.email,
                 password: this.loginForm.value.password
@@ -42,11 +47,21 @@ export class LoginComponent {
                     this.router.navigate(['/']);
                 },
                 (error) => {
-                    console.error('Error during registration:', error);
-                    const errorMessage =
-                        error.message || 'An unexpected error occurred.';
+                    console.error('Error during login:', error);
+
+                    // Extract error message from backend response
+                    let errorMessage = 'An unexpected error occurred.';
+                    if (error.error) {
+                        // Check if error.error contains a message
+                        if (typeof error.error === 'string') {
+                            errorMessage = error.error; // Plain text error
+                        } else if (error.error.message) {
+                            errorMessage = error.error.message; // JSON error message
+                        }
+                    }
+
                     this.formErrors.push(
-                        `Something went wrong: ${errorMessage}`
+                        errorMessage || 'An unexpected error occurred.'
                     );
                 }
             );

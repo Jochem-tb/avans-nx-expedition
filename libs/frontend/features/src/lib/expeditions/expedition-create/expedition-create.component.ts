@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExpeditionService } from '../expedition.service';
 import { Expedition } from '@avans-nx-expedition/backend/expedition';
@@ -9,33 +9,46 @@ import {
     ExpeditionStatus,
     ICreateExpedition
 } from '@avans-nx-expedition/shared/api';
+import { AccountService } from '@avans-nx-expedition/frontend/account';
+import { UserService } from '../../users/user.service';
 
 @Component({
     selector: 'avans-nx-expedition-expedition-create',
     templateUrl: './expedition-create.component.html',
     styleUrls: []
 })
-export class ExpeditionCreateComponent {
-    expedition: ICreateExpedition = {
-        title: '',
-        description: '',
-        startDate: new Date(),
-        endDate: new Date(),
-        difficultyLevel: DifficultyLevel.Unknown,
-        status: ExpeditionStatus.Unknown,
-        maxParticipants: 0,
-        participants: [],
-        organizer: 'https://cdn-icons-png.flaticon.com/512/3175/3175209.png',
-        location: {
-            name: '',
-            continent: ContinentEnum.Unknown,
-            latitude: 0,
-            longitude: 0
-        },
-        imageUrl: 'https://cdn-icons-png.flaticon.com/512/3175/3175209.png',
-        createdAt: new Date(),
-        updatedAt: new Date()
-    };
+export class ExpeditionCreateComponent implements OnInit {
+    expedition!: ICreateExpedition;
+
+    ngOnInit(): void {
+        this.accountService.getLoggedInUserId().subscribe((userId) => {
+            if (userId) {
+                this.userService.getUserByIdApi(userId).subscribe((user) => {
+                    this.expedition = {
+                        title: '',
+                        description: '',
+                        startDate: new Date(),
+                        endDate: new Date(),
+                        difficultyLevel: DifficultyLevel.Unknown,
+                        status: ExpeditionStatus.Unknown,
+                        maxParticipants: 0,
+                        participants: [],
+                        organizer: user,
+                        location: {
+                            name: '',
+                            continent: ContinentEnum.Unknown,
+                            latitude: 0,
+                            longitude: 0
+                        },
+                        imageUrl:
+                            'https://cdn-icons-png.flaticon.com/512/3175/3175209.png',
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    };
+                });
+            }
+        });
+    }
 
     difficultyLevels = Object.values(DifficultyLevel);
     statusus = Object.values(ExpeditionStatus);
@@ -44,7 +57,9 @@ export class ExpeditionCreateComponent {
     constructor(
         private route: ActivatedRoute,
         private expeditionService: ExpeditionService,
-        private router: Router
+        private router: Router,
+        private userService: UserService,
+        private accountService: AccountService
     ) {}
 
     createExpedition(): void {

@@ -394,7 +394,7 @@ tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c, _d, _e;
+var _a, _b, _c, _d, _e, _f;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateExpeditionDto = exports.UpsertExpeditionDto = exports.CreateExpeditionDto = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -452,11 +452,11 @@ tslib_1.__decorate([
 tslib_1.__decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
-    tslib_1.__metadata("design:type", String)
+    tslib_1.__metadata("design:type", typeof (_e = typeof api_1.IUser !== "undefined" && api_1.IUser) === "function" ? _e : Object)
 ], UpsertExpeditionDto.prototype, "organizer", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    tslib_1.__metadata("design:type", typeof (_e = typeof api_1.ILocation !== "undefined" && api_1.ILocation) === "function" ? _e : Object)
+    tslib_1.__metadata("design:type", typeof (_f = typeof api_1.ILocation !== "undefined" && api_1.ILocation) === "function" ? _f : Object)
 ], UpsertExpeditionDto.prototype, "location", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsString)(),
@@ -600,10 +600,10 @@ const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const features_1 = __webpack_require__(22);
 const user_1 = __webpack_require__(29);
-const expedition_1 = __webpack_require__(48);
-const auth_1 = __webpack_require__(41);
+const expedition_1 = __webpack_require__(44);
+const auth_1 = __webpack_require__(36);
 const mongoose_1 = __webpack_require__(27);
-const util_env_1 = __webpack_require__(53);
+const util_env_1 = __webpack_require__(49);
 const common_2 = __webpack_require__(1);
 const core_1 = __webpack_require__(2);
 let AppModule = class AppModule {
@@ -663,8 +663,8 @@ const meal_service_1 = __webpack_require__(25);
 const mongoose_1 = __webpack_require__(27);
 const user_1 = __webpack_require__(29);
 const meal_schema_1 = __webpack_require__(28);
-const auth_1 = __webpack_require__(41);
-const jwt_1 = __webpack_require__(40);
+const auth_1 = __webpack_require__(36);
+const jwt_1 = __webpack_require__(41);
 let BackendFeaturesMealModule = class BackendFeaturesMealModule {
 };
 exports.BackendFeaturesMealModule = BackendFeaturesMealModule;
@@ -698,7 +698,7 @@ const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const meal_service_1 = __webpack_require__(25);
 const common_2 = __webpack_require__(1);
-const auth_1 = __webpack_require__(41);
+const auth_1 = __webpack_require__(36);
 let MealController = MealController_1 = class MealController {
     constructor(mealService) {
         this.mealService = mealService;
@@ -917,17 +917,13 @@ const user_controller_1 = __webpack_require__(31);
 const user_service_1 = __webpack_require__(32);
 const mongoose_1 = __webpack_require__(27);
 const user_schema_1 = __webpack_require__(33);
-// import { Meal, MealSchema } from '@avans-nx-expedition/backend/features';
 let UsersModule = class UsersModule {
 };
 exports.UsersModule = UsersModule;
 exports.UsersModule = UsersModule = tslib_1.__decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forFeature([
-                { name: user_schema_1.User.name, schema: user_schema_1.UserSchema }
-                // { name: Meal.name, schema: MealSchema },
-            ])
+            mongoose_1.MongooseModule.forFeature([{ name: user_schema_1.User.name, schema: user_schema_1.UserSchema }])
         ],
         controllers: [user_controller_1.UserController],
         providers: [user_service_1.UserService],
@@ -950,8 +946,7 @@ const user_service_1 = __webpack_require__(32);
 const api_1 = __webpack_require__(8);
 const dto_1 = __webpack_require__(3);
 const user_exists_guard_1 = __webpack_require__(35);
-const admin_rights_guard_1 = __webpack_require__(36);
-const shared_1 = __webpack_require__(37);
+// import { TokenGuard } from '@avans-nx-expedition/backend/shared';
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -1021,7 +1016,6 @@ tslib_1.__decorate([
 ], UserController.prototype, "update", null);
 tslib_1.__decorate([
     (0, common_1.Delete)(':id'),
-    (0, common_1.UseGuards)(shared_1.TokenGuard, admin_rights_guard_1.AdminRightsGuard),
     tslib_1.__param(0, (0, common_1.Param)('id')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String]),
@@ -1058,6 +1052,11 @@ let UserService = UserService_1 = class UserService {
         this.logger.log(`Finding all items`);
         const items = await this.userModel.find();
         return items;
+    }
+    async findByUsername(userName) {
+        return this.userModel.findOne({
+            userName: { $regex: new RegExp(`^${userName}$`, "i") },
+        }).exec();
     }
     findAllInternal() {
         this.logger.log('Finding all items');
@@ -1268,6 +1267,7 @@ let UserExistGuard = class UserExistGuard {
         this.userModel = userModel;
     }
     canActivate(context) {
+        common_1.Logger.log('UserExistGuard');
         const user = context.switchToHttp().getRequest().body;
         return !!this.userModel.findOne({ username: user.username });
     }
@@ -1285,37 +1285,10 @@ exports.UserExistGuard = UserExistGuard = tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AdminRightsGuard = void 0;
 const tslib_1 = __webpack_require__(4);
-const common_1 = __webpack_require__(1);
-const mongoose_1 = __webpack_require__(27);
-const mongoose_2 = __webpack_require__(26);
-const api_1 = __webpack_require__(8);
-let AdminRightsGuard = class AdminRightsGuard {
-    constructor(userModel) {
-        this.userModel = userModel;
-    }
-    async canActivate(context) {
-        console.debug('AdminRightsGuard');
-        const request = context.switchToHttp().getRequest();
-        const userId = request.headers['user'];
-        console.debug('userId', userId);
-        if (!userId) {
-            return false;
-        }
-        const foundUser = await this.userModel.findOne({ _id: userId }).exec();
-        console.debug('foundUser', foundUser);
-        return foundUser !== null && foundUser.role === api_1.UserRole.Admin;
-    }
-};
-exports.AdminRightsGuard = AdminRightsGuard;
-exports.AdminRightsGuard = AdminRightsGuard = tslib_1.__decorate([
-    (0, common_1.Injectable)(),
-    tslib_1.__param(0, (0, mongoose_1.InjectModel)('User')),
-    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof mongoose_2.Model !== "undefined" && mongoose_2.Model) === "function" ? _a : Object])
-], AdminRightsGuard);
+tslib_1.__exportStar(__webpack_require__(37), exports);
+tslib_1.__exportStar(__webpack_require__(43), exports);
 
 
 /***/ }),
@@ -1324,116 +1297,14 @@ exports.AdminRightsGuard = AdminRightsGuard = tslib_1.__decorate([
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const tslib_1 = __webpack_require__(4);
-tslib_1.__exportStar(__webpack_require__(38), exports);
-tslib_1.__exportStar(__webpack_require__(39), exports);
-
-
-/***/ }),
-/* 38 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SharedModule = void 0;
-const tslib_1 = __webpack_require__(4);
-const common_1 = __webpack_require__(1);
-const token_guard_1 = __webpack_require__(39);
-let SharedModule = class SharedModule {
-};
-exports.SharedModule = SharedModule;
-exports.SharedModule = SharedModule = tslib_1.__decorate([
-    (0, common_1.Module)({
-        providers: [token_guard_1.TokenGuard],
-        exports: [token_guard_1.TokenGuard]
-    })
-], SharedModule);
-
-
-/***/ }),
-/* 39 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-var TokenGuard_1;
-var _a;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TokenGuard = void 0;
-const tslib_1 = __webpack_require__(4);
-const common_1 = __webpack_require__(1);
-const jwt_1 = __webpack_require__(40);
-let TokenGuard = TokenGuard_1 = class TokenGuard {
-    constructor(jwtService) {
-        this.jwtService = jwtService;
-        this.logger = new common_1.Logger(TokenGuard_1.name);
-    }
-    async canActivate(context) {
-        console.log('AuthGuard');
-        const request = context.switchToHttp().getRequest();
-        const token = this.extractTokenFromHeader(request);
-        if (!token) {
-            this.logger.log('No token found');
-        }
-        else {
-            try {
-                const payload = await this.jwtService.verifyAsync(token, {
-                    secret: process.env['JWT_SECRET'] || 'secretstring'
-                });
-                this.logger.log('payload', payload);
-                // Assign the payload to the request object
-                request['user'] = payload;
-            }
-            catch (error) {
-                this.logger.log('Invalid token');
-            }
-        }
-        // Always return true to allow access
-        return true;
-    }
-    extractTokenFromHeader(request) {
-        const [type, token] = request.headers.authorization?.split(' ') ?? [];
-        return type === 'Bearer' ? token : undefined;
-    }
-};
-exports.TokenGuard = TokenGuard;
-exports.TokenGuard = TokenGuard = TokenGuard_1 = tslib_1.__decorate([
-    (0, common_1.Injectable)(),
-    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof jwt_1.JwtService !== "undefined" && jwt_1.JwtService) === "function" ? _a : Object])
-], TokenGuard);
-
-
-/***/ }),
-/* 40 */
-/***/ ((module) => {
-
-module.exports = require("@nestjs/jwt");
-
-/***/ }),
-/* 41 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const tslib_1 = __webpack_require__(4);
-tslib_1.__exportStar(__webpack_require__(42), exports);
-tslib_1.__exportStar(__webpack_require__(47), exports);
-
-
-/***/ }),
-/* 42 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthModule = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const mongoose_1 = __webpack_require__(27);
-const auth_controller_1 = __webpack_require__(43);
-const jwt_1 = __webpack_require__(40);
+const auth_controller_1 = __webpack_require__(38);
+const jwt_1 = __webpack_require__(41);
 const user_1 = __webpack_require__(29);
-const auth_service_1 = __webpack_require__(44);
-const auth_guards_1 = __webpack_require__(47);
+const auth_service_1 = __webpack_require__(39);
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -1448,14 +1319,14 @@ exports.AuthModule = AuthModule = tslib_1.__decorate([
             })
         ],
         controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService, auth_guards_1.AuthGuard],
+        providers: [auth_service_1.AuthService],
         exports: [auth_service_1.AuthService]
     })
 ], AuthModule);
 
 
 /***/ }),
-/* 43 */
+/* 38 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1465,8 +1336,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const auth_service_1 = __webpack_require__(44);
-const decorators_1 = __webpack_require__(46);
+const auth_service_1 = __webpack_require__(39);
+const decorators_1 = __webpack_require__(42);
 const api_1 = __webpack_require__(8);
 const dto_1 = __webpack_require__(3);
 const user_1 = __webpack_require__(29);
@@ -1480,7 +1351,7 @@ let AuthController = AuthController_1 = class AuthController {
         return await this.authService.login(credentials);
     }
     async register(user) {
-        this.logger.log('Register');
+        this.logger.log(`Register attempt for new user`);
         return await this.authService.register(user);
     }
 };
@@ -1509,7 +1380,7 @@ exports.AuthController = AuthController = AuthController_1 = tslib_1.__decorate(
 
 
 /***/ }),
-/* 44 */
+/* 39 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1519,9 +1390,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthService = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const exceptions_1 = __webpack_require__(45);
+const exceptions_1 = __webpack_require__(40);
 const user_1 = __webpack_require__(29);
-const jwt_1 = __webpack_require__(40);
+const jwt_1 = __webpack_require__(41);
 const mongoose_1 = __webpack_require__(27);
 const mongoose_2 = __webpack_require__(26);
 let AuthService = AuthService_1 = class AuthService {
@@ -1542,37 +1413,27 @@ let AuthService = AuthService_1 = class AuthService {
         return null;
     }
     async login(credentials) {
-        // this.logger.debug(`Credentials: ${JSON.stringify(credentials)}`);
         this.logger.log(`login ${credentials.emailAddress}`);
-        return await this.userModel
-            .findOne({
-            emailAddress: credentials.emailAddress
-        })
+        const user = await this.userModel
+            .findOne({ emailAddress: credentials.emailAddress })
             .select('+password')
-            .exec()
-            .then((user) => {
-            if (user && user.password === credentials.password) {
-                const payload = {
-                    user_id: user._id
-                };
-                console.log('User found', user);
-                return {
-                    _id: user._id,
-                    name: user.name,
-                    emailAddress: user.emailAddress,
-                    profileImgUrl: user.profileImgUrl,
-                    token: this.jwtService.sign(payload)
-                };
-            }
-            else {
-                const errMsg = 'Email not found or password invalid';
-                this.logger.debug(errMsg);
-                throw new exceptions_1.UnauthorizedException(errMsg);
-            }
-        })
-            .catch((error) => {
-            return error;
-        });
+            .exec();
+        if (!user) {
+            throw new exceptions_1.UnauthorizedException('Email not found or password invalid');
+        }
+        const passwordMatches = credentials.password === user.password;
+        if (!passwordMatches) {
+            throw new exceptions_1.UnauthorizedException('Email not found or password invalid');
+        }
+        const payload = { user_id: user._id };
+        return {
+            _id: user._id,
+            name: user.name,
+            emailAddress: user.emailAddress,
+            profileImgUrl: user.profileImgUrl,
+            role: user.role,
+            token: this.jwtService.sign(payload)
+        };
     }
     async register(user) {
         this.logger.log(`Register user ${user.name}`);
@@ -1594,13 +1455,19 @@ exports.AuthService = AuthService = AuthService_1 = tslib_1.__decorate([
 
 
 /***/ }),
-/* 45 */
+/* 40 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/common/exceptions");
 
 /***/ }),
-/* 46 */
+/* 41 */
+/***/ ((module) => {
+
+module.exports = require("@nestjs/jwt");
+
+/***/ }),
+/* 42 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1613,7 +1480,7 @@ exports.Public = Public;
 
 
 /***/ }),
-/* 47 */
+/* 43 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1623,7 +1490,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthGuard = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const jwt_1 = __webpack_require__(40);
+const jwt_1 = __webpack_require__(41);
 let AuthGuard = AuthGuard_1 = class AuthGuard {
     constructor(jwtService) {
         this.jwtService = jwtService;
@@ -1664,19 +1531,19 @@ exports.AuthGuard = AuthGuard = AuthGuard_1 = tslib_1.__decorate([
 
 
 /***/ }),
-/* 48 */
+/* 44 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const tslib_1 = __webpack_require__(4);
-tslib_1.__exportStar(__webpack_require__(49), exports);
-tslib_1.__exportStar(__webpack_require__(52), exports);
-tslib_1.__exportStar(__webpack_require__(51), exports);
+tslib_1.__exportStar(__webpack_require__(45), exports);
+tslib_1.__exportStar(__webpack_require__(48), exports);
+tslib_1.__exportStar(__webpack_require__(47), exports);
 
 
 /***/ }),
-/* 49 */
+/* 45 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1684,10 +1551,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExpeditionModule = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const expedition_controller_1 = __webpack_require__(50);
-const expediton_service_1 = __webpack_require__(51);
+const expedition_controller_1 = __webpack_require__(46);
+const expediton_service_1 = __webpack_require__(47);
 const mongoose_1 = __webpack_require__(27);
-const expedition_schema_1 = __webpack_require__(52);
+const expedition_schema_1 = __webpack_require__(48);
 // import { Meal, MealSchema } from '@avans-nx-expedition/backend/features';
 let ExpeditionModule = class ExpeditionModule {
 };
@@ -1707,7 +1574,7 @@ exports.ExpeditionModule = ExpeditionModule = tslib_1.__decorate([
 
 
 /***/ }),
-/* 50 */
+/* 46 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1716,7 +1583,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExpeditionController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const expediton_service_1 = __webpack_require__(51);
+const expediton_service_1 = __webpack_require__(47);
 const api_1 = __webpack_require__(8);
 const dto_1 = __webpack_require__(3);
 let ExpeditionController = class ExpeditionController {
@@ -1791,7 +1658,7 @@ exports.ExpeditionController = ExpeditionController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 51 */
+/* 47 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1803,7 +1670,7 @@ const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const mongoose_1 = __webpack_require__(26);
 const mongoose_2 = __webpack_require__(27);
-const expedition_schema_1 = __webpack_require__(52);
+const expedition_schema_1 = __webpack_require__(48);
 let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
     constructor(expeditionModel // @InjectModel(Meal.name) private meetupModel: Model<MealDocument>
     ) {
@@ -1850,11 +1717,11 @@ exports.ExpeditionService = ExpeditionService = ExpeditionService_1 = tslib_1.__
 
 
 /***/ }),
-/* 52 */
+/* 48 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c, _d, _e, _f, _g;
+var _a, _b, _c, _d, _e, _f, _g, _h;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExpeditionSchema = exports.Expedition = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -1903,11 +1770,11 @@ tslib_1.__decorate([
 ], Expedition.prototype, "participants", void 0);
 tslib_1.__decorate([
     (0, mongoose_1.Prop)({ required: true, type: String }),
-    tslib_1.__metadata("design:type", String)
+    tslib_1.__metadata("design:type", typeof (_e = typeof api_1.IUser !== "undefined" && api_1.IUser) === "function" ? _e : Object)
 ], Expedition.prototype, "organizer", void 0);
 tslib_1.__decorate([
     (0, mongoose_1.Prop)({ required: true, type: Object }),
-    tslib_1.__metadata("design:type", typeof (_e = typeof api_1.ILocation !== "undefined" && api_1.ILocation) === "function" ? _e : Object)
+    tslib_1.__metadata("design:type", typeof (_f = typeof api_1.ILocation !== "undefined" && api_1.ILocation) === "function" ? _f : Object)
 ], Expedition.prototype, "location", void 0);
 tslib_1.__decorate([
     (0, mongoose_1.Prop)({
@@ -1919,11 +1786,11 @@ tslib_1.__decorate([
 ], Expedition.prototype, "imageUrl", void 0);
 tslib_1.__decorate([
     (0, mongoose_1.Prop)({ required: true, type: Date, default: new Date() }),
-    tslib_1.__metadata("design:type", typeof (_f = typeof Date !== "undefined" && Date) === "function" ? _f : Object)
+    tslib_1.__metadata("design:type", typeof (_g = typeof Date !== "undefined" && Date) === "function" ? _g : Object)
 ], Expedition.prototype, "createdAt", void 0);
 tslib_1.__decorate([
     (0, mongoose_1.Prop)({ required: true, type: Date, default: new Date() }),
-    tslib_1.__metadata("design:type", typeof (_g = typeof Date !== "undefined" && Date) === "function" ? _g : Object)
+    tslib_1.__metadata("design:type", typeof (_h = typeof Date !== "undefined" && Date) === "function" ? _h : Object)
 ], Expedition.prototype, "updatedAt", void 0);
 exports.Expedition = Expedition = tslib_1.__decorate([
     (0, mongoose_1.Schema)()
@@ -1932,18 +1799,18 @@ exports.ExpeditionSchema = mongoose_1.SchemaFactory.createForClass(Expedition);
 
 
 /***/ }),
-/* 53 */
+/* 49 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const tslib_1 = __webpack_require__(4);
-tslib_1.__exportStar(__webpack_require__(54), exports);
-tslib_1.__exportStar(__webpack_require__(55), exports);
+tslib_1.__exportStar(__webpack_require__(50), exports);
+tslib_1.__exportStar(__webpack_require__(51), exports);
 
 
 /***/ }),
-/* 54 */
+/* 50 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1958,7 +1825,7 @@ exports.environment = {
 
 
 /***/ }),
-/* 55 */
+/* 51 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
