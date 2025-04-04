@@ -7,7 +7,8 @@ import {
 } from './expedition.schema';
 import {
     ICreateExpedition,
-    IExpedition
+    IExpedition,
+    IUser
 } from '@avans-nx-expedition/shared/api';
 // import { Meal, MealDocument } from '@avans-nx-expedition/backend/features';
 import {
@@ -27,7 +28,20 @@ export class ExpeditionService {
 
     async findAll(): Promise<IExpedition[]> {
         this.logger.log(`Finding all items`);
-        const items = await this.expeditionModel.find();
+        this.logger.log(
+            `Found without populate ${await this.expeditionModel.find()}`
+        );
+        this.logger.log(
+            `Found with populate ${await this.expeditionModel
+                .find()
+                .populate('organizer')
+                .populate('participants')}`
+        );
+        const items = await this.expeditionModel
+            .find()
+            .populate('organizer')
+            .populate('participants')
+            .exec();
         return items;
     }
 
@@ -51,10 +65,18 @@ export class ExpeditionService {
     }
 
     async create(expedition: CreateExpeditionDto): Promise<IExpedition> {
-        this.logger.log(`Create expedition with title:  ${expedition.title}`);
+        this.logger.log(`Create expedition with title: ${expedition.title}`);
+
+        // Extract the actual user ID from the nested object.
+        expedition.organizer = (expedition.organizer as any).results._id;
+        expedition.participants = (expedition.participants as any[]).map(
+            (user) => (user.results ? user.results._id : user._id)
+        );
+
         expedition.createdAt = new Date();
         expedition.updatedAt = new Date();
-        const createdItem = this.expeditionModel.create(expedition);
+
+        const createdItem = await this.expeditionModel.create(expedition);
         return createdItem;
     }
 

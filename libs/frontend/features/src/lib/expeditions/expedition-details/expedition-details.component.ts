@@ -18,6 +18,7 @@ export class ExpeditionDetailsComponent implements OnInit {
     expedition: IExpedition | undefined;
     loggedUserId: string = '';
     loggedUser: IUser | null = null;
+    isOrganiser: boolean = false;
     sub: Subscription = new Subscription();
 
     constructor(
@@ -54,6 +55,10 @@ export class ExpeditionDetailsComponent implements OnInit {
                     console.log('No logged-in user found.');
                 }
             });
+
+            if(this.expedition) {
+                this.isOrganiser = this.expedition.organizer === this.loggedUserId;
+            }
     }
 
     joinExpedition(): void {

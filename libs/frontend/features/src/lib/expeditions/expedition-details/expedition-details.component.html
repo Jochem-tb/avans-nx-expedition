@@ -35,7 +35,7 @@
             <div class="d-flex justify-content-end">
                 <!-- Edit Button -->
                 <button
-                    *ngIf="(expedition?.organizer)!._id === loggedUserId"
+                    *ngIf="isOrganiser"
                     class="btn btn-outline-light me-2"
                     style="border: 1px solid #4da1ff"
                 >

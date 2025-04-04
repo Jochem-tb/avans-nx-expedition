@@ -1679,7 +1679,16 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
     }
     async findAll() {
         this.logger.log(`Finding all items`);
-        const items = await this.expeditionModel.find();
+        this.logger.log(`Found without populate ${await this.expeditionModel.find()}`);
+        this.logger.log(`Found with populate ${await this.expeditionModel
+            .find()
+            .populate('organizer')
+            .populate('participants')}`);
+        const items = await this.expeditionModel
+            .find()
+            .populate('organizer')
+            .populate('participants')
+            .exec();
         return items;
     }
     async findOne(_id) {
@@ -1696,10 +1705,13 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
         return items;
     }
     async create(expedition) {
-        this.logger.log(`Create expedition with title:  ${expedition.title}`);
+        this.logger.log(`Create expedition with title: ${expedition.title}`);
+        // Extract the actual user ID from the nested object.
+        expedition.organizer = expedition.organizer.results._id;
+        expedition.participants = expedition.participants.map((user) => (user.results ? user.results._id : user._id));
         expedition.createdAt = new Date();
         expedition.updatedAt = new Date();
-        const createdItem = this.expeditionModel.create(expedition);
+        const createdItem = await this.expeditionModel.create(expedition);
         return createdItem;
     }
     async update(_id, expedition) {
@@ -1721,11 +1733,12 @@ exports.ExpeditionService = ExpeditionService = ExpeditionService_1 = tslib_1.__
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c, _d, _e, _f, _g, _h;
+var _a, _b, _c, _d, _e, _f, _g;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExpeditionSchema = exports.Expedition = void 0;
 const tslib_1 = __webpack_require__(4);
 const mongoose_1 = __webpack_require__(27);
+const mongoose_2 = __webpack_require__(26);
 // import { v4 as uuid } from 'uuid';
 const api_1 = __webpack_require__(8);
 const class_validator_1 = __webpack_require__(7);
@@ -1765,16 +1778,19 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", Number)
 ], Expedition.prototype, "maxParticipants", void 0);
 tslib_1.__decorate([
-    (0, mongoose_1.Prop)({ required: true, type: [String] }),
+    (0, mongoose_1.Prop)({
+        required: true,
+        type: [{ type: mongoose_2.Schema.Types.ObjectId, ref: 'User' }]
+    }),
     tslib_1.__metadata("design:type", Array)
 ], Expedition.prototype, "participants", void 0);
 tslib_1.__decorate([
-    (0, mongoose_1.Prop)({ required: true, type: String }),
-    tslib_1.__metadata("design:type", typeof (_e = typeof api_1.IUser !== "undefined" && api_1.IUser) === "function" ? _e : Object)
+    (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Schema.Types.ObjectId, ref: 'User' }),
+    tslib_1.__metadata("design:type", String)
 ], Expedition.prototype, "organizer", void 0);
 tslib_1.__decorate([
     (0, mongoose_1.Prop)({ required: true, type: Object }),
-    tslib_1.__metadata("design:type", typeof (_f = typeof api_1.ILocation !== "undefined" && api_1.ILocation) === "function" ? _f : Object)
+    tslib_1.__metadata("design:type", typeof (_e = typeof api_1.ILocation !== "undefined" && api_1.ILocation) === "function" ? _e : Object)
 ], Expedition.prototype, "location", void 0);
 tslib_1.__decorate([
     (0, mongoose_1.Prop)({
@@ -1786,11 +1802,11 @@ tslib_1.__decorate([
 ], Expedition.prototype, "imageUrl", void 0);
 tslib_1.__decorate([
     (0, mongoose_1.Prop)({ required: true, type: Date, default: new Date() }),
-    tslib_1.__metadata("design:type", typeof (_g = typeof Date !== "undefined" && Date) === "function" ? _g : Object)
+    tslib_1.__metadata("design:type", typeof (_f = typeof Date !== "undefined" && Date) === "function" ? _f : Object)
 ], Expedition.prototype, "createdAt", void 0);
 tslib_1.__decorate([
     (0, mongoose_1.Prop)({ required: true, type: Date, default: new Date() }),
-    tslib_1.__metadata("design:type", typeof (_h = typeof Date !== "undefined" && Date) === "function" ? _h : Object)
+    tslib_1.__metadata("design:type", typeof (_g = typeof Date !== "undefined" && Date) === "function" ? _g : Object)
 ], Expedition.prototype, "updatedAt", void 0);
 exports.Expedition = Expedition = tslib_1.__decorate([
     (0, mongoose_1.Schema)()

@@ -3,6 +3,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 // import { v4 as uuid } from 'uuid';
 import {
     ICreateExpedition,
+    IExpeditionMongo,
     IExpedition,
     IUpdateExpedition,
     IUpsertExpedition,
@@ -40,12 +41,14 @@ export class Expedition implements IExpedition {
 
     @Prop({ required: true, type: Number })
     maxParticipants!: number;
+    @Prop({
+        required: true,
+        type: [{ type: MongooseSchema.Types.ObjectId, ref: 'User' }]
+    })
+    participants!: string[];
 
-    @Prop({ required: true, type: [String] })
-    participants!: IUser[];
-
-    @Prop({ required: true, type: String })
-    organizer!: IUser;
+    @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'User' })
+    organizer!: string;
 
     @Prop({ required: true, type: Object })
     location!: ILocation;

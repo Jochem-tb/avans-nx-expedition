@@ -34,6 +34,23 @@ export interface ILocation {
     continent: ContinentEnum;
 }
 
+export interface IExpeditionMongo {
+    _id: string;
+    title: string;
+    description: string;
+    startDate: Date;
+    endDate: Date;
+    difficultyLevel: DifficultyLevel;
+    status: ExpeditionStatus;
+    maxParticipants: number;
+    participants: string[];
+    organizer: string;
+    location: ILocation;
+    imageUrl: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 export interface IExpedition {
     _id: string;
     title: string;
@@ -43,8 +60,8 @@ export interface IExpedition {
     difficultyLevel: DifficultyLevel;
     status: ExpeditionStatus;
     maxParticipants: number;
-    participants: IUser[];
-    organizer: IUser;
+    participants: (IUser | string)[];
+    organizer: IUser | string;
     location: ILocation;
     imageUrl: string;
     createdAt: Date;

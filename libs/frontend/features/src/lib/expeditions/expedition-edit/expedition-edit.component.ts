@@ -6,7 +6,8 @@ import { Subscription } from 'rxjs';
 import {
     ContinentEnum,
     DifficultyLevel,
-    ExpeditionStatus
+    ExpeditionStatus,
+    IExpedition
 } from '@avans-nx-expedition/shared/api';
 
 @Component({
@@ -16,7 +17,7 @@ import {
 })
 export class ExpeditionEditComponent implements OnInit {
     expeditionId: string | null = null;
-    expedition: Expedition | undefined;
+    expedition: IExpedition | undefined;
 
     difficultyLevels = Object.values(DifficultyLevel);
     statusus = Object.values(ExpeditionStatus);
