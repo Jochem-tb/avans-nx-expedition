@@ -1578,7 +1578,7 @@ exports.ExpeditionModule = ExpeditionModule = tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c, _d, _e, _f, _g, _h;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExpeditionController = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -1611,6 +1611,12 @@ let ExpeditionController = class ExpeditionController {
     }
     update(id, expedition) {
         return this.expeditionService.update(id, expedition);
+    }
+    join(id, userId) {
+        return this.expeditionService.join(id, userId);
+    }
+    leave(id, userId) {
+        return this.expeditionService.leave(id, userId);
     }
 };
 exports.ExpeditionController = ExpeditionController;
@@ -1651,6 +1657,22 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", [String, typeof (_g = typeof dto_1.UpdateExpeditionDto !== "undefined" && dto_1.UpdateExpeditionDto) === "function" ? _g : Object]),
     tslib_1.__metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
 ], ExpeditionController.prototype, "update", null);
+tslib_1.__decorate([
+    (0, common_1.Get)(':id/join/:userId'),
+    tslib_1.__param(0, (0, common_1.Param)('id')),
+    tslib_1.__param(1, (0, common_1.Param)('userId')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String, String]),
+    tslib_1.__metadata("design:returntype", typeof (_j = typeof Promise !== "undefined" && Promise) === "function" ? _j : Object)
+], ExpeditionController.prototype, "join", null);
+tslib_1.__decorate([
+    (0, common_1.Get)(':id/leave/:userId'),
+    tslib_1.__param(0, (0, common_1.Param)('id')),
+    tslib_1.__param(1, (0, common_1.Param)('userId')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String, String]),
+    tslib_1.__metadata("design:returntype", typeof (_k = typeof Promise !== "undefined" && Promise) === "function" ? _k : Object)
+], ExpeditionController.prototype, "leave", null);
 exports.ExpeditionController = ExpeditionController = tslib_1.__decorate([
     (0, common_1.Controller)('expedition'),
     tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof expediton_service_1.ExpeditionService !== "undefined" && expediton_service_1.ExpeditionService) === "function" ? _a : Object])
@@ -1679,11 +1701,6 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
     }
     async findAll() {
         this.logger.log(`Finding all items`);
-        this.logger.log(`Found without populate ${await this.expeditionModel.find()}`);
-        this.logger.log(`Found with populate ${await this.expeditionModel
-            .find()
-            .populate('organizer')
-            .populate('participants')}`);
         const items = await this.expeditionModel
             .find()
             .populate('organizer')
@@ -1718,6 +1735,22 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
         this.logger.log(`Update expedition ${expedition.title}`);
         expedition.updatedAt = new Date();
         return this.expeditionModel.findByIdAndUpdate({ _id }, expedition);
+    }
+    async join(_id, userId) {
+        this.logger.log(`Join expedition ${_id} with user ${userId}`);
+        const expedition = await this.expeditionModel
+            .findByIdAndUpdate({ _id }, { $addToSet: { participants: userId } }, { new: true })
+            .populate('participants')
+            .populate('organizer');
+        return expedition;
+    }
+    async leave(_id, userId) {
+        this.logger.log(`Leave expedition ${_id} with user ${userId}`);
+        const expedition = await this.expeditionModel
+            .findByIdAndUpdate({ _id }, { $pull: { participants: userId } }, { new: true })
+            .populate('participants')
+            .populate('organizer');
+        return expedition;
     }
 };
 exports.ExpeditionService = ExpeditionService;

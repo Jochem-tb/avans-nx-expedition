@@ -69,20 +69,26 @@ export class ExpeditionService {
         userId: string
     ): Observable<IExpedition | undefined> {
         console.log('joinExpedition aanroepen');
-        return this.httpClient.post<IExpedition>(
-            `http://localhost:3000/api/expedition/${id}/join`,
-            userId
-        );
+        return this.httpClient
+            .get<{ results: IExpedition }>(
+                `http://localhost:3000/api/expedition/${id}/join/${userId}`
+            )
+            .pipe(
+                map((response) => response?.results) // Extract the 'results' property from the response
+            );
     }
 
     leaveExpedition(
         id: string,
         userId: string
     ): Observable<IExpedition | undefined> {
-        console.log('joinExpedition aanroepen');
-        return this.httpClient.post<IExpedition>(
-            `http://localhost:3000/api/expedition/${id}/leave`,
-            userId
-        );
+        console.log('leaveExpedition aanroepen');
+        return this.httpClient
+            .get<{ results: IExpedition }>(
+                `http://localhost:3000/api/expedition/${id}/leave/${userId}`
+            )
+            .pipe(
+                map((response) => response?.results) // Extract the 'results' property from the response
+            );
     }
 }

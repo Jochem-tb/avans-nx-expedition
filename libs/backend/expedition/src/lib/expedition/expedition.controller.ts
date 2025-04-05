@@ -62,4 +62,20 @@ export class ExpeditionController {
     ): Promise<IExpedition | null> {
         return this.expeditionService.update(id, expedition);
     }
+
+    @Get(':id/join/:userId')
+    join(
+        @Param('id') id: string,
+        @Param('userId') userId: string
+    ): Promise<IExpedition | null> {
+        return this.expeditionService.join(id, userId);
+    }
+
+    @Get(':id/leave/:userId')
+    leave(
+        @Param('id') id: string,
+        @Param('userId') userId: string
+    ): Promise<IExpedition | null> {
+        return this.expeditionService.leave(id, userId);
+    }
 }

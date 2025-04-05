@@ -28,15 +28,6 @@ export class ExpeditionService {
 
     async findAll(): Promise<IExpedition[]> {
         this.logger.log(`Finding all items`);
-        this.logger.log(
-            `Found without populate ${await this.expeditionModel.find()}`
-        );
-        this.logger.log(
-            `Found with populate ${await this.expeditionModel
-                .find()
-                .populate('organizer')
-                .populate('participants')}`
-        );
         const items = await this.expeditionModel
             .find()
             .populate('organizer')
@@ -87,5 +78,30 @@ export class ExpeditionService {
         this.logger.log(`Update expedition ${expedition.title}`);
         expedition.updatedAt = new Date();
         return this.expeditionModel.findByIdAndUpdate({ _id }, expedition);
+    }
+
+    async join(_id: string, userId: string): Promise<IExpedition | null> {
+        this.logger.log(`Join expedition ${_id} with user ${userId}`);
+        const expedition = await this.expeditionModel
+            .findByIdAndUpdate(
+                { _id },
+                { $addToSet: { participants: userId } },
+                { new: true }
+            )
+            .populate('participants')
+            .populate('organizer');
+        return expedition;
+    }
+    async leave(_id: string, userId: string): Promise<IExpedition | null> {
+        this.logger.log(`Leave expedition ${_id} with user ${userId}`);
+        const expedition = await this.expeditionModel
+            .findByIdAndUpdate(
+                { _id },
+                { $pull: { participants: userId } },
+                { new: true }
+            )
+            .populate('participants')
+            .populate('organizer');
+        return expedition;
     }
 }

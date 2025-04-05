@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ExpeditionService } from '../expedition.service';
 import { Expedition } from '@avans-nx-expedition/backend/expedition';
@@ -24,7 +24,8 @@ export class ExpeditionDetailsComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private expeditionService: ExpeditionService,
-        private accountService: AccountService
+        private accountService: AccountService,
+        private cdRef: ChangeDetectorRef
     ) {}
 
     isUserParticipant(expedition: any, loggedUserId: string): boolean {
@@ -45,20 +46,32 @@ export class ExpeditionDetailsComponent implements OnInit {
                     console.log('Expedition:', this.expedition);
                 });
         });
+        this.accountService.checkToken().subscribe((isLoggedIn) => {
+            if (isLoggedIn) {
+                console.log('User is logged in');
+            } else {
+                console.log('User is not logged in');
+            }
+        });
+
+        console.log('Before getLoggedInUserId');
         this.accountService
             .getLoggedInUserId()
             .subscribe((id: string | null) => {
+                console.log('Inside subscribe of getLoggedInUserId');
                 if (id) {
                     this.loggedUserId = id;
                     console.log('Logged User:', this.loggedUserId);
+
+                    // Only check isOrganiser if we already have the expedition
+                    if (this.expedition) {
+                        this.isOrganiser =
+                            this.expedition.organizer === this.loggedUserId;
+                    }
                 } else {
                     console.log('No logged-in user found.');
                 }
             });
-
-            if(this.expedition) {
-                this.isOrganiser = this.expedition.organizer === this.loggedUserId;
-            }
     }
 
     joinExpedition(): void {
@@ -67,7 +80,10 @@ export class ExpeditionDetailsComponent implements OnInit {
                 .joinExpedition(this.expedition._id, this.loggedUserId)
                 .subscribe((expedition) => {
                     console.log('Joined expedition:', expedition);
-                    this.expedition = expedition;
+                    this.expedition = expedition as IExpedition;
+                    this.isOrganiser =
+                        this.expedition!.organizer === this.loggedUserId;
+                    this.cdRef.detectChanges(); // Trigger change detection manually
                 });
         }
     }
@@ -77,9 +93,18 @@ export class ExpeditionDetailsComponent implements OnInit {
             this.expeditionService
                 .leaveExpedition(this.expedition._id, this.loggedUserId)
                 .subscribe((expedition) => {
+                    console.log(expedition);
                     console.log('Left expedition:', expedition);
-                    this.expedition = expedition;
+                    this.expedition = expedition as IExpedition;
+                    this.cdRef.detectChanges(); // Trigger change detection manually
                 });
         }
+    }
+
+    getParticipantName(participant: IUser | string): string {
+        if (typeof participant === 'string') {
+            return 'Unknown user'; // or 'Loading...'
+        }
+        return participant.name;
     }
 }
