@@ -7,13 +7,18 @@ import {
     ContinentEnum,
     DifficultyLevel,
     ExpeditionStatus,
-    IExpedition
+    IExpedition,
+    IUser
 } from '@avans-nx-expedition/shared/api';
+import { AccountService } from '@avans-nx-expedition/frontend/account';
+import { DatePipe } from '@angular/common';
+import * as exp from 'constants';
 
 @Component({
     selector: 'avans-nx-expedition-expedition-edit',
     templateUrl: './expedition-edit.component.html',
-    styleUrls: ['./expedition-edit.component.css']
+    styleUrls: ['./expedition-edit.component.css'],
+    providers: [DatePipe]
 })
 export class ExpeditionEditComponent implements OnInit {
     expeditionId: string | null = null;
@@ -27,7 +32,9 @@ export class ExpeditionEditComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private expeditionService: ExpeditionService,
-        private router: Router
+        private router: Router,
+        private datePipe: DatePipe,
+        private accountService: AccountService
     ) {}
 
     ngOnInit(): void {
@@ -39,12 +46,59 @@ export class ExpeditionEditComponent implements OnInit {
                 .subscribe((expedition) => {
                     this.expedition = expedition;
                     console.log('Expedition:', this.expedition);
+
+                    //check if logged in user is expedition organiser
+                    this.accountService
+                        .getLoggedInUserId()
+                        .subscribe((userId) => {
+                            if (this.expedition) {
+                                if (
+                                    typeof this.expedition.organizer ===
+                                        'object' &&
+                                    this.expedition.organizer !== null
+                                ) {
+                                    var isOrganiser =
+                                        this.expedition.organizer._id ===
+                                        userId;
+
+                                    if (isOrganiser) {
+                                        console.log(
+                                            'User is the organizer of this expedition.'
+                                        );
+                                    } else {
+                                        this.router.navigate(['/expeditions']);
+                                        console.error(
+                                            'User is not the organizer of this expedition.'
+                                        );
+                                        return;
+                                    }
+                                } else {
+                                    this.router.navigate(['/expeditions']);
+                                    console.error(
+                                        'User is not the organizer of this expedition.'
+                                    );
+                                    return;
+                                }
+                            }
+                        });
                 });
         });
     }
 
     ngOnDestroy(): void {
         this.sub.unsubscribe();
+    }
+
+    getParticipantName(person: string | IUser): string {
+        return (person as IUser).name;
+    }
+
+    removeParticipant(person: string | IUser): void {
+        // Logic to remove the participant
+        this.expedition!.participants = this.expedition!.participants.filter(
+            (p) => p !== person
+        );
+        console.log(`${this.getParticipantName(person)} has been removed.`);
     }
 
     saveExpedition(): void {
