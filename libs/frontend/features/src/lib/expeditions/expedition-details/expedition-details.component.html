@@ -42,13 +42,7 @@
                     Edit
                 </button>
 
-                <button
-                    *ngIf="isOrganiser"
-                    class="deleteButton"
-                    style="border: 1px solid #4da1ff"
-                >
-                    Delete
-                </button>
+                <button *ngIf="isOrganiser" class="deleteButton">Delete</button>
             </div>
 
             <hr *ngIf="isOrganiser" />
