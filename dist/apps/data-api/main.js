@@ -1710,7 +1710,11 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
     }
     async findOne(_id) {
         this.logger.log(`finding expedition with id ${_id}`);
-        const item = await this.expeditionModel.findOne({ _id }).exec();
+        const item = await this.expeditionModel
+            .findOne({ _id })
+            .populate('organizer')
+            .populate('participants')
+            .exec();
         if (!item) {
             this.logger.debug('Item not found');
         }
@@ -1737,20 +1741,32 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
         return this.expeditionModel.findByIdAndUpdate({ _id }, expedition);
     }
     async join(_id, userId) {
-        this.logger.log(`Join expedition ${_id} with user ${userId}`);
-        const expedition = await this.expeditionModel
-            .findByIdAndUpdate({ _id }, { $addToSet: { participants: userId } }, { new: true })
-            .populate('participants')
-            .populate('organizer');
-        return expedition;
+        try {
+            this.logger.log(`Join expedition ${_id} with user ${userId}`);
+            const expedition = await this.expeditionModel
+                .findByIdAndUpdate({ _id }, { $addToSet: { participants: userId } }, { new: true })
+                .populate('participants')
+                .populate('organizer');
+            return expedition;
+        }
+        catch (error) {
+            this.logger.error(`Error joining expedition: ${error}`);
+            return null;
+        }
     }
     async leave(_id, userId) {
-        this.logger.log(`Leave expedition ${_id} with user ${userId}`);
-        const expedition = await this.expeditionModel
-            .findByIdAndUpdate({ _id }, { $pull: { participants: userId } }, { new: true })
-            .populate('participants')
-            .populate('organizer');
-        return expedition;
+        try {
+            this.logger.log(`Leave expedition ${_id} with user ${userId}`);
+            const expedition = await this.expeditionModel
+                .findByIdAndUpdate({ _id }, { $pull: { participants: userId } }, { new: true })
+                .populate('participants')
+                .populate('organizer');
+            return expedition;
+        }
+        catch (error) {
+            this.logger.error(`Error leaving expedition: ${error}`);
+            return null;
+        }
     }
 };
 exports.ExpeditionService = ExpeditionService;

@@ -37,25 +37,24 @@ export class ExpeditionDetailsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.route.paramMap.subscribe((params) => {
-            this.expeditionId = params.get('id');
-            this.expeditionService
-                .getExpeditionById(String(this.expeditionId))
-                .subscribe((expedition) => {
-                    this.expedition = expedition;
-                    console.log('Expedition:', this.expedition);
+        console.log('ExpeditionDetailsComponent.ngOnInit() aangeroepen');
+        this.expeditionId = this.route.snapshot.paramMap.get('id');
+        console.log('Expedition ID:', this.expeditionId);
+        this.expeditionService
+            .getExpeditionByIdApi(String(this.expeditionId))
+            .subscribe((expedition) => {
+                this.expedition = expedition;
+                console.log('Expedition:', this.expedition);
 
-                    this.accountService.checkToken().subscribe((isLoggedIn) => {
-                        if (isLoggedIn) {
-                            console.log('User is logged in');
-                        } else {
-                            console.log('User is not logged in');
-                        }
-                    });
-
-                    this.checkIfUserIsOrganiser();
+                this.accountService.checkToken().subscribe((isLoggedIn) => {
+                    if (isLoggedIn) {
+                        console.log('User is logged in');
+                    } else {
+                        console.log('User is not logged in');
+                    }
                 });
-        });
+                this.checkIfUserIsOrganiser();
+            });
     }
 
     checkIfUserIsOrganiser(): void {

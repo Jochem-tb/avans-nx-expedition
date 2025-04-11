@@ -22,11 +22,17 @@ export class ExpeditionService {
             .pipe(map((response) => response.results)); // Extract 'results' array
     }
 
-    getExpeditionByIdApi(id: string | null): Observable<IExpedition> {
+    getExpeditionByIdApi(
+        id: string | null
+    ): Observable<IExpedition | undefined> {
         console.log('getExpeditionById aanroepen');
-        return this.httpClient.get<IExpedition>(
-            `http://localhost:3000/api/expedition/${id}`
-        );
+        return this.httpClient
+            .get<{ results: IExpedition }>(
+                `http://localhost:3000/api/expedition/${id}`
+            )
+            .pipe(
+                map((response) => response?.results) // Extract the 'results' property from the response
+            );
     }
 
     updateExpedition(expedition: IExpedition): Observable<IExpedition> {
