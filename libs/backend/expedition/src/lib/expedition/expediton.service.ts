@@ -119,4 +119,55 @@ export class ExpeditionService {
             return null;
         }
     }
+
+    getRecommended(userId: string): Promise<IExpedition[] | null> {
+        return this.expeditionModel
+            .find({ organizer: { $ne: userId } })
+            .populate('participants')
+            .populate('organizer')
+            .exec()
+            .then((expeditions) => {
+                if (expeditions.length === 0) {
+                    this.logger.debug(
+                        `User: ${userId} has no recommended expeditions`
+                    );
+                    return null;
+                }
+                return expeditions;
+            });
+    }
+
+    getJoined(userId: string): Promise<IExpedition[] | null> {
+        return this.expeditionModel
+            .find({ participants: userId })
+            .populate('participants')
+            .populate('organizer')
+            .exec()
+            .then((expeditions) => {
+                if (expeditions.length === 0) {
+                    this.logger.debug(
+                        `User: ${userId} has not joined to any expeditions`
+                    );
+                    return null;
+                }
+                return expeditions;
+            });
+    }
+
+    getOrganising(userId: string): Promise<IExpedition[] | null> {
+        return this.expeditionModel
+            .find({ organizer: userId })
+            .populate('participants')
+            .populate('organizer')
+            .exec()
+            .then((expeditions) => {
+                if (expeditions.length === 0) {
+                    this.logger.debug(
+                        `User: ${userId} is not organizing any expeditions`
+                    );
+                    return null;
+                }
+                return expeditions;
+            });
+    }
 }

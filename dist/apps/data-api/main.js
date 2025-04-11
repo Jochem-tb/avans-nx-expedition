@@ -1578,7 +1578,7 @@ exports.ExpeditionModule = ExpeditionModule = tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExpeditionController = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -1617,6 +1617,15 @@ let ExpeditionController = class ExpeditionController {
     }
     leave(id, userId) {
         return this.expeditionService.leave(id, userId);
+    }
+    getOrganising(userId) {
+        return this.expeditionService.getOrganising(userId);
+    }
+    getJoined(userId) {
+        return this.expeditionService.getJoined(userId);
+    }
+    getRecommended(userId) {
+        return this.expeditionService.getRecommended(userId);
     }
 };
 exports.ExpeditionController = ExpeditionController;
@@ -1673,6 +1682,27 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", [String, String]),
     tslib_1.__metadata("design:returntype", typeof (_k = typeof Promise !== "undefined" && Promise) === "function" ? _k : Object)
 ], ExpeditionController.prototype, "leave", null);
+tslib_1.__decorate([
+    (0, common_1.Get)('/organising/:userId'),
+    tslib_1.__param(0, (0, common_1.Param)('userId')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String]),
+    tslib_1.__metadata("design:returntype", typeof (_l = typeof Promise !== "undefined" && Promise) === "function" ? _l : Object)
+], ExpeditionController.prototype, "getOrganising", null);
+tslib_1.__decorate([
+    (0, common_1.Get)('/joined/:userId'),
+    tslib_1.__param(0, (0, common_1.Param)('userId')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String]),
+    tslib_1.__metadata("design:returntype", typeof (_m = typeof Promise !== "undefined" && Promise) === "function" ? _m : Object)
+], ExpeditionController.prototype, "getJoined", null);
+tslib_1.__decorate([
+    (0, common_1.Get)('/recommended/:userId'),
+    tslib_1.__param(0, (0, common_1.Param)('userId')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String]),
+    tslib_1.__metadata("design:returntype", typeof (_o = typeof Promise !== "undefined" && Promise) === "function" ? _o : Object)
+], ExpeditionController.prototype, "getRecommended", null);
 exports.ExpeditionController = ExpeditionController = tslib_1.__decorate([
     (0, common_1.Controller)('expedition'),
     tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof expediton_service_1.ExpeditionService !== "undefined" && expediton_service_1.ExpeditionService) === "function" ? _a : Object])
@@ -1767,6 +1797,48 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
             this.logger.error(`Error leaving expedition: ${error}`);
             return null;
         }
+    }
+    getRecommended(userId) {
+        return this.expeditionModel
+            .find({ organizer: { $ne: userId } })
+            .populate('participants')
+            .populate('organizer')
+            .exec()
+            .then((expeditions) => {
+            if (expeditions.length === 0) {
+                this.logger.debug(`User: ${userId} has no recommended expeditions`);
+                return null;
+            }
+            return expeditions;
+        });
+    }
+    getJoined(userId) {
+        return this.expeditionModel
+            .find({ participants: userId })
+            .populate('participants')
+            .populate('organizer')
+            .exec()
+            .then((expeditions) => {
+            if (expeditions.length === 0) {
+                this.logger.debug(`User: ${userId} has not joined to any expeditions`);
+                return null;
+            }
+            return expeditions;
+        });
+    }
+    getOrganising(userId) {
+        return this.expeditionModel
+            .find({ organizer: userId })
+            .populate('participants')
+            .populate('organizer')
+            .exec()
+            .then((expeditions) => {
+            if (expeditions.length === 0) {
+                this.logger.debug(`User: ${userId} is not organizing any expeditions`);
+                return null;
+            }
+            return expeditions;
+        });
     }
 };
 exports.ExpeditionService = ExpeditionService;

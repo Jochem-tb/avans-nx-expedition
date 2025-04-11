@@ -97,4 +97,26 @@ export class ExpeditionService {
                 map((response) => response?.results) // Extract the 'results' property from the response
             );
     }
+
+    getRecommendedExpeditions(userId: string): Observable<IExpedition[]> {
+        return this.httpClient
+            .get<{ results: IExpedition[] }>(
+                `http://localhost:3000/api/expedition/recommended/${userId}`
+            )
+            .pipe(map((response) => response.results)); // Extract 'results' array
+    }
+    getOrganisingExpeditions(userId: string): Observable<IExpedition[]> {
+        return this.httpClient
+            .get<{ results: IExpedition[] }>(
+                `http://localhost:3000/api/expedition/organising/${userId}`
+            )
+            .pipe(map((response) => response.results)); // Extract 'results' array
+    }
+    getJoinedExpeditions(userId: string): Observable<IExpedition[]> {
+        return this.httpClient
+            .get<{ results: IExpedition[] }>(
+                `http://localhost:3000/api/expedition/joined/${userId}`
+            )
+            .pipe(map((response) => response.results)); // Extract 'results' array
+    }
 }

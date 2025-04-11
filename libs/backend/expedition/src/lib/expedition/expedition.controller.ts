@@ -78,4 +78,23 @@ export class ExpeditionController {
     ): Promise<IExpedition | null> {
         return this.expeditionService.leave(id, userId);
     }
+
+    @Get('/organising/:userId')
+    getOrganising(
+        @Param('userId') userId: string
+    ): Promise<IExpedition[] | null> {
+        return this.expeditionService.getOrganising(userId);
+    }
+
+    @Get('/joined/:userId')
+    getJoined(@Param('userId') userId: string): Promise<IExpedition[] | null> {
+        return this.expeditionService.getJoined(userId);
+    }
+
+    @Get('/recommended/:userId')
+    getRecommended(
+        @Param('userId') userId: string
+    ): Promise<IExpedition[] | null> {
+        return this.expeditionService.getRecommended(userId);
+    }
 }

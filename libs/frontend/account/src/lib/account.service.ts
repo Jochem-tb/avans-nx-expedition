@@ -26,6 +26,8 @@ export class AccountService {
 
     private updateLoginState(): void {
         const token = localStorage.getItem('apiToken');
+        const previousLoginState = this.loggedInSubject.getValue(); // Get the current state of loggedInSubject
+
         if (token) {
             this.apiToken = token;
             try {
@@ -39,14 +41,21 @@ export class AccountService {
                     localStorage.removeItem('apiToken');
                     this.loggedInUser = null;
                     this.loggedInUserId = null;
-                    this.loggedInSubject.next(false);
+
+                    // Only update the state if it's actually changing
+                    if (previousLoginState !== false) {
+                        this.loggedInSubject.next(false);
+                    }
                     return;
                 }
 
                 // Use decoded user_id to construct a minimal IUserIdentity
                 this.loggedInUserId = decodedToken.user_id;
 
-                this.loggedInSubject.next(true);
+                // Only update the state if it's actually changing
+                if (previousLoginState !== true) {
+                    this.loggedInSubject.next(true);
+                }
                 console.log(
                     'Login state restored from token. User ID:',
                     this.loggedInUserId
@@ -55,13 +64,21 @@ export class AccountService {
                 console.error('Error decoding token:', error);
                 this.loggedInUser = null;
                 this.loggedInUserId = null;
-                this.loggedInSubject.next(false);
+
+                // Only update the state if it's actually changing
+                if (previousLoginState !== false) {
+                    this.loggedInSubject.next(false);
+                }
             }
         } else {
             console.log('No token found in localStorage');
             this.loggedInUser = null;
             this.loggedInUserId = null;
-            this.loggedInSubject.next(false);
+
+            // Only update the state if it's actually changing
+            if (previousLoginState !== false) {
+                this.loggedInSubject.next(false);
+            }
         }
     }
 
