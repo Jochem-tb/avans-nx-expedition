@@ -36,33 +36,22 @@
                 <!-- Edit Button -->
                 <button
                     *ngIf="isOrganiser"
-                    class="btn btn-outline-light me-2"
-                    style="border: 1px solid #4da1ff"
+                    class="editButton"
+                    [routerLink]="['/expeditions', expedition!._id, 'edit']"
                 >
                     Edit
                 </button>
-            </div>
-            <div class="d-flex justify-content-center">
-                <!-- Join Button -->
-                <button
-                    *ngIf="!isUserParticipant(expedition, loggedUserId)"
-                    class="btn btn-outline-primary"
-                    (click)="joinExpedition()"
-                >
-                    Join
-                </button>
 
-                <!-- Leave Button -->
                 <button
-                    *ngIf="isUserParticipant(expedition, loggedUserId)"
-                    class="btn btn-outline-danger"
-                    (click)="leaveExpedition()"
+                    *ngIf="isOrganiser"
+                    class="deleteButton"
+                    style="border: 1px solid #4da1ff"
                 >
-                    Leave
+                    Delete
                 </button>
             </div>
 
-            <hr />
+            <hr *ngIf="isOrganiser" />
             <!-- Expedition Image and Title -->
             <div class="d-flex flex-column align-items-center mb-4 mt-4">
                 <img
@@ -76,6 +65,29 @@
                 <h3 class="card-title fw-semibold text-center">
                     {{ expedition?.title }}
                 </h3>
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <!-- Join Button -->
+                <button
+                    *ngIf="
+                        !isUserParticipant(expedition, loggedUserId) &&
+                        loggedUserId
+                    "
+                    class="joinLeaveButton joinButton"
+                    (click)="joinExpedition()"
+                >
+                    Join
+                </button>
+
+                <!-- Leave Button -->
+                <button
+                    *ngIf="isUserParticipant(expedition, loggedUserId)"
+                    class="joinLeaveButton leaveButton"
+                    (click)="leaveExpedition()"
+                >
+                    Leave
+                </button>
             </div>
             <hr />
 

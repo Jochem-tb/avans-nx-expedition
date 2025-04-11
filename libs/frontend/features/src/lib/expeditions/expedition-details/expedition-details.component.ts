@@ -11,7 +11,7 @@ import { IExpedition } from '@avans-nx-expedition/shared/api';
 @Component({
     selector: 'avans-nx-expedition-expedition-details',
     templateUrl: './expedition-details.component.html',
-    styles: []
+    styleUrls: ['./expedition-details.component.css']
 })
 export class ExpeditionDetailsComponent implements OnInit {
     expeditionId: string | null = null;
@@ -44,29 +44,41 @@ export class ExpeditionDetailsComponent implements OnInit {
                 .subscribe((expedition) => {
                     this.expedition = expedition;
                     console.log('Expedition:', this.expedition);
+
+                    this.accountService.checkToken().subscribe((isLoggedIn) => {
+                        if (isLoggedIn) {
+                            console.log('User is logged in');
+                        } else {
+                            console.log('User is not logged in');
+                        }
+                    });
+
+                    this.checkIfUserIsOrganiser();
                 });
         });
-        this.accountService.checkToken().subscribe((isLoggedIn) => {
-            if (isLoggedIn) {
-                console.log('User is logged in');
-            } else {
-                console.log('User is not logged in');
-            }
-        });
+    }
 
-        console.log('Before getLoggedInUserId');
+    checkIfUserIsOrganiser(): void {
         this.accountService
             .getLoggedInUserId()
             .subscribe((id: string | null) => {
-                console.log('Inside subscribe of getLoggedInUserId');
                 if (id) {
                     this.loggedUserId = id;
                     console.log('Logged User:', this.loggedUserId);
 
                     // Only check isOrganiser if we already have the expedition
                     if (this.expedition) {
-                        this.isOrganiser =
-                            this.expedition.organizer === this.loggedUserId;
+                        if (
+                            typeof this.expedition.organizer === 'object' &&
+                            this.expedition.organizer !== null
+                        ) {
+                            this.isOrganiser =
+                                this.expedition.organizer._id ===
+                                this.loggedUserId;
+                        } else {
+                            this.isOrganiser =
+                                this.expedition.organizer === this.loggedUserId;
+                        }
                     }
                 } else {
                     console.log('No logged-in user found.');
@@ -81,9 +93,6 @@ export class ExpeditionDetailsComponent implements OnInit {
                 .subscribe((expedition) => {
                     console.log('Joined expedition:', expedition);
                     this.expedition = expedition as IExpedition;
-                    this.isOrganiser =
-                        this.expedition!.organizer === this.loggedUserId;
-                    this.cdRef.detectChanges(); // Trigger change detection manually
                 });
         }
     }
@@ -96,7 +105,6 @@ export class ExpeditionDetailsComponent implements OnInit {
                     console.log(expedition);
                     console.log('Left expedition:', expedition);
                     this.expedition = expedition as IExpedition;
-                    this.cdRef.detectChanges(); // Trigger change detection manually
                 });
         }
     }

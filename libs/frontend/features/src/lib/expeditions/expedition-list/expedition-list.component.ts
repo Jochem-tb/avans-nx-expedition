@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ExpeditionService } from '../expedition.service';
 import { IExpedition } from '@avans-nx-expedition/shared/api';
-import { Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 import { ExpeditionEditComponent } from '../expedition-edit/expedition-edit.component';
 import { MatDialog } from '@angular/material/dialog';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
     selector: 'avans-nx-expedition-expedition-list',
@@ -16,22 +17,23 @@ export class ExpeditionListComponent implements OnInit, OnDestroy {
 
     constructor(
         private expeditionService: ExpeditionService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private router: Router
     ) {}
 
     ngOnInit(): void {
         console.log('ExpeditionListComponent.ngOnInit() aangeroepen');
-        this.sub.add(
-            this.expeditionService.getExpeditionsAsyncApi().subscribe(
-                (expeditions) => {
-                    this.expeditions = expeditions;
-                    console.log('Expeditions loaded:', expeditions);
-                },
-                (error) => {
-                    console.error('Error loading expeditions:', error);
-                }
-            )
-        );
+        this.loadExpeditions();
+
+        // Refresh when navigated to this component
+        const routerSub = this.router.events
+            .pipe(filter((event) => event instanceof NavigationEnd))
+            .subscribe(() => {
+                console.log('Navigation ended – reloading expeditions');
+                this.loadExpeditions();
+            });
+
+        this.sub.add(routerSub);
     }
 
     ngOnDestroy(): void {
@@ -39,5 +41,17 @@ export class ExpeditionListComponent implements OnInit, OnDestroy {
             console.log('Unsubscribing from expedition service');
             this.sub.unsubscribe();
         }
+    }
+
+    loadExpeditions(): void {
+        this.expeditionService.getExpeditionsAsyncApi().subscribe(
+            (expeditions) => {
+                this.expeditions = expeditions;
+                console.log('Expeditions loaded:', expeditions);
+            },
+            (error) => {
+                console.error('Error loading expeditions:', error);
+            }
+        );
     }
 }

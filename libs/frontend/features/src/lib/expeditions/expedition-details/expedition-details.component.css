@@ -1,0 +1,45 @@
+.joinLeaveButton {
+    width: 200px; /* 1000px is huge for a button — feel free to adjust */
+    padding: 10px 20px;
+    border: none;
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 1s ease;
+}
+
+/* Modifier for join */
+.joinButton {
+    background-color: green;
+}
+
+/* Modifier for leave */
+.leaveButton {
+    background-color: red;
+}
+
+.editButton {
+    margin: 5px;
+    background-color: orange;
+    width: 120px;
+    padding: 8px 16px;
+    border: none;
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+}
+
+.deleteButton {
+    margin: 5px;
+    background-color: rgb(255, 60, 60);
+    width: 150px;
+    padding: 8px 16px;
+    border: none;
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+}
