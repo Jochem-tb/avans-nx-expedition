@@ -239,201 +239,405 @@
 
                 <!-- Add ActivitySection Section -->
 
-                <div class="mb-3 row">
-                    <h3 class="fw-bold justif">Activities</h3>
+                <div class="container mt-5">
+                    <div class="row">
+                        <!-- Left Column: List of Added Activities -->
+                        <div class="col-md-6">
+                            <h3 class="fw-bold">Activities</h3>
+                            <ul class="list-group">
+                                <li
+                                    *ngFor="
+                                        let activity of activities;
+                                        let i = index
+                                    "
+                                    class="list-group-item mb-2"
+                                    (click)="selectActivity(i)"
+                                    [class.active]="selectedActivityIndex === i"
+                                    style="cursor: pointer"
+                                >
+                                    <div>
+                                        <strong>{{ activity.title }}</strong>
+                                    </div>
+                                    <div>
+                                        {{ activity.date }}
+                                        ({{ activity.startTime }} -
+                                        {{ activity.endTime }})
+                                    </div>
+                                    <div
+                                        *ngIf="activity.gear?.length"
+                                        class="mt-2"
+                                    >
+                                        <small class="text-muted"
+                                            >Gear Items:</small
+                                        >
+                                        <ul class="list-group mt-1">
+                                            <li
+                                                class="list-group-item py-1"
+                                                *ngFor="
+                                                    let gear of activity.gear
+                                                "
+                                            >
+                                                {{ gear.name }} ({{
+                                                    gear.quantity
+                                                }}) - {{ gear.status }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
 
-                    <!-- Displaying list of added activities -->
-                    <div class="col-6">
-                        <h6 class="fw-bold">Added Activities:</h6>
-                        <ul class="list-group">
-                            <li
-                                class="list-group-item mb-1"
-                                *ngFor="
-                                    let activity of activities;
-                                    let i = index
-                                "
-                            >
-                                <div>
-                                    <strong>{{ activity.title }}</strong>
+                        <!-- Right Column: Activity Edit Section -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <!-- Tabs for switching between Activity editing and Gear editing -->
+                                    <ul class="nav nav-tabs card-header-tabs">
+                                        <li class="nav-item">
+                                            <a
+                                                class="nav-link"
+                                                [class.active]="
+                                                    activeTab === 'activity'
+                                                "
+                                                (click)="activeTab = 'activity'"
+                                                >Activity Details</a
+                                            >
+                                        </li>
+                                        <li class="nav-item">
+                                            <a
+                                                class="nav-link"
+                                                [class.active]="
+                                                    activeTab === 'gear'
+                                                "
+                                                (click)="activeTab = 'gear'"
+                                                >Gear Items</a
+                                            >
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div>{{ activity.description }}</div>
-                                <div>
-                                    {{ activity.date }} -
-                                    {{ activity.startTime }} to
-                                    {{ activity.endTime }}
+                                <div class="card-body">
+                                    <!-- Activity Details Form -->
+                                    <div *ngIf="activeTab === 'activity'">
+                                        <h5
+                                            class="card-title"
+                                            *ngIf="
+                                                selectedActivityIndex !== null;
+                                                else createActivity
+                                            "
+                                        >
+                                            Edit Activity
+                                        </h5>
+                                        <ng-template #createActivity>
+                                            <h5 class="card-title">
+                                                Create Activity
+                                            </h5>
+                                        </ng-template>
+                                        <div class="mb-3">
+                                            <label
+                                                for="activityTitle"
+                                                class="form-label"
+                                                >Title:</label
+                                            >
+                                            <input
+                                                type="text"
+                                                id="activityTitle"
+                                                class="form-control"
+                                                [(ngModel)]="
+                                                    currentActivity.title
+                                                "
+                                            />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label
+                                                for="activityDescription"
+                                                class="form-label"
+                                                >Description:</label
+                                            >
+                                            <textarea
+                                                id="activityDescription"
+                                                class="form-control"
+                                                rows="3"
+                                                [(ngModel)]="
+                                                    currentActivity.description
+                                                "
+                                            ></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label
+                                                for="activityDate"
+                                                class="form-label"
+                                                >Date:</label
+                                            >
+                                            <input
+                                                type="date"
+                                                id="activityDate"
+                                                class="form-control"
+                                                [(ngModel)]="
+                                                    currentActivity.date
+                                                "
+                                            />
+                                        </div>
+                                        <div class="row g-3 mb-3">
+                                            <div class="col">
+                                                <label
+                                                    for="activityStartTime"
+                                                    class="form-label"
+                                                    >Start Time:</label
+                                                >
+                                                <input
+                                                    type="time"
+                                                    id="activityStartTime"
+                                                    class="form-control"
+                                                    [(ngModel)]="
+                                                        currentActivity.startTime
+                                                    "
+                                                />
+                                            </div>
+                                            <div class="col">
+                                                <label
+                                                    for="activityEndTime"
+                                                    class="form-label"
+                                                    >End Time:</label
+                                                >
+                                                <input
+                                                    type="time"
+                                                    id="activityEndTime"
+                                                    class="form-control"
+                                                    [(ngModel)]="
+                                                        currentActivity.endTime
+                                                    "
+                                                />
+                                            </div>
+                                        </div>
+                                        <!-- Button to Save or Update the Activity -->
+                                        <div class="text-center">
+                                            <button
+                                                class="btn btn-primary"
+                                                (click)="saveActivity()"
+                                            >
+                                                Save Activity
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Gear Items Section: This appears within the right column form -->
+                                    <div *ngIf="activeTab === 'gear'">
+                                        <h5 class="card-title">
+                                            <!-- Show different title based on whether editing or adding -->
+                                            {{
+                                                selectedGearIndex === null
+                                                    ? 'Add Gear Item'
+                                                    : 'Edit Gear Item'
+                                            }}
+                                        </h5>
+
+                                        <!-- When adding new gear -->
+                                        <div *ngIf="selectedGearIndex === null">
+                                            <div class="mb-3">
+                                                <label class="form-label"
+                                                    >Gear Name:</label
+                                                >
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    [(ngModel)]="
+                                                        newGearItem.name
+                                                    "
+                                                    placeholder="Enter gear name"
+                                                />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label"
+                                                    >Description:</label
+                                                >
+                                                <textarea
+                                                    class="form-control"
+                                                    [(ngModel)]="
+                                                        newGearItem.description
+                                                    "
+                                                    placeholder="Enter description"
+                                                ></textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label"
+                                                    >Quantity:</label
+                                                >
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    [(ngModel)]="
+                                                        newGearItem.quantity
+                                                    "
+                                                    min="1"
+                                                />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label"
+                                                    >Status:</label
+                                                >
+                                                <select
+                                                    class="form-select"
+                                                    [(ngModel)]="
+                                                        newGearItem.status
+                                                    "
+                                                >
+                                                    <option
+                                                        *ngFor="
+                                                            let status of gearStatuses
+                                                        "
+                                                        [value]="status"
+                                                    >
+                                                        {{ status }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- When editing an existing gear item -->
+                                        <div *ngIf="selectedGearIndex !== null">
+                                            <div class="mb-3">
+                                                <label class="form-label"
+                                                    >Gear Name:</label
+                                                >
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    [(ngModel)]="
+                                                        currentGearItem.name
+                                                    "
+                                                    placeholder="Enter gear name"
+                                                />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label"
+                                                    >Description:</label
+                                                >
+                                                <textarea
+                                                    class="form-control"
+                                                    [(ngModel)]="
+                                                        currentGearItem.description
+                                                    "
+                                                    placeholder="Enter description"
+                                                ></textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label"
+                                                    >Quantity:</label
+                                                >
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    [(ngModel)]="
+                                                        currentGearItem.quantity
+                                                    "
+                                                    min="1"
+                                                />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label"
+                                                    >Status:</label
+                                                >
+                                                <select
+                                                    class="form-select"
+                                                    [(ngModel)]="
+                                                        currentGearItem.status
+                                                    "
+                                                >
+                                                    <option
+                                                        *ngFor="
+                                                            let status of gearStatuses
+                                                        "
+                                                        [value]="status"
+                                                    >
+                                                        {{ status }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="text-center">
+                                                <button
+                                                    class="btn btn-primary"
+                                                    (click)="saveGearItem()"
+                                                >
+                                                    Save Gear Item
+                                                </button>
+                                                <button
+                                                    class="btn btn-outline-secondary ms-2"
+                                                    (click)="deselectGearItem()"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Buttons: Save/Edit or Add -->
+                                        <div class="text-center">
+                                            <button
+                                                *ngIf="
+                                                    selectedGearIndex === null
+                                                "
+                                                class="btn btn-secondary"
+                                                (click)="addGearItem()"
+                                            >
+                                                Add Gear Item
+                                            </button>
+                                        </div>
+
+                                        <!-- List gear items for the current activity -->
+                                        <div
+                                            *ngIf="currentActivity.gear?.length"
+                                            class="mt-4"
+                                        >
+                                            <h6 class="fw-bold">
+                                                Current Gear Items:
+                                            </h6>
+                                            <ul class="list-group">
+                                                <li
+                                                    *ngFor="
+                                                        let gear of currentActivity.gear;
+                                                        let i = index
+                                                    "
+                                                    class="list-group-item d-flex justify-content-between align-items-center"
+                                                >
+                                                    <div>
+                                                        <strong>{{
+                                                            gear.name
+                                                        }}</strong>
+                                                        ({{ gear.quantity }}) -
+                                                        {{ gear.status }}
+                                                        <div class="text-muted">
+                                                            {{
+                                                                gear.description
+                                                            }}
+                                                        </div>
+                                                    </div>
+                                                    <!-- Edit button for gear item -->
+                                                    <button
+                                                        class="btn btn-sm btn-outline-primary"
+                                                        (click)="
+                                                            selectGearItem(i)
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="bi bi-pencil"
+                                                        ></i>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Input fields for a new activity -->
-                    <div class="col-6">
-                        <h6 class="fw-bold mb-3">Create Activity</h6>
-                        <div class="mb-3">
-                            <label for="activityTitle" class="form-label"
-                                >Activity Name:</label
-                            >
-                            <input
-                                type="text"
-                                id="activityTitle"
-                                class="form-control"
-                                placeholder="Enter Activity Name"
-                                [(ngModel)]="newActivity.title"
-                            />
-                        </div>
-                        <div class="mb-3">
-                            <label for="activityDescription" class="form-label"
-                                >Description:</label
-                            >
-                            <textarea
-                                id="activityDescription"
-                                class="form-control"
-                                rows="3"
-                                placeholder="Enter Activity Description"
-                                [(ngModel)]="newActivity.description"
-                            ></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="activityDate" class="form-label"
-                                >Activity Date:</label
-                            >
-                            <input
-                                type="date"
-                                id="activityDate"
-                                class="form-control"
-                                [(ngModel)]="newActivity.date"
-                            />
-                        </div>
-                        <div class="row g-3">
-                            <div class="col">
-                                <label
-                                    for="activityStartTime"
-                                    class="form-label"
-                                    >Start Time:</label
-                                >
-                                <input
-                                    type="time"
-                                    id="activityStartTime"
-                                    class="form-control"
-                                    [(ngModel)]="newActivity.startTime"
-                                />
                             </div>
-                            <div class="col">
-                                <label for="activityEndTime" class="form-label"
-                                    >End Time:</label
+
+                            <!-- Save Button -->
+                            <div class="text-center mt-4">
+                                <button
+                                    class="saveButton"
+                                    (click)="saveExpedition()"
                                 >
-                                <input
-                                    type="time"
-                                    id="activityEndTime"
-                                    class="form-control"
-                                    [(ngModel)]="newActivity.endTime"
-                                />
+                                    Save Expedition
+                                </button>
                             </div>
                         </div>
-                        <div class="mt-4">
-                            <h6 class="fw-bold">Location</h6>
-                            <div class="mb-3">
-                                <label
-                                    for="activityLocationName"
-                                    class="form-label"
-                                    >Location Name:</label
-                                >
-                                <input
-                                    type="text"
-                                    id="activityLocationName"
-                                    class="form-control"
-                                    placeholder="Enter Location Name"
-                                    [(ngModel)]="newActivity.location.name"
-                                />
-                            </div>
-                        </div>
-                        <div class="text-center mt-3">
-                            <button
-                                class="btn btn-primary"
-                                (click)="addActivity()"
-                            >
-                                Add Activity
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Gear Items Section -->
-                    <div class="mt-4">
-                        <h6 class="fw-bold">Add Gear Items</h6>
-
-                        <div class="mb-3">
-                            <label class="form-label">Name:</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                [(ngModel)]="newGearItem.name"
-                                placeholder="Enter gear name"
-                            />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Description:</label>
-                            <textarea
-                                class="form-control"
-                                [(ngModel)]="newGearItem.description"
-                                placeholder="Enter description"
-                            ></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Quantity:</label>
-                            <input
-                                type="number"
-                                class="form-control"
-                                [(ngModel)]="newGearItem.quantity"
-                                min="1"
-                            />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Status:</label>
-                            <select
-                                class="form-select"
-                                [(ngModel)]="newGearItem.status"
-                            >
-                                <option
-                                    *ngFor="let status of gearStatuses"
-                                    [value]="status"
-                                >
-                                    {{ status }}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="text-center">
-                            <button
-                                class="btn btn-secondary"
-                                (click)="addGearItemToNewActivity()"
-                            >
-                                Add Gear Item
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Show added gear items for this new activity -->
-                    <div *ngIf="newActivity.gear?.length" class="mt-4">
-                        <h6 class="fw-bold">Added Gear Items:</h6>
-                        <ul class="list-group">
-                            <li
-                                *ngFor="let gear of newActivity.gear"
-                                class="list-group-item"
-                            >
-                                <strong>{{ gear.name }}</strong> ({{
-                                    gear.quantity
-                                }}) - {{ gear.status }}
-                                <div class="text-muted">
-                                    {{ gear.description }}
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Save Button -->
-                    <div class="text-center mt-4">
-                        <button class="saveButton" (click)="saveExpedition()">
-                            Save Expedition
-                        </button>
                     </div>
                 </div>
             </div>

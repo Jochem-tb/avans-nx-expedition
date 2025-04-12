@@ -34,7 +34,7 @@ export class ExpeditionEditComponent implements OnInit {
 
     activities: IActivity[] = []; // Array to hold activities
 
-    newActivity: IActivity = {
+    currentActivity: IActivity = {
         _id: '',
         title: '',
         description: '',
@@ -52,6 +52,26 @@ export class ExpeditionEditComponent implements OnInit {
         difficultyLevel: DifficultyLevel.Unknown
     };
 
+    // For toggling between the Activity and Gear input fields on the right:
+    activeTab: 'activity' | 'gear' = 'activity';
+
+    // When a user selects an activity from the left list, store its index:
+    selectedActivityIndex: number | null = null;
+
+    // --- Gear Item Editing State ---
+    // List of gear items for the currentActivity is in currentActivity.gearItems.
+    // For editing, create a separate editing object and an index variable:
+    currentGearItem: IGearItem = {
+        _id: '',
+        name: '',
+        description: '',
+        quantity: 1,
+        status: GearStatusEnum.ToPack
+    };
+
+    selectedGearIndex: number | null = null;
+
+    // For creating new gear items (when not editing an existing one)
     newGearItem: IGearItem = {
         _id: '',
         name: '',
@@ -155,37 +175,6 @@ export class ExpeditionEditComponent implements OnInit {
         }
     }
 
-    addActivity() {
-        if (
-            this.newActivity.title &&
-            this.newActivity.date &&
-            this.newActivity.startTime &&
-            this.newActivity.endTime
-        ) {
-            this.activities.push({ ...this.newActivity });
-            this.sortActivities(); // Sort activities after adding a new one
-
-            // Reset fields
-            this.newActivity = {
-                _id: '',
-                title: '',
-                description: '',
-                date: '' as unknown as Date,
-                startTime: '14:00', // Default start time
-                endTime: '16:00', // Default end time
-                location: {
-                    latitude: 0,
-                    longitude: 0,
-                    name: '',
-                    continent: ContinentEnum.Unknown
-                },
-                gear: [],
-                notes: '', // Additional notes or instructions
-                difficultyLevel: DifficultyLevel.Unknown
-            };
-        }
-    }
-
     sortActivities() {
         this.activities.sort((a, b) => {
             const dateComparison =
@@ -197,18 +186,135 @@ export class ExpeditionEditComponent implements OnInit {
         });
     }
 
-    // For demo, assume you're adding to the current new activity before it's submitted
-    addGearItemToNewActivity() {
-        if (!this.newActivity.gear) this.newActivity.gear = [];
+    // Called when the user clicks an activity from the left list.
+    selectActivity(index: number) {
+        // If the clicked activity is already selected, deselect it
+        if (this.selectedActivityIndex === index) {
+            this.deselectActivity();
+        } else {
+            // Save the currently selected activity (if any)
+            if (this.selectedActivityIndex !== null) {
+                this.saveActivity();
+            }
 
-        const newItem = {
-            ...this.newGearItem,
-            _id: crypto.randomUUID() // Give it a temporary ID
+            // Select the new activity
+            this.selectedActivityIndex = index;
+            this.currentActivity = { ...this.activities[index] };
+            this.activeTab = 'activity';
+        }
+    }
+
+    deselectActivity() {
+        // Save changes before resetting
+        if (this.selectedActivityIndex !== null) {
+            this.saveActivity();
+        }
+        this.resetCurrentActivity(); // This sets selectedActivityIndex = null
+    }
+
+    // Save or update the activity from the right side
+    saveActivity() {
+        if (this.selectedActivityIndex === null) {
+            // Adding a new activity
+            this.activities.push({ ...this.currentActivity });
+        } else {
+            // Updating an existing activity
+            this.activities[this.selectedActivityIndex] = {
+                ...this.currentActivity
+            };
+        }
+        // Reset currentActivity and selection
+        this.sortActivities(); // Sort activities after adding a new one
+        this.resetCurrentActivity();
+    }
+
+    // Reset current activity editing form
+    resetCurrentActivity() {
+        this.currentActivity = {
+            _id: '',
+            title: '',
+            description: '',
+            date: '' as unknown as Date,
+            startTime: '14:00', // Default start time
+            endTime: '16:00', // Default end time
+            location: {
+                latitude: 0,
+                longitude: 0,
+                name: '',
+                continent: ContinentEnum.Unknown
+            },
+            gear: [],
+            notes: '', // Additional notes or instructions
+            difficultyLevel: DifficultyLevel.Unknown
         };
+        this.selectedActivityIndex = null;
+        this.activeTab = 'activity';
+    }
 
-        this.newActivity.gear.push(newItem);
+    // Optionally, a method to cancel editing.
+    cancelEdit() {
+        this.resetCurrentActivity();
+    }
 
-        // Reset gear item form
+    // --- Methods for Gear Items ---
+
+    // Called when a gear item in the gear list is clicked for editing.
+    selectGearItem(index: number) {
+        // If the clicked gear item is already selected, then deselect it.
+        if (this.selectedGearIndex === index) {
+            this.deselectGearItem();
+        } else {
+            // Save previous gear item if one was selected and it's different.
+            if (
+                this.selectedGearIndex !== null &&
+                this.selectedGearIndex !== index
+            ) {
+                this.saveGearItem();
+            }
+            // Select the new gear item for editing:
+            this.selectedGearIndex = index;
+            // Copy the gear item into currentGearItem for editing.
+            this.currentGearItem = { ...this.currentActivity.gear[index] };
+        }
+    }
+
+    // Save the currently edited gear item back into the currentActivity list.
+    saveGearItem() {
+        if (this.selectedGearIndex !== null) {
+            // Update the gear item in the list.
+            this.currentActivity.gear[this.selectedGearIndex] = {
+                ...this.currentGearItem
+            };
+            // Deselect it afterwards.
+            this.deselectGearItem();
+        }
+    }
+
+    // Deselect the gear item and reset the currentGearItem.
+    deselectGearItem() {
+        this.selectedGearIndex = null;
+        // Reset current gear item editor.
+        this.currentGearItem = {
+            _id: '',
+            name: '',
+            description: '',
+            quantity: 1,
+            status: GearStatusEnum.ToPack
+        };
+    }
+
+    // Add a new gear item (if not editing an existing one)
+    addGearItem() {
+        // Generate a temporary ID (or use any unique generator)
+        this.newGearItem._id = crypto.randomUUID
+            ? crypto.randomUUID()
+            : Math.random().toString();
+        if (!this.currentActivity.gear) {
+            this.currentActivity.gear = [];
+        }
+        // Add the new gear item to the current activity gear list.
+        this.currentActivity.gear.push({ ...this.newGearItem });
+        // Reset newGearItem for next use.
         this.newGearItem = {
             _id: '',
             name: '',
