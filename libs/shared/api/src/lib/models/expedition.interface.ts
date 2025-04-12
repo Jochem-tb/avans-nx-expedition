@@ -68,6 +68,34 @@ export interface IExpedition {
     updatedAt: Date;
 }
 
+export interface IActivity {
+    _id: string;
+    title: string;
+    description: string;
+    date: Date;
+    startTime: string; // e.g., "14:00"
+    endTime: string; // e.g., "16:00"
+    location: ILocation;
+    gear: IGearItem[];
+    difficultyLevel: DifficultyLevel; // Optional: Difficulty level of the activity
+    notes: string; // Additional notes or instructions
+}
+
+export interface IGearItem {
+    _id: string;
+    name: string;
+    description: string;
+    quantity: number;
+    status: GearStatusEnum;
+}
+
+export enum GearStatusEnum {
+    ToPack = 'To Pack',
+    Packed = 'Packed',
+    Missing = 'Missing',
+    NotAvailable = 'Not Available'
+}
+
 export type ICreateExpedition = Omit<IExpedition, '_id'>;
 
 export type IUpdateExpedition = Partial<Omit<IExpedition, '_id'>>;

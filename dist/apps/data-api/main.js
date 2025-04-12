@@ -243,7 +243,7 @@ var UserSkills;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ContinentEnum = exports.ExpeditionStatus = exports.DifficultyLevel = void 0;
+exports.GearStatusEnum = exports.ContinentEnum = exports.ExpeditionStatus = exports.DifficultyLevel = void 0;
 var DifficultyLevel;
 (function (DifficultyLevel) {
     DifficultyLevel["Easy"] = "Easy";
@@ -271,6 +271,13 @@ var ContinentEnum;
     ContinentEnum["South_America"] = "South America";
     ContinentEnum["Unknown"] = "Unknown";
 })(ContinentEnum || (exports.ContinentEnum = ContinentEnum = {}));
+var GearStatusEnum;
+(function (GearStatusEnum) {
+    GearStatusEnum["ToPack"] = "To Pack";
+    GearStatusEnum["Packed"] = "Packed";
+    GearStatusEnum["Missing"] = "Missing";
+    GearStatusEnum["NotAvailable"] = "Not Available";
+})(GearStatusEnum || (exports.GearStatusEnum = GearStatusEnum = {}));
 
 
 /***/ }),
