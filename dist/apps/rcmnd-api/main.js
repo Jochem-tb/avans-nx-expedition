@@ -394,7 +394,7 @@ tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c, _d, _e;
+var _a, _b, _c, _d, _e, _f;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateExpeditionDto = exports.UpsertExpeditionDto = exports.CreateExpeditionDto = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -452,11 +452,11 @@ tslib_1.__decorate([
 tslib_1.__decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
-    tslib_1.__metadata("design:type", String)
+    tslib_1.__metadata("design:type", typeof (_e = typeof api_1.IUser !== "undefined" && api_1.IUser) === "function" ? _e : Object)
 ], UpsertExpeditionDto.prototype, "organizer", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    tslib_1.__metadata("design:type", typeof (_e = typeof api_1.ILocation !== "undefined" && api_1.ILocation) === "function" ? _e : Object)
+    tslib_1.__metadata("design:type", typeof (_f = typeof api_1.ILocation !== "undefined" && api_1.ILocation) === "function" ? _f : Object)
 ], UpsertExpeditionDto.prototype, "location", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsString)(),
@@ -606,12 +606,20 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = tslib_1.__decorate([
     (0, common_1.Module)({
         imports: [
+            // Neo4jModule.forRoot({
+            //     scheme: 'bolt+s',
+            //     host: 'd5e40bc7.databases.neo4j.io',
+            //     port: 7687,
+            //     username: process.env.NEO4J_USER,
+            //     password: process.env.NEO4J_PASSWORD
+            // }),
             dist_1.Neo4jModule.forRoot({
-                scheme: 'bolt+s',
-                host: 'd5e40bc7.databases.neo4j.io',
+                scheme: 'neo4j',
+                host: 'localhost',
                 port: 7687,
-                username: process.env.NEO4J_USER,
-                password: process.env.NEO4J_PASSWORD
+                username: 'neo4j',
+                password: 'password',
+                database: 'expeditionrec'
             }),
             neo4j_1.Neo4jBackendModule
         ],
@@ -629,6 +637,7 @@ exports.AppModule = AppModule = tslib_1.__decorate([
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const tslib_1 = __webpack_require__(4);
 tslib_1.__exportStar(__webpack_require__(23), exports);
+tslib_1.__exportStar(__webpack_require__(26), exports);
 
 
 /***/ }),
@@ -651,7 +660,7 @@ exports.Neo4jBackendModule = Neo4jBackendModule = tslib_1.__decorate([
         imports: [nest_neo4j_1.Neo4jModule],
         controllers: [neo4j_controller_1.Neo4JExampleController],
         providers: [neo4j_users_service_1.Neo4JUserService],
-        exports: []
+        exports: [neo4j_users_service_1.Neo4JUserService]
     })
 ], Neo4jBackendModule);
 
@@ -667,7 +676,7 @@ module.exports = require("nest-neo4j");
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b;
+var _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Neo4JExampleController = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -681,6 +690,23 @@ let Neo4JExampleController = class Neo4JExampleController {
         const results = await this.neo4jService.findAll();
         return results;
     }
+    async getRecommended(userId) {
+        return await this.neo4jService.getRecommendedExpeditions(userId);
+    }
+    async addExpeditionRelation(body // Expecting a body with userId and expeditionId
+    ) {
+        console.log('addExpeditionRelation aanroepen');
+        const { userId, expeditionId, expeditionObject } = body;
+        // Call your service that handles Neo4j interaction
+        return await this.neo4jService.addUserExpeditionRelation(userId, expeditionId, expeditionObject);
+    }
+    async removeExpeditionRelation(body // Expecting a body with userId and expeditionId
+    ) {
+        console.log('removeExpeditionRelation aanroepen');
+        const { userId, expeditionId } = body;
+        // Call your service that handles Neo4j interaction
+        return await this.neo4jService.removeUserExpeditionRelation(userId, expeditionId);
+    }
 };
 exports.Neo4JExampleController = Neo4JExampleController;
 tslib_1.__decorate([
@@ -689,6 +715,27 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", []),
     tslib_1.__metadata("design:returntype", typeof (_b = typeof Promise !== "undefined" && Promise) === "function" ? _b : Object)
 ], Neo4JExampleController.prototype, "getAllUsers", null);
+tslib_1.__decorate([
+    (0, common_1.Get)('recommended/:userId'),
+    tslib_1.__param(0, (0, common_1.Param)('userId')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String]),
+    tslib_1.__metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+], Neo4JExampleController.prototype, "getRecommended", null);
+tslib_1.__decorate([
+    (0, common_1.Post)('joinExpedition'),
+    tslib_1.__param(0, (0, common_1.Body)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [Object]),
+    tslib_1.__metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
+], Neo4JExampleController.prototype, "addExpeditionRelation", null);
+tslib_1.__decorate([
+    (0, common_1.Post)('leaveExpedition'),
+    tslib_1.__param(0, (0, common_1.Body)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [Object]),
+    tslib_1.__metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
+], Neo4JExampleController.prototype, "removeExpeditionRelation", null);
 exports.Neo4JExampleController = Neo4JExampleController = tslib_1.__decorate([
     (0, common_1.Controller)('users'),
     tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof neo4j_users_service_1.Neo4JUserService !== "undefined" && neo4j_users_service_1.Neo4JUserService) === "function" ? _a : Object])
@@ -713,10 +760,42 @@ let Neo4JUserService = Neo4JUserService_1 = class Neo4JUserService {
         this.logger = new common_1.Logger(Neo4JUserService_1.name);
     }
     async findAll() {
-        this.logger.log('findAll users');
-        const results = await this.neo4jService.read(`MATCH people=()-[:WorksIn]->(t:Team {name:'Informatica'}) RETURN people;`);
-        const users = results.records.map((record) => record._fields[0].start.properties);
-        return users;
+        this.logger.log('Fetching all users from Neo4j');
+        const results = await this.neo4jService.read(`MATCH (u:User) RETURN u`);
+        return results.records.map((record) => record.get('u').properties);
+    }
+    async getRecommendedExpeditions(userId) {
+        const query = `
+            MATCH (u:User {id: $userId})-[:JOINED]->(e:Expedition)<-[:JOINED]-(other:User)-[:JOINED]->(rec:Expedition)
+            WHERE NOT (u)-[:JOINED]->(rec)
+            RETURN DISTINCT rec
+            LIMIT 10
+        `;
+        const result = await this.neo4jService.read(query, { userId });
+        return result.records.map((record) => record.get('rec').properties);
+    }
+    async addUserExpeditionRelation(userId, expeditionId, expeditionObject) {
+        const { title, difficultyLevel, location } = expeditionObject;
+        const query = `
+            MERGE (u:User {id: $userId})
+            MERGE (e:Expedition {title: $title, id: $expeditionId, difficulty: $difficultyLevel, continent: $location.continent })
+            MERGE (u)-[:JOINED]->(e)
+        `;
+        await this.neo4jService.write(query, {
+            userId,
+            expeditionId,
+            title,
+            difficultyLevel,
+            location
+        });
+        this.logger.log(`User ${userId} joined expedition in Neo4J ${expeditionId}`);
+    }
+    async removeUserExpeditionRelation(userId, expeditionId) {
+        const query = `
+            MATCH (u:User {id: $userId})-[r:JOINED]->(e:Expedition {id: $expeditionId})
+            DELETE r
+        `;
+        await this.neo4jService.write(query, { userId, expeditionId });
     }
 };
 exports.Neo4JUserService = Neo4JUserService;

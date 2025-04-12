@@ -64,7 +64,7 @@ export class ExpeditionController {
     }
 
     @Get(':id/join/:userId')
-    join(
+    async join(
         @Param('id') id: string,
         @Param('userId') userId: string
     ): Promise<IExpedition | null> {
@@ -72,7 +72,7 @@ export class ExpeditionController {
     }
 
     @Get(':id/leave/:userId')
-    leave(
+    async leave(
         @Param('id') id: string,
         @Param('userId') userId: string
     ): Promise<IExpedition | null> {

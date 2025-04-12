@@ -1612,10 +1612,10 @@ let ExpeditionController = class ExpeditionController {
     update(id, expedition) {
         return this.expeditionService.update(id, expedition);
     }
-    join(id, userId) {
+    async join(id, userId) {
         return this.expeditionService.join(id, userId);
     }
-    leave(id, userId) {
+    async leave(id, userId) {
         return this.expeditionService.leave(id, userId);
     }
     getOrganising(userId) {

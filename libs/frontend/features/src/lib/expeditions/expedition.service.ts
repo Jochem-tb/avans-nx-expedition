@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ICreateExpedition, IExpedition } from '../../../../../shared/api/src';
-import { delay, map, Observable, of } from 'rxjs';
+import { delay, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Logger } from '@nestjs/common';
 
@@ -54,20 +54,14 @@ export class ExpeditionService {
 
     getExpeditionById(id: string | null): Observable<IExpedition | undefined> {
         console.log('getExpeditionById aanroepen');
-        if (this.expeditions.length === 0) {
-            return this.getExpeditionsAsyncApi().pipe(
-                map((expeditions) => {
-                    this.expeditions = expeditions;
-                    return this.expeditions.find(
-                        (expedition) => expedition._id === id
-                    );
-                })
-            );
-        } else {
-            return of(
-                this.expeditions.find((expedition) => expedition._id === id)
-            );
-        }
+        return this.getExpeditionsAsyncApi().pipe(
+            map((expeditions) => {
+                this.expeditions = expeditions;
+                return this.expeditions.find(
+                    (expedition) => expedition._id === id
+                );
+            })
+        );
     }
 
     joinExpedition(
@@ -75,12 +69,31 @@ export class ExpeditionService {
         userId: string
     ): Observable<IExpedition | undefined> {
         console.log('joinExpedition aanroepen');
+
+        // Send the GET request to fetch the expedition and send the POST request in parallel
         return this.httpClient
             .get<{ results: IExpedition }>(
                 `http://localhost:3000/api/expedition/${id}/join/${userId}`
             )
             .pipe(
-                map((response) => response?.results) // Extract the 'results' property from the response
+                switchMap((response) => {
+                    const expeditionObject = response?.results; // Extract the expedition object from the first API response
+
+                    // Send the POST request (this won't return anything)
+                    this.httpClient
+                        .post(
+                            `http://localhost:3100/api/users/joinExpedition`,
+                            {
+                                expeditionId: id,
+                                userId: userId,
+                                expeditionObject: expeditionObject // Include the expedition object in the request body
+                            }
+                        )
+                        .subscribe(); // We don't need to handle the response from the POST request
+
+                    // Return the expedition object from the first GET request
+                    return of(expeditionObject); // Return the expedition object to the subscriber
+                })
             );
     }
 
@@ -89,13 +102,19 @@ export class ExpeditionService {
         userId: string
     ): Observable<IExpedition | undefined> {
         console.log('leaveExpedition aanroepen');
-        return this.httpClient
-            .get<{ results: IExpedition }>(
+
+        // Send both requests in parallel using forkJoin
+        return forkJoin({
+            expedition: this.httpClient.get<{ results: IExpedition }>(
                 `http://localhost:3000/api/expedition/${id}/leave/${userId}`
+            ),
+            user: this.httpClient.post<{ results: IExpedition }>(
+                `http://localhost:3100/api/users/leaveExpedition`,
+                { expeditionId: id, userId: userId }
             )
-            .pipe(
-                map((response) => response?.results) // Extract the 'results' property from the response
-            );
+        }).pipe(
+            map((response) => response.expedition?.results) // Extract the 'results' property from the first API response
+        );
     }
 
     getRecommendedExpeditions(userId: string): Observable<IExpedition[]> {
