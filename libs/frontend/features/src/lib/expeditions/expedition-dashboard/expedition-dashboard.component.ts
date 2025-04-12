@@ -68,28 +68,54 @@ export class ExpeditionDashboardComponent implements OnInit, OnDestroy {
             return;
         }
 
-        // Use forkJoin to load all expeditions concurrently
-        const expeditions$ = forkJoin({
-            joined: this.expeditionService.getJoinedExpeditions(this.userId),
-            organising: this.expeditionService.getOrganisingExpeditions(
-                this.userId
-            ),
-            recommended: this.expeditionService.getRecommendedExpeditions(
-                this.userId
-            )
-        });
+        this.loadJoinedExpeditions();
+        this.loadOrganisingExpeditions();
+        this.loadRecommendedExpeditions();
+    }
 
-        // Subscribe to the combined observables
+    private loadJoinedExpeditions(): void {
+        console.log('Loading joined expeditions for user ID:', this.userId);
+        if (!this.userId) return;
+
         this.sub.add(
-            expeditions$.subscribe({
-                next: (expeditions) => {
-                    // Now expeditions contains all the data from the API calls
-                    this.joinedExpeditions = expeditions.joined;
-                    this.organisingExpeditions = expeditions.organising;
-                    this.recommendedExpeditions = expeditions.recommended;
+            this.expeditionService.getJoinedExpeditions(this.userId).subscribe({
+                next: (joined) => {
+                    this.joinedExpeditions = joined;
                 },
                 error: (err) => {
-                    console.error('Error loading expeditions', err);
+                    console.error('Error loading joined expeditions', err);
+                }
+            })
+        );
+    }
+
+    private loadOrganisingExpeditions(): void {
+        console.log('Loading organising expeditions for user ID:', this.userId);
+        if (!this.userId) return;
+
+        this.sub.add(
+            this.expeditionService.getOrganisingExpeditions(this.userId).subscribe({
+                next: (organising) => {
+                    this.organisingExpeditions = organising;
+                },
+                error: (err) => {
+                    console.error('Error loading organising expeditions', err);
+                }
+            })
+        );
+    }
+
+    private loadRecommendedExpeditions(): void {
+        console.log('Loading recommended expeditions for user ID:', this.userId);
+        if (!this.userId) return;
+
+        this.sub.add(
+            this.expeditionService.getRecommendedExpeditions(this.userId).subscribe({
+                next: (recommended) => {
+                    this.recommendedExpeditions = recommended;
+                },
+                error: (err) => {
+                    console.error('Error loading recommended expeditions', err);
                 }
             })
         );

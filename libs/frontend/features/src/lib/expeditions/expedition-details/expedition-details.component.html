@@ -42,7 +42,13 @@
                     Edit
                 </button>
 
-                <button *ngIf="isOrganiser" class="deleteButton">Delete</button>
+                <button
+                    *ngIf="isOrganiser"
+                    (click)="deleteExpedition()"
+                    class="deleteButton"
+                >
+                    Delete
+                </button>
             </div>
 
             <hr *ngIf="isOrganiser" />

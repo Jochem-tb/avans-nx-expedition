@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExpeditionService } from '../expedition.service';
 import { Expedition } from '@avans-nx-expedition/backend/expedition';
 import { Subscription } from 'rxjs';
@@ -25,7 +25,7 @@ export class ExpeditionDetailsComponent implements OnInit {
         private route: ActivatedRoute,
         private expeditionService: ExpeditionService,
         private accountService: AccountService,
-        private cdRef: ChangeDetectorRef
+        private router: Router
     ) {}
 
     isUserParticipant(expedition: any, loggedUserId: string): boolean {
@@ -113,5 +113,17 @@ export class ExpeditionDetailsComponent implements OnInit {
             return 'Unknown user'; // or 'Loading...'
         }
         return participant.name;
+    }
+
+    deleteExpedition(): void {
+        if (this.expedition && this.expedition._id) {
+            this.expeditionService
+                .deleteExpedition(this.expedition._id)
+                .subscribe(() => {
+                    console.log('Expedition deleted successfully');
+                    this.router.navigate(['/expeditions']); // Navigate to the expeditions list or any other page
+                    // Optionally navigate away or show a success message
+                });
+        }
     }
 }

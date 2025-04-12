@@ -49,6 +49,15 @@ export class ExpeditionService {
         return item;
     }
 
+    async delete(_id: string): Promise<IExpedition | null> {
+        this.logger.log(`Deleting expedition with id ${_id}`);
+        const item = await this.expeditionModel.findByIdAndDelete({ _id });
+        if (!item) {
+            this.logger.debug('Item not found');
+        }
+        return item;
+    }
+
     async findManyByDifficultyLevel(
         difficultyLevel: string
     ): Promise<IExpedition[]> {

@@ -99,7 +99,7 @@ export class RegisterComponent implements OnInit {
         this.accountService.register(data).subscribe(
             (response) => {
                 console.log('User registered successfully:', response);
-                this.router.navigate(['/']);
+                this.router.navigate(['/login']);
             },
             (error) => {
                 console.error('Error during registration:', error);

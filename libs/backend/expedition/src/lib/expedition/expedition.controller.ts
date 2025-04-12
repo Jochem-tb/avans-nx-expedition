@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     Param,
     Post,
@@ -47,6 +48,11 @@ export class ExpeditionController {
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<IExpedition | null> {
         return this.expeditionService.findOne(id);
+    }
+
+    @Delete(':id')
+    async delete(@Param('id') id: string): Promise<IExpedition | null> {
+        return this.expeditionService.delete(id);
     }
 
     @Post('')

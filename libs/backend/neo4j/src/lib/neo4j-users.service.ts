@@ -1,4 +1,4 @@
-import { IExpedition } from '@avans-nx-expedition/shared/api';
+import { IExpedition, IUser } from '@avans-nx-expedition/shared/api';
 import { Injectable, Logger } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j/dist';
 
@@ -17,14 +17,41 @@ export class Neo4JUserService {
 
     async getRecommendedExpeditions(userId: string): Promise<any[]> {
         const query = `
-            MATCH (u:User {id: $userId})-[:JOINED]->(e:Expedition)<-[:JOINED]-(other:User)-[:JOINED]->(rec:Expedition)
-            WHERE NOT (u)-[:JOINED]->(rec)
-            RETURN DISTINCT rec
+            MATCH (u:User {id: $userId})-[:JOINED]->(exp:Expedition)
+            WITH u, collect(exp) AS userExps
+            MATCH (other:User)-[:JOINED]->(rec:Expedition)
+            WHERE other.id <> $userId AND NOT (u)-[:JOINED]->(rec)
+            WITH rec, userExps, count(DISTINCT other) AS similarCount
+            WITH rec, similarCount,
+                 size([attr IN ['difficulty','continent','organizerId'] 
+                       WHERE ANY(e IN userExps WHERE e[attr] = rec[attr])]) AS attrMatchCount
+            ORDER BY (similarCount + attrMatchCount) DESC
             LIMIT 10
+            RETURN rec, similarCount, attrMatchCount
         `;
 
+        // Execute the query
         const result = await this.neo4jService.read(query, { userId });
 
+        // Log overall recommendation process
+        this.logger.log(`Recommended expeditions for user ${userId}:`);
+
+        // For each record, log detailed intermediate values:
+        result.records.forEach((record, index) => {
+            const expeditionNode = record.get('rec');
+            const recProperties = expeditionNode.properties;
+            const similarCount = record.get('similarCount');
+            const attrMatchCount = record.get('attrMatchCount');
+
+            this.logger.log(
+                `Record ${index + 1} => Expedition: ${
+                    recProperties.title || recProperties.id
+                }, ` +
+                    `Similar Users: ${similarCount}, Attribute Matches: ${attrMatchCount}`
+            );
+        });
+
+        // Finally, return the expedition properties for the frontend
         return result.records.map((record) => record.get('rec').properties);
     }
 
@@ -33,11 +60,15 @@ export class Neo4JUserService {
         expeditionId: string,
         expeditionObject: IExpedition
     ) {
-        const { title, difficultyLevel, location } = expeditionObject;
+        const { title, difficultyLevel, location, organizer } =
+            expeditionObject;
+
+        const organizer_Id = (organizer as IUser)._id;
+        console.log(organizer_Id);
 
         const query = `
             MERGE (u:User {id: $userId})
-            MERGE (e:Expedition {title: $title, id: $expeditionId, difficulty: $difficultyLevel, continent: $location.continent })
+            MERGE (e:Expedition {title: $title, id: $expeditionId, difficulty: $difficultyLevel, continent: $location.continent, organizerId: $organizer_Id})
             MERGE (u)-[:JOINED]->(e)
         `;
         await this.neo4jService.write(query, {
@@ -45,7 +76,8 @@ export class Neo4JUserService {
             expeditionId,
             title,
             difficultyLevel,
-            location
+            location,
+            organizer_Id
         });
         this.logger.log(
             `User ${userId} joined expedition in Neo4J ${expeditionId}`
@@ -58,5 +90,20 @@ export class Neo4JUserService {
             DELETE r
         `;
         await this.neo4jService.write(query, { userId, expeditionId });
+    }
+
+    async deleteExpedition(id: string): Promise<any> {
+        const query = `
+            MATCH (e:Expedition {id: $id})
+            OPTIONAL MATCH (e)-[r]-()  // Optional match to remove all relationships
+            DELETE r, e
+        `;
+
+        const result = await this.neo4jService.write(query, { id });
+
+        // Log the deleted expedition
+        this.logger.log(`Expedition with id ${id} deleted`);
+
+        return { success: true };
     }
 }

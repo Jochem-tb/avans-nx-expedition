@@ -1578,7 +1578,7 @@ exports.ExpeditionModule = ExpeditionModule = tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExpeditionController = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -1604,6 +1604,9 @@ let ExpeditionController = class ExpeditionController {
     // }
     async findOne(id) {
         return this.expeditionService.findOne(id);
+    }
+    async delete(id) {
+        return this.expeditionService.delete(id);
     }
     // @UseGuards(expeditionExistGuard) NOT IMPLEMENTED YET
     create(expedition) {
@@ -1650,21 +1653,28 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
 ], ExpeditionController.prototype, "findOne", null);
 tslib_1.__decorate([
+    (0, common_1.Delete)(':id'),
+    tslib_1.__param(0, (0, common_1.Param)('id')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String]),
+    tslib_1.__metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
+], ExpeditionController.prototype, "delete", null);
+tslib_1.__decorate([
     (0, common_1.Post)('')
     // @UseGuards(expeditionExistGuard) NOT IMPLEMENTED YET
     ,
     tslib_1.__param(0, (0, common_1.Body)()),
     tslib_1.__metadata("design:type", Function),
-    tslib_1.__metadata("design:paramtypes", [typeof (_e = typeof dto_1.CreateExpeditionDto !== "undefined" && dto_1.CreateExpeditionDto) === "function" ? _e : Object]),
-    tslib_1.__metadata("design:returntype", typeof (_f = typeof Promise !== "undefined" && Promise) === "function" ? _f : Object)
+    tslib_1.__metadata("design:paramtypes", [typeof (_f = typeof dto_1.CreateExpeditionDto !== "undefined" && dto_1.CreateExpeditionDto) === "function" ? _f : Object]),
+    tslib_1.__metadata("design:returntype", typeof (_g = typeof Promise !== "undefined" && Promise) === "function" ? _g : Object)
 ], ExpeditionController.prototype, "create", null);
 tslib_1.__decorate([
     (0, common_1.Put)(':id'),
     tslib_1.__param(0, (0, common_1.Param)('id')),
     tslib_1.__param(1, (0, common_1.Body)()),
     tslib_1.__metadata("design:type", Function),
-    tslib_1.__metadata("design:paramtypes", [String, typeof (_g = typeof dto_1.UpdateExpeditionDto !== "undefined" && dto_1.UpdateExpeditionDto) === "function" ? _g : Object]),
-    tslib_1.__metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
+    tslib_1.__metadata("design:paramtypes", [String, typeof (_h = typeof dto_1.UpdateExpeditionDto !== "undefined" && dto_1.UpdateExpeditionDto) === "function" ? _h : Object]),
+    tslib_1.__metadata("design:returntype", typeof (_j = typeof Promise !== "undefined" && Promise) === "function" ? _j : Object)
 ], ExpeditionController.prototype, "update", null);
 tslib_1.__decorate([
     (0, common_1.Get)(':id/join/:userId'),
@@ -1672,7 +1682,7 @@ tslib_1.__decorate([
     tslib_1.__param(1, (0, common_1.Param)('userId')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String, String]),
-    tslib_1.__metadata("design:returntype", typeof (_j = typeof Promise !== "undefined" && Promise) === "function" ? _j : Object)
+    tslib_1.__metadata("design:returntype", typeof (_k = typeof Promise !== "undefined" && Promise) === "function" ? _k : Object)
 ], ExpeditionController.prototype, "join", null);
 tslib_1.__decorate([
     (0, common_1.Get)(':id/leave/:userId'),
@@ -1680,28 +1690,28 @@ tslib_1.__decorate([
     tslib_1.__param(1, (0, common_1.Param)('userId')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String, String]),
-    tslib_1.__metadata("design:returntype", typeof (_k = typeof Promise !== "undefined" && Promise) === "function" ? _k : Object)
+    tslib_1.__metadata("design:returntype", typeof (_l = typeof Promise !== "undefined" && Promise) === "function" ? _l : Object)
 ], ExpeditionController.prototype, "leave", null);
 tslib_1.__decorate([
     (0, common_1.Get)('/organising/:userId'),
     tslib_1.__param(0, (0, common_1.Param)('userId')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String]),
-    tslib_1.__metadata("design:returntype", typeof (_l = typeof Promise !== "undefined" && Promise) === "function" ? _l : Object)
+    tslib_1.__metadata("design:returntype", typeof (_m = typeof Promise !== "undefined" && Promise) === "function" ? _m : Object)
 ], ExpeditionController.prototype, "getOrganising", null);
 tslib_1.__decorate([
     (0, common_1.Get)('/joined/:userId'),
     tslib_1.__param(0, (0, common_1.Param)('userId')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String]),
-    tslib_1.__metadata("design:returntype", typeof (_m = typeof Promise !== "undefined" && Promise) === "function" ? _m : Object)
+    tslib_1.__metadata("design:returntype", typeof (_o = typeof Promise !== "undefined" && Promise) === "function" ? _o : Object)
 ], ExpeditionController.prototype, "getJoined", null);
 tslib_1.__decorate([
     (0, common_1.Get)('/recommended/:userId'),
     tslib_1.__param(0, (0, common_1.Param)('userId')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String]),
-    tslib_1.__metadata("design:returntype", typeof (_o = typeof Promise !== "undefined" && Promise) === "function" ? _o : Object)
+    tslib_1.__metadata("design:returntype", typeof (_p = typeof Promise !== "undefined" && Promise) === "function" ? _p : Object)
 ], ExpeditionController.prototype, "getRecommended", null);
 exports.ExpeditionController = ExpeditionController = tslib_1.__decorate([
     (0, common_1.Controller)('expedition'),
@@ -1745,6 +1755,14 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
             .populate('organizer')
             .populate('participants')
             .exec();
+        if (!item) {
+            this.logger.debug('Item not found');
+        }
+        return item;
+    }
+    async delete(_id) {
+        this.logger.log(`Deleting expedition with id ${_id}`);
+        const item = await this.expeditionModel.findByIdAndDelete({ _id });
         if (!item) {
             this.logger.debug('Item not found');
         }

@@ -707,6 +707,21 @@ let Neo4JExampleController = class Neo4JExampleController {
         // Call your service that handles Neo4j interaction
         return await this.neo4jService.removeUserExpeditionRelation(userId, expeditionId);
     }
+    async deleteExpedition(id) {
+        try {
+            await this.neo4jService.deleteExpedition(id);
+            return {
+                success: true,
+                message: `Expedition with id ${id} has been deleted`
+            };
+        }
+        catch (error) {
+            console.log(`Failed to delete expedition: ${id}`);
+            return {
+                success: false
+            };
+        }
+    }
 };
 exports.Neo4JExampleController = Neo4JExampleController;
 tslib_1.__decorate([
@@ -716,7 +731,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:returntype", typeof (_b = typeof Promise !== "undefined" && Promise) === "function" ? _b : Object)
 ], Neo4JExampleController.prototype, "getAllUsers", null);
 tslib_1.__decorate([
-    (0, common_1.Get)('recommended/:userId'),
+    (0, common_1.Get)(':userId'),
     tslib_1.__param(0, (0, common_1.Param)('userId')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String]),
@@ -736,8 +751,15 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", [Object]),
     tslib_1.__metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
 ], Neo4JExampleController.prototype, "removeExpeditionRelation", null);
+tslib_1.__decorate([
+    (0, common_1.Delete)('expedition/:id'),
+    tslib_1.__param(0, (0, common_1.Param)('id')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String]),
+    tslib_1.__metadata("design:returntype", Promise)
+], Neo4JExampleController.prototype, "deleteExpedition", null);
 exports.Neo4JExampleController = Neo4JExampleController = tslib_1.__decorate([
-    (0, common_1.Controller)('users'),
+    (0, common_1.Controller)('recommendations'),
     tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof neo4j_users_service_1.Neo4JUserService !== "undefined" && neo4j_users_service_1.Neo4JUserService) === "function" ? _a : Object])
 ], Neo4JExampleController);
 
@@ -766,19 +788,41 @@ let Neo4JUserService = Neo4JUserService_1 = class Neo4JUserService {
     }
     async getRecommendedExpeditions(userId) {
         const query = `
-            MATCH (u:User {id: $userId})-[:JOINED]->(e:Expedition)<-[:JOINED]-(other:User)-[:JOINED]->(rec:Expedition)
-            WHERE NOT (u)-[:JOINED]->(rec)
-            RETURN DISTINCT rec
+            MATCH (u:User {id: $userId})-[:JOINED]->(exp:Expedition)
+            WITH u, collect(exp) AS userExps
+            MATCH (other:User)-[:JOINED]->(rec:Expedition)
+            WHERE other.id <> $userId AND NOT (u)-[:JOINED]->(rec)
+            WITH rec, userExps, count(DISTINCT other) AS similarCount
+            WITH rec, similarCount,
+                 size([attr IN ['difficulty','continent','organizerId'] 
+                       WHERE ANY(e IN userExps WHERE e[attr] = rec[attr])]) AS attrMatchCount
+            ORDER BY (similarCount + attrMatchCount) DESC
             LIMIT 10
+            RETURN rec, similarCount, attrMatchCount
         `;
+        // Execute the query
         const result = await this.neo4jService.read(query, { userId });
+        // Log overall recommendation process
+        this.logger.log(`Recommended expeditions for user ${userId}:`);
+        // For each record, log detailed intermediate values:
+        result.records.forEach((record, index) => {
+            const expeditionNode = record.get('rec');
+            const recProperties = expeditionNode.properties;
+            const similarCount = record.get('similarCount');
+            const attrMatchCount = record.get('attrMatchCount');
+            this.logger.log(`Record ${index + 1} => Expedition: ${recProperties.title || recProperties.id}, ` +
+                `Similar Users: ${similarCount}, Attribute Matches: ${attrMatchCount}`);
+        });
+        // Finally, return the expedition properties for the frontend
         return result.records.map((record) => record.get('rec').properties);
     }
     async addUserExpeditionRelation(userId, expeditionId, expeditionObject) {
-        const { title, difficultyLevel, location } = expeditionObject;
+        const { title, difficultyLevel, location, organizer } = expeditionObject;
+        const organizer_Id = organizer._id;
+        console.log(organizer_Id);
         const query = `
             MERGE (u:User {id: $userId})
-            MERGE (e:Expedition {title: $title, id: $expeditionId, difficulty: $difficultyLevel, continent: $location.continent })
+            MERGE (e:Expedition {title: $title, id: $expeditionId, difficulty: $difficultyLevel, continent: $location.continent, organizerId: $organizer_Id})
             MERGE (u)-[:JOINED]->(e)
         `;
         await this.neo4jService.write(query, {
@@ -786,7 +830,8 @@ let Neo4JUserService = Neo4JUserService_1 = class Neo4JUserService {
             expeditionId,
             title,
             difficultyLevel,
-            location
+            location,
+            organizer_Id
         });
         this.logger.log(`User ${userId} joined expedition in Neo4J ${expeditionId}`);
     }
@@ -796,6 +841,17 @@ let Neo4JUserService = Neo4JUserService_1 = class Neo4JUserService {
             DELETE r
         `;
         await this.neo4jService.write(query, { userId, expeditionId });
+    }
+    async deleteExpedition(id) {
+        const query = `
+            MATCH (e:Expedition {id: $id})
+            OPTIONAL MATCH (e)-[r]-()  // Optional match to remove all relationships
+            DELETE r, e
+        `;
+        const result = await this.neo4jService.write(query, { id });
+        // Log the deleted expedition
+        this.logger.log(`Expedition with id ${id} deleted`);
+        return { success: true };
     }
 };
 exports.Neo4JUserService = Neo4JUserService;
