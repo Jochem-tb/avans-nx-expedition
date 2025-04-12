@@ -79,7 +79,6 @@ export class ExpeditionService {
                 switchMap((response) => {
                     const expeditionObject = response?.results; // Extract the expedition object from the first API response
 
-                    // Send the POST request (this won't return anything)
                     console.log('deleteExpedition neo4J');
                     this.httpClient
                         .delete(
@@ -166,11 +165,6 @@ export class ExpeditionService {
             .pipe(
                 map((response) => response.results), // Extract 'results' array
                 switchMap((neoExpeditionObject) => {
-                    // Ensure that expeditions is an array of IExpedition
-                    console.log(
-                        'inside recommended with expeditions:',
-                        neoExpeditionObject
-                    );
                     const expeditionRequests = neoExpeditionObject.map(
                         (neoExpeditionObject) =>
                             this.getExpeditionByIdApi(neoExpeditionObject.id) // Assuming you have a method to fetch expeditions by ID
