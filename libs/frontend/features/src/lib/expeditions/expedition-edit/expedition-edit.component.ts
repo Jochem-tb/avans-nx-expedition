@@ -228,6 +228,20 @@ export class ExpeditionEditComponent implements OnInit {
         this.resetCurrentActivity();
     }
 
+    // Remove an activity at the given index.
+    deleteActivity(index: number, event: Event): void {
+        event.stopPropagation(); // Prevent the click from selecting/deselecting the activity
+        // Optionally, prompt for confirmation
+        if (confirm('Are you sure you want to delete this activity?')) {
+            // If the activity being removed is currently selected, deselect it first.
+            if (this.selectedActivityIndex === index) {
+                this.deselectActivity();
+            }
+            // Remove the activity from the array.
+            this.activities.splice(index, 1);
+        }
+    }
+
     // Reset current activity editing form
     resetCurrentActivity() {
         this.currentActivity = {
@@ -287,6 +301,18 @@ export class ExpeditionEditComponent implements OnInit {
             };
             // Deselect it afterwards.
             this.deselectGearItem();
+        }
+    }
+
+    // Remove a gear item from currentActivity at the specified index.
+    deleteGearItem(index: number, event: Event): void {
+        event.stopPropagation(); // Prevent interference with edit selection
+        if (confirm('Are you sure you want to delete this gear item?')) {
+            if (this.selectedGearIndex === index) {
+                // If the gear item currently being edited is deleted, reset the editing form.
+                this.deselectGearItem();
+            }
+            this.currentActivity.gear.splice(index, 1);
         }
     }
 
