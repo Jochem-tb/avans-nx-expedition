@@ -1191,10 +1191,6 @@ tslib_1.__decorate([
         type: String,
         select: true,
         unique: true
-        // validate: {
-        //     validator: isEmail,
-        //     message: 'should be a valid email address'
-        // }
     }),
     tslib_1.__metadata("design:type", Object)
 ], User.prototype, "emailAddress", void 0);

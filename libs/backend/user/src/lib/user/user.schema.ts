@@ -36,10 +36,6 @@ export class User implements IUser {
         type: String,
         select: true,
         unique: true
-        // validate: {
-        //     validator: isEmail,
-        //     message: 'should be a valid email address'
-        // }
     })
     emailAddress = '';
 
