@@ -8,6 +8,7 @@ import {
 import {
     DifficultyLevel,
     ExpeditionStatus,
+    IActivity,
     ICreateExpedition,
     IExpedition,
     ILocation,
@@ -27,6 +28,7 @@ import {
 import { Meal } from '@avans-nx-expedition/backend/features';
 
 export class CreateExpeditionDto implements ICreateExpedition {
+    activities!: (string | IActivity)[];
     title!: string;
     description!: string;
     startDate!: Date;
@@ -76,6 +78,9 @@ export class UpsertExpeditionDto implements IUpsertExpedition {
 
     @IsString({ each: true })
     participants!: IUser[];
+
+    @IsString({ each: true })
+    activities!: (string | IActivity)[];
 
     @IsString()
     @IsNotEmpty()

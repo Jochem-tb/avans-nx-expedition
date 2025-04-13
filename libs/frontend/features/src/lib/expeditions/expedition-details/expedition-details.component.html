@@ -145,7 +145,73 @@
                             <strong>Continent:</strong>
                             {{ expedition?.location?.continent }}
                         </p>
-                        <br />
+                    </div>
+                </div>
+                <div class="row mt-4 p-4">
+                    <div class="activityContainer p-0 col">
+                        <h5 class="fw-bold">Activities</h5>
+                        <ul
+                            class="list-group list-group-flush"
+                            style="background-color: #1c2331; color: white"
+                        >
+                            <li
+                                class="list-group-item"
+                                *ngFor="let activity of expedition?.activities"
+                                style="
+                                    background-color: #1c2331;
+                                    border: none;
+                                    color: white;
+                                "
+                            >
+                                <ng-container *ngIf="isActivity(activity)">
+                                    <div>
+                                        <strong>{{ activity.title }}</strong>
+                                    </div>
+                                    <div>
+                                        {{
+                                            activity.date | date : 'dd-mm-yyyy-'
+                                        }}
+                                        ({{ activity.startTime }} -
+                                        {{ activity.endTime }})
+                                    </div>
+                                    <div *ngIf="activity.description">
+                                        <strong>Description:</strong>
+                                        {{ activity.description }}
+                                    </div>
+                                    <div *ngIf="activity.location.name">
+                                        <strong>Location:</strong>
+                                        {{ activity.location.name }}
+                                    </div>
+                                    <div *ngIf="activity.difficultyLevel">
+                                        <strong>Difficulty:</strong>
+                                        {{ activity.difficultyLevel }}
+                                    </div>
+                                    <div
+                                        *ngIf="activity.gear?.length"
+                                        class="mt-2"
+                                    >
+                                        <small class="text-muted"
+                                            >Gear Items:</small
+                                        >
+                                        <ul class="list-group mt-1">
+                                            <li
+                                                class="list-group-item py-1"
+                                                *ngFor="
+                                                    let gear of activity.gear
+                                                "
+                                            >
+                                                {{ gear.name }} ({{
+                                                    gear.quantity
+                                                }}) - {{ gear.status }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </ng-container>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="participantContainer p-0 col">
                         <h5 class="fw-bold">Participants</h5>
                         <ul
                             class="list-group list-group-flush"

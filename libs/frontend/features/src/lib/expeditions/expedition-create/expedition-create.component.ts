@@ -33,6 +33,7 @@ export class ExpeditionCreateComponent implements OnInit {
                         status: ExpeditionStatus.Unknown,
                         maxParticipants: 0,
                         participants: [],
+                        activities: [],
                         organizer: user,
                         location: {
                             name: '',

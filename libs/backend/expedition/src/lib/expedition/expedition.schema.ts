@@ -50,6 +50,12 @@ export class Expedition implements IExpedition {
     @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'User' })
     organizer!: string;
 
+    @Prop({
+        required: true,
+        type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Activity' }]
+    })
+    activities!: string[];
+
     @Prop({ required: true, type: Object })
     location!: ILocation;
 

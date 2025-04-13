@@ -13,7 +13,8 @@ import {
     ExpeditionStatus,
     DifficultyLevel,
     ContinentEnum,
-    IExpedition
+    IExpedition,
+    IActivity
 } from '@avans-nx-expedition/shared/api';
 import {
     CreateExpeditionDto,
@@ -59,6 +60,12 @@ export class ExpeditionController {
     // @UseGuards(expeditionExistGuard) NOT IMPLEMENTED YET
     create(@Body() expedition: CreateExpeditionDto): Promise<IExpedition> {
         return this.expeditionService.create(expedition);
+    }
+
+    @Post('activity')
+    // @UseGuards(expeditionExistGuard) NOT IMPLEMENTED YET
+    createActivity(@Body() activity: IActivity): Promise<IActivity> {
+        return this.expeditionService.createActivity(activity);
     }
 
     @Put(':id')

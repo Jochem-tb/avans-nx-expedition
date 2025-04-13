@@ -5,7 +5,11 @@ import { Expedition } from '@avans-nx-expedition/backend/expedition';
 import { Subscription } from 'rxjs';
 import { User, UserService } from '@avans-nx-expedition/backend/user';
 import { AccountService } from '@avans-nx-expedition/frontend/account'; // Adjust the path if necessary
-import { IUser, IUserIdentity } from '@avans-nx-expedition/shared/api';
+import {
+    IActivity,
+    IUser,
+    IUserIdentity
+} from '@avans-nx-expedition/shared/api';
 import { IExpedition } from '@avans-nx-expedition/shared/api';
 
 @Component({
@@ -36,6 +40,10 @@ export class ExpeditionDetailsComponent implements OnInit {
         );
     }
 
+    isActivity(activity: IActivity | string): activity is IActivity {
+        return typeof activity !== 'string';
+    }
+
     ngOnInit(): void {
         console.log('ExpeditionDetailsComponent.ngOnInit() aangeroepen');
         this.expeditionId = this.route.snapshot.paramMap.get('id');
@@ -44,6 +52,7 @@ export class ExpeditionDetailsComponent implements OnInit {
             .getExpeditionByIdApi(String(this.expeditionId))
             .subscribe((expedition) => {
                 this.expedition = expedition;
+
                 console.log('Expedition:', this.expedition);
 
                 this.accountService.checkToken().subscribe((isLoggedIn) => {

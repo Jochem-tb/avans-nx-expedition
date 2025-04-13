@@ -5,7 +5,9 @@ import {
     Expedition as ExpeditionModel,
     ExpeditionDocument
 } from './expedition.schema';
+import { Activity as ActivityModel, ActivityDocument } from './activity.schema';
 import {
+    IActivity,
     ICreateExpedition,
     IExpedition,
     IUser
@@ -23,7 +25,9 @@ export class ExpeditionService {
 
     constructor(
         @InjectModel(ExpeditionModel.name)
-        private expeditionModel: Model<ExpeditionDocument> // @InjectModel(Meal.name) private meetupModel: Model<MealDocument>
+        private expeditionModel: Model<ExpeditionDocument>,
+        @InjectModel(ActivityModel.name)
+        private activityModel: Model<ActivityDocument>
     ) {}
 
     async findAll(): Promise<IExpedition[]> {
@@ -32,6 +36,7 @@ export class ExpeditionService {
             .find()
             .populate('organizer')
             .populate('participants')
+            .populate('activities')
             .exec();
         return items;
     }
@@ -42,7 +47,10 @@ export class ExpeditionService {
             .findOne({ _id })
             .populate('organizer')
             .populate('participants')
+            .populate('activities')
             .exec();
+
+        console.log('item in findOne', item);
         if (!item) {
             this.logger.debug('Item not found');
         }
@@ -84,6 +92,36 @@ export class ExpeditionService {
         return createdItem;
     }
 
+    async createActivity(activity: any): Promise<any> {
+        this.logger.log(`Create activity with title: ${activity.title}`);
+
+        if (!activity._id || activity._id === '') {
+            delete activity._id; // Remove _id if it exists
+            const createdItem = await this.activityModel.create(activity);
+            this.logger.log(`Created activity: ${createdItem}`);
+            return createdItem;
+        } else {
+            // If _id exists, update the existing activity
+            const existingActivity = await this.activityModel.findById(
+                activity._id
+            );
+            if (existingActivity) {
+                this.logger.log(`Updating existing activity: ${activity._id}`);
+                const updatedActivity =
+                    await this.activityModel.findByIdAndUpdate(
+                        activity._id,
+                        activity,
+                        { new: true }
+                    );
+
+                this.logger.log(`Updated activity: ${updatedActivity}`);
+                return updatedActivity;
+            }
+            this.logger.log(`Activity already exists with id: ${activity._id}`);
+            return activity;
+        }
+    }
+
     async update(
         _id: string,
         expedition: UpdateExpeditionDto
@@ -103,7 +141,10 @@ export class ExpeditionService {
                     { new: true }
                 )
                 .populate('participants')
-                .populate('organizer');
+                .populate('organizer')
+                .populate('activities')
+                .exec();
+
             return expedition;
         } catch (error) {
             this.logger.error(`Error joining expedition: ${error}`);
@@ -121,7 +162,8 @@ export class ExpeditionService {
                     { new: true }
                 )
                 .populate('participants')
-                .populate('organizer');
+                .populate('organizer')
+                .populate('activities');
             return expedition;
         } catch (error) {
             this.logger.error(`Error leaving expedition: ${error}`);
@@ -134,6 +176,7 @@ export class ExpeditionService {
             .find({ organizer: { $ne: userId } })
             .populate('participants')
             .populate('organizer')
+            .populate('activities')
             .exec()
             .then((expeditions) => {
                 if (expeditions.length === 0) {
@@ -151,6 +194,7 @@ export class ExpeditionService {
             .find({ participants: userId })
             .populate('participants')
             .populate('organizer')
+            .populate('activities')
             .exec()
             .then((expeditions) => {
                 if (expeditions.length === 0) {
@@ -168,6 +212,7 @@ export class ExpeditionService {
             .find({ organizer: userId })
             .populate('participants')
             .populate('organizer')
+            .populate('activities')
             .exec()
             .then((expeditions) => {
                 if (expeditions.length === 0) {

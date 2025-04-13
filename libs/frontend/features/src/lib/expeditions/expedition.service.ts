@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ICreateExpedition, IExpedition } from '../../../../../shared/api/src';
+import {
+    IActivity,
+    ICreateExpedition,
+    IExpedition
+} from '../../../../../shared/api/src';
 import { delay, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Logger } from '@nestjs/common';
@@ -37,29 +41,53 @@ export class ExpeditionService {
 
     updateExpedition(expedition: IExpedition): Observable<IExpedition> {
         console.log('updateExpedition aanroepen');
-        return this.httpClient
-            .put<{ results: IExpedition }>(
-                `http://localhost:3000/api/expedition/${expedition._id}`,
-                expedition
-            )
-            .pipe(
-                switchMap((response) => {
-                    const expeditionObject = response?.results; // Extract the expedition object from the first API response
 
-                    // Send the POST request (this won't return anything)
-                    this.httpClient
-                        .put(
-                            `http://localhost:3100/api/recommendations/expedition/${expedition._id}`,
-                            {
-                                expedition
-                            }
-                        )
-                        .subscribe(); // We don't need to handle the response from the POST request
-
-                    // Return the expedition object from the first GET request
-                    return of(expeditionObject); // Return the expedition object to the subscriber
-                })
+        console.log('Save activities:', expedition.activities);
+        // Step 1: Save all activities separately
+        const activitySaves$ = expedition.activities.map((activity) => {
+            return this.httpClient.post<{ results: IActivity }>(
+                `http://localhost:3000/api/expedition/activity`,
+                activity
             );
+        });
+
+        // Step 2: Wait for all activities to be saved, then collect IDs
+        return forkJoin(activitySaves$).pipe(
+            switchMap((savedActivities) => {
+                console.log(savedActivities);
+                // Replace activities with only their ObjectIds
+                const activityIds = savedActivities.map(
+                    (res) => res.results._id
+                ); // <-- Fix here
+                const updatedExpedition = {
+                    ...expedition,
+                    activities: activityIds
+                };
+
+                console.log('updated expedition', updatedExpedition);
+                console.log(activityIds);
+
+                console.log('update the expedition');
+                // Step 3: Update the expedition with activity references
+                return this.httpClient.put<{ results: IExpedition }>(
+                    `http://localhost:3000/api/expedition/${expedition._id}`,
+                    updatedExpedition
+                );
+            }),
+            switchMap((response) => {
+                const expeditionObject = response.results;
+
+                // Optional: Notify Neo4J (or other systems)
+                this.httpClient
+                    .put(
+                        `http://localhost:3100/api/recommendations/expedition/${expedition._id}`,
+                        { expedition: expeditionObject }
+                    )
+                    .subscribe();
+
+                return of(expeditionObject);
+            })
+        );
     }
 
     createExpedition(

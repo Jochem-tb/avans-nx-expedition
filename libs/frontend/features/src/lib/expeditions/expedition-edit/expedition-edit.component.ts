@@ -62,7 +62,6 @@ export class ExpeditionEditComponent implements OnInit {
     // List of gear items for the currentActivity is in currentActivity.gearItems.
     // For editing, create a separate editing object and an index variable:
     currentGearItem: IGearItem = {
-        _id: '',
         name: '',
         description: '',
         quantity: 1,
@@ -73,7 +72,6 @@ export class ExpeditionEditComponent implements OnInit {
 
     // For creating new gear items (when not editing an existing one)
     newGearItem: IGearItem = {
-        _id: '',
         name: '',
         description: '',
         quantity: 1,
@@ -98,6 +96,8 @@ export class ExpeditionEditComponent implements OnInit {
                 .getExpeditionById(String(this.expeditionId))
                 .subscribe((expedition) => {
                     this.expedition = expedition;
+                    this.activities =
+                        (expedition!.activities as IActivity[]) || []; // Initialize activities from the expedition object
                     console.log('Expedition:', this.expedition);
 
                     //check if logged in user is expedition organiser
@@ -157,6 +157,10 @@ export class ExpeditionEditComponent implements OnInit {
     saveExpedition(): void {
         // Ensure that the expedition object has been properly filled
         if (this.expedition) {
+            this.expedition.activities = this.activities; // Save activities to the expedition object
+            console.log(
+                `expedition Activities coupled: ${this.expedition.activities}`
+            );
             this.expeditionService.updateExpedition(this.expedition).subscribe(
                 (updatedExpedition) => {
                     // Handle success (e.g., navigate back, show success message)
@@ -321,7 +325,6 @@ export class ExpeditionEditComponent implements OnInit {
         this.selectedGearIndex = null;
         // Reset current gear item editor.
         this.currentGearItem = {
-            _id: '',
             name: '',
             description: '',
             quantity: 1,
@@ -331,10 +334,6 @@ export class ExpeditionEditComponent implements OnInit {
 
     // Add a new gear item (if not editing an existing one)
     addGearItem() {
-        // Generate a temporary ID (or use any unique generator)
-        this.newGearItem._id = crypto.randomUUID
-            ? crypto.randomUUID()
-            : Math.random().toString();
         if (!this.currentActivity.gear) {
             this.currentActivity.gear = [];
         }
@@ -342,7 +341,6 @@ export class ExpeditionEditComponent implements OnInit {
         this.currentActivity.gear.push({ ...this.newGearItem });
         // Reset newGearItem for next use.
         this.newGearItem = {
-            _id: '',
             name: '',
             description: '',
             quantity: 1,

@@ -61,6 +61,7 @@ export interface IExpedition {
     status: ExpeditionStatus;
     maxParticipants: number;
     participants: (IUser | string)[];
+    activities: (IActivity | string)[];
     organizer: IUser | string;
     location: ILocation;
     imageUrl: string;
@@ -82,7 +83,6 @@ export interface IActivity {
 }
 
 export interface IGearItem {
-    _id: string;
     name: string;
     description: string;
     quantity: number;
