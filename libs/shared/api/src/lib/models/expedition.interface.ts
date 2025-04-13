@@ -62,6 +62,7 @@ export interface IExpedition {
     maxParticipants: number;
     participants: (IUser | string)[];
     activities: (IActivity | string)[];
+    roles: (IRole | string)[];
     organizer: IUser | string;
     location: ILocation;
     imageUrl: string;
@@ -94,6 +95,14 @@ export enum GearStatusEnum {
     Packed = 'Packed',
     Missing = 'Missing',
     NotAvailable = 'Not Available'
+}
+
+export interface IRole {
+    _id?: string; // Optional because new roles might not have an _id yet
+    title: string;
+    responsibilities: string;
+    userId: string; // Reference to the User
+    expeditionId: string; // Reference to the Expedition
 }
 
 export type ICreateExpedition = Omit<IExpedition, '_id'>;

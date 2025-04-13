@@ -461,6 +461,10 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", Array)
 ], UpsertExpeditionDto.prototype, "activities", void 0);
 tslib_1.__decorate([
+    (0, class_validator_1.IsString)({ each: true }),
+    tslib_1.__metadata("design:type", Array)
+], UpsertExpeditionDto.prototype, "roles", void 0);
+tslib_1.__decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     tslib_1.__metadata("design:type", typeof (_e = typeof api_1.IUser !== "undefined" && api_1.IUser) === "function" ? _e : Object)
@@ -614,7 +618,7 @@ const user_1 = __webpack_require__(29);
 const expedition_1 = __webpack_require__(44);
 const auth_1 = __webpack_require__(36);
 const mongoose_1 = __webpack_require__(27);
-const util_env_1 = __webpack_require__(50);
+const util_env_1 = __webpack_require__(51);
 const common_2 = __webpack_require__(1);
 const core_1 = __webpack_require__(2);
 let AppModule = class AppModule {
@@ -1567,6 +1571,7 @@ const expediton_service_1 = __webpack_require__(47);
 const mongoose_1 = __webpack_require__(27);
 const expedition_schema_1 = __webpack_require__(48);
 const activity_schema_1 = __webpack_require__(49);
+const role_schema_1 = __webpack_require__(50);
 // import { Meal, MealSchema } from '@avans-nx-expedition/backend/features';
 let ExpeditionModule = class ExpeditionModule {
 };
@@ -1576,7 +1581,8 @@ exports.ExpeditionModule = ExpeditionModule = tslib_1.__decorate([
         imports: [
             mongoose_1.MongooseModule.forFeature([
                 { name: expedition_schema_1.Expedition.name, schema: expedition_schema_1.ExpeditionSchema },
-                { name: 'Activity', schema: activity_schema_1.ActivitySchema } // Assuming Activity is also an ExpeditionSchema for this example
+                { name: 'Activity', schema: activity_schema_1.ActivitySchema }, // Assuming Activity is also an ExpeditionSchema for this example,
+                { name: 'Role', schema: role_schema_1.RoleSchema } // Assuming Meal is also an ExpeditionSchema for this example
             ])
         ],
         controllers: [expedition_controller_1.ExpeditionController],
@@ -1591,7 +1597,7 @@ exports.ExpeditionModule = ExpeditionModule = tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExpeditionController = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -1628,6 +1634,10 @@ let ExpeditionController = class ExpeditionController {
     // @UseGuards(expeditionExistGuard) NOT IMPLEMENTED YET
     createActivity(activity) {
         return this.expeditionService.createActivity(activity);
+    }
+    // @UseGuards(expeditionExistGuard) NOT IMPLEMENTED YET
+    createRole(role) {
+        return this.expeditionService.createRole(role);
     }
     update(id, expedition) {
         return this.expeditionService.update(id, expedition);
@@ -1695,12 +1705,21 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:returntype", typeof (_j = typeof Promise !== "undefined" && Promise) === "function" ? _j : Object)
 ], ExpeditionController.prototype, "createActivity", null);
 tslib_1.__decorate([
+    (0, common_1.Post)('role')
+    // @UseGuards(expeditionExistGuard) NOT IMPLEMENTED YET
+    ,
+    tslib_1.__param(0, (0, common_1.Body)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [typeof (_k = typeof api_1.IRole !== "undefined" && api_1.IRole) === "function" ? _k : Object]),
+    tslib_1.__metadata("design:returntype", typeof (_l = typeof Promise !== "undefined" && Promise) === "function" ? _l : Object)
+], ExpeditionController.prototype, "createRole", null);
+tslib_1.__decorate([
     (0, common_1.Put)(':id'),
     tslib_1.__param(0, (0, common_1.Param)('id')),
     tslib_1.__param(1, (0, common_1.Body)()),
     tslib_1.__metadata("design:type", Function),
-    tslib_1.__metadata("design:paramtypes", [String, typeof (_k = typeof dto_1.UpdateExpeditionDto !== "undefined" && dto_1.UpdateExpeditionDto) === "function" ? _k : Object]),
-    tslib_1.__metadata("design:returntype", typeof (_l = typeof Promise !== "undefined" && Promise) === "function" ? _l : Object)
+    tslib_1.__metadata("design:paramtypes", [String, typeof (_m = typeof dto_1.UpdateExpeditionDto !== "undefined" && dto_1.UpdateExpeditionDto) === "function" ? _m : Object]),
+    tslib_1.__metadata("design:returntype", typeof (_o = typeof Promise !== "undefined" && Promise) === "function" ? _o : Object)
 ], ExpeditionController.prototype, "update", null);
 tslib_1.__decorate([
     (0, common_1.Get)(':id/join/:userId'),
@@ -1708,7 +1727,7 @@ tslib_1.__decorate([
     tslib_1.__param(1, (0, common_1.Param)('userId')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String, String]),
-    tslib_1.__metadata("design:returntype", typeof (_m = typeof Promise !== "undefined" && Promise) === "function" ? _m : Object)
+    tslib_1.__metadata("design:returntype", typeof (_p = typeof Promise !== "undefined" && Promise) === "function" ? _p : Object)
 ], ExpeditionController.prototype, "join", null);
 tslib_1.__decorate([
     (0, common_1.Get)(':id/leave/:userId'),
@@ -1716,28 +1735,28 @@ tslib_1.__decorate([
     tslib_1.__param(1, (0, common_1.Param)('userId')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String, String]),
-    tslib_1.__metadata("design:returntype", typeof (_o = typeof Promise !== "undefined" && Promise) === "function" ? _o : Object)
+    tslib_1.__metadata("design:returntype", typeof (_q = typeof Promise !== "undefined" && Promise) === "function" ? _q : Object)
 ], ExpeditionController.prototype, "leave", null);
 tslib_1.__decorate([
     (0, common_1.Get)('/organising/:userId'),
     tslib_1.__param(0, (0, common_1.Param)('userId')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String]),
-    tslib_1.__metadata("design:returntype", typeof (_p = typeof Promise !== "undefined" && Promise) === "function" ? _p : Object)
+    tslib_1.__metadata("design:returntype", typeof (_r = typeof Promise !== "undefined" && Promise) === "function" ? _r : Object)
 ], ExpeditionController.prototype, "getOrganising", null);
 tslib_1.__decorate([
     (0, common_1.Get)('/joined/:userId'),
     tslib_1.__param(0, (0, common_1.Param)('userId')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String]),
-    tslib_1.__metadata("design:returntype", typeof (_q = typeof Promise !== "undefined" && Promise) === "function" ? _q : Object)
+    tslib_1.__metadata("design:returntype", typeof (_s = typeof Promise !== "undefined" && Promise) === "function" ? _s : Object)
 ], ExpeditionController.prototype, "getJoined", null);
 tslib_1.__decorate([
     (0, common_1.Get)('/recommended/:userId'),
     tslib_1.__param(0, (0, common_1.Param)('userId')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String]),
-    tslib_1.__metadata("design:returntype", typeof (_r = typeof Promise !== "undefined" && Promise) === "function" ? _r : Object)
+    tslib_1.__metadata("design:returntype", typeof (_t = typeof Promise !== "undefined" && Promise) === "function" ? _t : Object)
 ], ExpeditionController.prototype, "getRecommended", null);
 exports.ExpeditionController = ExpeditionController = tslib_1.__decorate([
     (0, common_1.Controller)('expedition'),
@@ -1751,7 +1770,7 @@ exports.ExpeditionController = ExpeditionController = tslib_1.__decorate([
 
 
 var ExpeditionService_1;
-var _a, _b;
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExpeditionService = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -1760,10 +1779,12 @@ const mongoose_1 = __webpack_require__(26);
 const mongoose_2 = __webpack_require__(27);
 const expedition_schema_1 = __webpack_require__(48);
 const activity_schema_1 = __webpack_require__(49);
+const role_schema_1 = __webpack_require__(50);
 let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
-    constructor(expeditionModel, activityModel) {
+    constructor(expeditionModel, activityModel, roleModel) {
         this.expeditionModel = expeditionModel;
         this.activityModel = activityModel;
+        this.roleModel = roleModel;
         this.logger = new common_1.Logger(ExpeditionService_1.name);
     }
     async findAll() {
@@ -1773,6 +1794,7 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
             .populate('organizer')
             .populate('participants')
             .populate('activities')
+            .populate('roles')
             .exec();
         return items;
     }
@@ -1783,6 +1805,7 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
             .populate('organizer')
             .populate('participants')
             .populate('activities')
+            .populate('roles')
             .exec();
         console.log('item in findOne', item);
         if (!item) {
@@ -1834,6 +1857,29 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
             return activity;
         }
     }
+    async createRole(role) {
+        this.logger.log(`Create role with title: ${role.title}`);
+        if (!role._id || role._id === '') {
+            delete role._id; // Remove _id if it exists
+            const createdItem = await this.roleModel.create(role);
+            this.logger.log(`Created role: ${createdItem}`);
+            return createdItem;
+        }
+        else {
+            // If _id exists, update the existing activity
+            const existingRole = await this.roleModel.findById(role._id);
+            if (existingRole) {
+                this.logger.log(`Updating existing role: ${role._id}`);
+                const updatedRole = await this.roleModel.findByIdAndUpdate(role._id, role, {
+                    new: true
+                });
+                this.logger.log(`Updated role: ${updatedRole}`);
+                return updatedRole;
+            }
+            this.logger.log(`Role already exists with id: ${role._id}`);
+            return role;
+        }
+    }
     async update(_id, expedition) {
         this.logger.log(`Update expedition ${expedition.title}`);
         expedition.updatedAt = new Date();
@@ -1847,6 +1893,7 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
                 .populate('participants')
                 .populate('organizer')
                 .populate('activities')
+                .populate('roles')
                 .exec();
             return expedition;
         }
@@ -1862,7 +1909,8 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
                 .findByIdAndUpdate({ _id }, { $pull: { participants: userId } }, { new: true })
                 .populate('participants')
                 .populate('organizer')
-                .populate('activities');
+                .populate('activities')
+                .populate('roles');
             return expedition;
         }
         catch (error) {
@@ -1876,6 +1924,7 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
             .populate('participants')
             .populate('organizer')
             .populate('activities')
+            .populate('roles')
             .exec()
             .then((expeditions) => {
             if (expeditions.length === 0) {
@@ -1891,6 +1940,7 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
             .populate('participants')
             .populate('organizer')
             .populate('activities')
+            .populate('roles')
             .exec()
             .then((expeditions) => {
             if (expeditions.length === 0) {
@@ -1906,6 +1956,7 @@ let ExpeditionService = ExpeditionService_1 = class ExpeditionService {
             .populate('participants')
             .populate('organizer')
             .populate('activities')
+            .populate('roles')
             .exec()
             .then((expeditions) => {
             if (expeditions.length === 0) {
@@ -1921,7 +1972,8 @@ exports.ExpeditionService = ExpeditionService = ExpeditionService_1 = tslib_1.__
     (0, common_1.Injectable)({}),
     tslib_1.__param(0, (0, mongoose_2.InjectModel)(expedition_schema_1.Expedition.name)),
     tslib_1.__param(1, (0, mongoose_2.InjectModel)(activity_schema_1.Activity.name)),
-    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof mongoose_1.Model !== "undefined" && mongoose_1.Model) === "function" ? _a : Object, typeof (_b = typeof mongoose_1.Model !== "undefined" && mongoose_1.Model) === "function" ? _b : Object])
+    tslib_1.__param(2, (0, mongoose_2.InjectModel)(role_schema_1.Role.name)),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof mongoose_1.Model !== "undefined" && mongoose_1.Model) === "function" ? _a : Object, typeof (_b = typeof mongoose_1.Model !== "undefined" && mongoose_1.Model) === "function" ? _b : Object, typeof (_c = typeof mongoose_1.Model !== "undefined" && mongoose_1.Model) === "function" ? _c : Object])
 ], ExpeditionService);
 
 
@@ -1992,6 +2044,13 @@ tslib_1.__decorate([
     }),
     tslib_1.__metadata("design:type", Array)
 ], Expedition.prototype, "activities", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({
+        required: true,
+        type: [{ type: mongoose_2.Schema.Types.ObjectId, ref: 'Role' }]
+    }),
+    tslib_1.__metadata("design:type", Array)
+], Expedition.prototype, "roles", void 0);
 tslib_1.__decorate([
     (0, mongoose_1.Prop)({ required: true, type: Object }),
     tslib_1.__metadata("design:type", typeof (_e = typeof api_1.ILocation !== "undefined" && api_1.ILocation) === "function" ? _e : Object)
@@ -2086,13 +2145,56 @@ exports.ActivitySchema = mongoose_1.SchemaFactory.createForClass(Activity);
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RoleSchema = exports.Role = void 0;
 const tslib_1 = __webpack_require__(4);
-tslib_1.__exportStar(__webpack_require__(51), exports);
-tslib_1.__exportStar(__webpack_require__(52), exports);
+const mongoose_1 = __webpack_require__(27);
+const class_validator_1 = __webpack_require__(7);
+let Role = class Role {
+};
+exports.Role = Role;
+tslib_1.__decorate([
+    (0, class_validator_1.IsMongoId)(),
+    tslib_1.__metadata("design:type", String)
+], Role.prototype, "_id", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: String }),
+    tslib_1.__metadata("design:type", String)
+], Role.prototype, "title", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: false, type: String }),
+    tslib_1.__metadata("design:type", String)
+], Role.prototype, "description", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: false, type: String }),
+    tslib_1.__metadata("design:type", String)
+], Role.prototype, "responsibilities", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: false, type: String }),
+    tslib_1.__metadata("design:type", String)
+], Role.prototype, "userId", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: false, type: String }),
+    tslib_1.__metadata("design:type", String)
+], Role.prototype, "expeditionId", void 0);
+exports.Role = Role = tslib_1.__decorate([
+    (0, mongoose_1.Schema)()
+], Role);
+exports.RoleSchema = mongoose_1.SchemaFactory.createForClass(Role);
 
 
 /***/ }),
 /* 51 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const tslib_1 = __webpack_require__(4);
+tslib_1.__exportStar(__webpack_require__(52), exports);
+tslib_1.__exportStar(__webpack_require__(53), exports);
+
+
+/***/ }),
+/* 52 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2107,7 +2209,7 @@ exports.environment = {
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ ((__unused_webpack_module, exports) => {
 
 

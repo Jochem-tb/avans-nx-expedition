@@ -11,6 +11,7 @@ import {
     IActivity,
     IExpedition,
     IGearItem,
+    IRole,
     IUser
 } from '@avans-nx-expedition/shared/api';
 import { AccountService } from '@avans-nx-expedition/frontend/account';
@@ -80,6 +81,16 @@ export class ExpeditionEditComponent implements OnInit {
 
     gearStatuses = Object.values(GearStatusEnum);
 
+    // For roles management
+    roles: IRole[] = [];
+    // Object for creating a new role
+    newRole: IRole = {
+        title: '',
+        responsibilities: '',
+        userId: '', // You can initialize with a default or leave empty
+        expeditionId: '' // This will be filled with current expedition _id when adding a role
+    };
+
     constructor(
         private route: ActivatedRoute,
         private expeditionService: ExpeditionService,
@@ -98,6 +109,7 @@ export class ExpeditionEditComponent implements OnInit {
                     this.expedition = expedition;
                     this.activities =
                         (expedition!.activities as IActivity[]) || []; // Initialize activities from the expedition object
+                    this.roles = (expedition!.roles as IRole[]) || []; // Initialize activities from the expedition object
                     console.log('Expedition:', this.expedition);
 
                     //check if logged in user is expedition organiser
@@ -146,21 +158,40 @@ export class ExpeditionEditComponent implements OnInit {
         return (person as IUser).name;
     }
 
+    getParticipantNameById(person: string | IUser): string {
+        if (typeof person === 'string') {
+            const participant = this.expedition?.participants?.find(
+                (p) => (p as IUser)._id === person
+            ) as IUser;
+            return participant ? participant.name : 'Unknown';
+        } else {
+            return person.name;
+        }
+    }
+
+    getParticipantId(participant: IUser | string): string {
+        // If participant is a string, return it; if it's an object, return its _id.
+        return typeof participant === 'string' ? participant : participant._id;
+    }
+
     removeParticipant(person: string | IUser): void {
         // Logic to remove the participant
-        this.expedition!.participants = this.expedition!.participants.filter(
-            (p) => p !== person
-        );
-        console.log(`${this.getParticipantName(person)} has been removed.`);
+        // this.expedition!.participants = this.expedition!.participants.filter(
+        //     (p) => p !== person
+        // );
+        // console.log(`${this.getParticipantName(person)} has been removed.`);
     }
 
     saveExpedition(): void {
         // Ensure that the expedition object has been properly filled
+        console.log('Saving expedition:', this.expedition);
         if (this.expedition) {
             this.expedition.activities = this.activities; // Save activities to the expedition object
+            this.expedition.roles = this.roles; // Save roles to the expedition object
             console.log(
                 `expedition Activities coupled: ${this.expedition.activities}`
             );
+            console.log(`expedition Roles coupled: ${this.expedition.roles}`);
             this.expeditionService.updateExpedition(this.expedition).subscribe(
                 (updatedExpedition) => {
                     // Handle success (e.g., navigate back, show success message)
@@ -346,5 +377,32 @@ export class ExpeditionEditComponent implements OnInit {
             quantity: 1,
             status: GearStatusEnum.ToPack
         };
+    }
+
+    // Method to add a role
+    addRole(): void {
+        // Set expeditionId from current expedition if available.
+        // Assume you have expedition object with _id already
+        if (!this.newRole.expeditionId && this.expedition?._id) {
+            this.newRole.expeditionId = this.expedition._id;
+        }
+
+        // Add the new role to the array
+        this.roles.push({ ...this.newRole });
+
+        // Reset the newRole object for the next entry
+        this.newRole = {
+            title: '',
+            responsibilities: '',
+            userId: '',
+            expeditionId: this.expedition ? this.expedition._id : ''
+        };
+    }
+
+    deleteRole(index: number, event: Event) {
+        event.stopPropagation(); // prevent any click propagation if needed
+        if (confirm('Are you sure you want to delete this role?')) {
+            this.roles.splice(index, 1);
+        }
     }
 }

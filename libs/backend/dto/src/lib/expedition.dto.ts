@@ -12,6 +12,7 @@ import {
     ICreateExpedition,
     IExpedition,
     ILocation,
+    IRole,
     IUpdateExpedition,
     // ICreateUser,
     IUpdateUser,
@@ -37,6 +38,7 @@ export class CreateExpeditionDto implements ICreateExpedition {
     status!: ExpeditionStatus;
     maxParticipants!: number;
     participants!: IUser[];
+    roles!: IRole[];
     organizer!: IUser;
     location!: ILocation;
     imageUrl!: string;
@@ -81,6 +83,9 @@ export class UpsertExpeditionDto implements IUpsertExpedition {
 
     @IsString({ each: true })
     activities!: (string | IActivity)[];
+
+    @IsString({ each: true })
+    roles!: (string | IRole)[];
 
     @IsString()
     @IsNotEmpty()

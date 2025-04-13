@@ -461,6 +461,10 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", Array)
 ], UpsertExpeditionDto.prototype, "activities", void 0);
 tslib_1.__decorate([
+    (0, class_validator_1.IsString)({ each: true }),
+    tslib_1.__metadata("design:type", Array)
+], UpsertExpeditionDto.prototype, "roles", void 0);
+tslib_1.__decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     tslib_1.__metadata("design:type", typeof (_e = typeof api_1.IUser !== "undefined" && api_1.IUser) === "function" ? _e : Object)

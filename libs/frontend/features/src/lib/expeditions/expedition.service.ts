@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import {
     IActivity,
     ICreateExpedition,
-    IExpedition
+    IExpedition,
+    IRole
 } from '../../../../../shared/api/src';
 import { delay, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -51,24 +52,43 @@ export class ExpeditionService {
             );
         });
 
-        // Step 2: Wait for all activities to be saved, then collect IDs
-        return forkJoin(activitySaves$).pipe(
-            switchMap((savedActivities) => {
-                console.log(savedActivities);
+        console.log('Save roles:', expedition.roles);
+        const roleSaves$ = expedition.roles.map((role) => {
+            return this.httpClient.post<{ results: IRole }>(
+                `http://localhost:3000/api/expedition/role`,
+                role
+            );
+        });
+
+        // Step 2: Wait for both activities and roles to be saved
+        return forkJoin({
+            activityResponses: forkJoin(activitySaves$), // returns an array of activity save responses
+            roleResponses: forkJoin(roleSaves$) // returns an array of role save responses
+        }).pipe(
+            switchMap(({ activityResponses, roleResponses }) => {
+                console.log('Activity Responses:', activityResponses);
+                console.log('Role Responses:', roleResponses);
+
                 // Replace activities with only their ObjectIds
-                const activityIds = savedActivities.map(
+                const activityIds = activityResponses.map(
                     (res) => res.results._id
-                ); // <-- Fix here
+                );
+                // Replace roles with only their ObjectIds (if you want to save the role references as well)
+                const roleIds = roleResponses.map((res) => res.results._id);
+
+                // Combine the IDs into the expedition object
                 const updatedExpedition = {
                     ...expedition,
-                    activities: activityIds
+                    activities: activityIds,
+                    // Assuming your expedition model supports a roles field:
+                    roles: roleIds
                 };
 
-                console.log('updated expedition', updatedExpedition);
-                console.log(activityIds);
+                console.log('Updated expedition to save:', updatedExpedition);
+                console.log('Activity IDs:', activityIds);
+                console.log('Role IDs:', roleIds);
 
-                console.log('update the expedition');
-                // Step 3: Update the expedition with activity references
+                // Step 3: Update the expedition with the new references
                 return this.httpClient.put<{ results: IExpedition }>(
                     `http://localhost:3000/api/expedition/${expedition._id}`,
                     updatedExpedition
@@ -76,8 +96,9 @@ export class ExpeditionService {
             }),
             switchMap((response) => {
                 const expeditionObject = response.results;
+                console.log('Expedition updated:', expeditionObject);
 
-                // Optional: Notify Neo4J (or other systems)
+                // Optional: Notify other systems (e.g., Neo4J)
                 this.httpClient
                     .put(
                         `http://localhost:3100/api/recommendations/expedition/${expedition._id}`,

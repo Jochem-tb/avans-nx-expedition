@@ -6,13 +6,13 @@ import {
     ExpeditionDocument
 } from './expedition.schema';
 import { Activity as ActivityModel, ActivityDocument } from './activity.schema';
+import { Role as RoleModel, RoleDocument } from './role.schema';
 import {
     IActivity,
     ICreateExpedition,
     IExpedition,
     IUser
 } from '@avans-nx-expedition/shared/api';
-// import { Meal, MealDocument } from '@avans-nx-expedition/backend/features';
 import {
     CreateExpeditionDto,
     UpdateExpeditionDto
@@ -27,7 +27,9 @@ export class ExpeditionService {
         @InjectModel(ExpeditionModel.name)
         private expeditionModel: Model<ExpeditionDocument>,
         @InjectModel(ActivityModel.name)
-        private activityModel: Model<ActivityDocument>
+        private activityModel: Model<ActivityDocument>,
+        @InjectModel(RoleModel.name)
+        private roleModel: Model<RoleDocument>
     ) {}
 
     async findAll(): Promise<IExpedition[]> {
@@ -37,6 +39,7 @@ export class ExpeditionService {
             .populate('organizer')
             .populate('participants')
             .populate('activities')
+            .populate('roles')
             .exec();
         return items;
     }
@@ -48,6 +51,7 @@ export class ExpeditionService {
             .populate('organizer')
             .populate('participants')
             .populate('activities')
+            .populate('roles')
             .exec();
 
         console.log('item in findOne', item);
@@ -122,6 +126,35 @@ export class ExpeditionService {
         }
     }
 
+    async createRole(role: any): Promise<any> {
+        this.logger.log(`Create role with title: ${role.title}`);
+
+        if (!role._id || role._id === '') {
+            delete role._id; // Remove _id if it exists
+            const createdItem = await this.roleModel.create(role);
+            this.logger.log(`Created role: ${createdItem}`);
+            return createdItem;
+        } else {
+            // If _id exists, update the existing activity
+            const existingRole = await this.roleModel.findById(role._id);
+            if (existingRole) {
+                this.logger.log(`Updating existing role: ${role._id}`);
+                const updatedRole = await this.roleModel.findByIdAndUpdate(
+                    role._id,
+                    role,
+                    {
+                        new: true
+                    }
+                );
+
+                this.logger.log(`Updated role: ${updatedRole}`);
+                return updatedRole;
+            }
+            this.logger.log(`Role already exists with id: ${role._id}`);
+            return role;
+        }
+    }
+
     async update(
         _id: string,
         expedition: UpdateExpeditionDto
@@ -143,6 +176,7 @@ export class ExpeditionService {
                 .populate('participants')
                 .populate('organizer')
                 .populate('activities')
+                .populate('roles')
                 .exec();
 
             return expedition;
@@ -163,7 +197,8 @@ export class ExpeditionService {
                 )
                 .populate('participants')
                 .populate('organizer')
-                .populate('activities');
+                .populate('activities')
+                .populate('roles');
             return expedition;
         } catch (error) {
             this.logger.error(`Error leaving expedition: ${error}`);
@@ -177,6 +212,7 @@ export class ExpeditionService {
             .populate('participants')
             .populate('organizer')
             .populate('activities')
+            .populate('roles')
             .exec()
             .then((expeditions) => {
                 if (expeditions.length === 0) {
@@ -195,6 +231,7 @@ export class ExpeditionService {
             .populate('participants')
             .populate('organizer')
             .populate('activities')
+            .populate('roles')
             .exec()
             .then((expeditions) => {
                 if (expeditions.length === 0) {
@@ -213,6 +250,7 @@ export class ExpeditionService {
             .populate('participants')
             .populate('organizer')
             .populate('activities')
+            .populate('roles')
             .exec()
             .then((expeditions) => {
                 if (expeditions.length === 0) {

@@ -34,6 +34,7 @@ export class ExpeditionCreateComponent implements OnInit {
                         maxParticipants: 0,
                         participants: [],
                         activities: [],
+                        roles: [],
                         organizer: user,
                         location: {
                             name: '',

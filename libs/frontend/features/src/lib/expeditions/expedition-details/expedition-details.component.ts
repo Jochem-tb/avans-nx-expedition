@@ -7,6 +7,7 @@ import { User, UserService } from '@avans-nx-expedition/backend/user';
 import { AccountService } from '@avans-nx-expedition/frontend/account'; // Adjust the path if necessary
 import {
     IActivity,
+    IRole,
     IUser,
     IUserIdentity
 } from '@avans-nx-expedition/shared/api';
@@ -25,6 +26,9 @@ export class ExpeditionDetailsComponent implements OnInit {
     isOrganiser: boolean = false;
     sub: Subscription = new Subscription();
 
+    // This dictionary tracks which participant’s roles dropdown is open.
+    roleDropdowns: { [userId: string]: boolean } = {};
+
     constructor(
         private route: ActivatedRoute,
         private expeditionService: ExpeditionService,
@@ -42,6 +46,34 @@ export class ExpeditionDetailsComponent implements OnInit {
 
     isActivity(activity: IActivity | string): activity is IActivity {
         return typeof activity !== 'string';
+    }
+
+    // Helper: Return the participant's ID regardless of if it's a string or IUser object.
+    getParticipantId(participant: IUser | string): string {
+        return typeof participant === 'string' ? participant : participant._id;
+    }
+
+    // Helper: Return roles attached to a participant by filtering expedition.roles.
+    getRolesForParticipant(participant: IUser | string): IRole[] {
+        if (this.expedition && this.expedition.roles) {
+            const participantId = this.getParticipantId(participant);
+            return this.expedition.roles
+                .filter((role): role is IRole => typeof role !== 'string')
+                .filter((role) => role.userId === participantId);
+        }
+        return [];
+    }
+
+    // Helper to toggle the dropdown for a given participant.
+    toggleRoleDropdown(participant: IUser | string): void {
+        const participantId = this.getParticipantId(participant);
+        this.roleDropdowns[participantId] = !this.roleDropdowns[participantId];
+    }
+
+    // Helper: Check if the role dropdown for a participant is open.
+    isRoleDropdownOpen(participant: IUser | string): boolean {
+        const participantId = this.getParticipantId(participant);
+        return !!this.roleDropdowns[participantId];
     }
 
     ngOnInit(): void {

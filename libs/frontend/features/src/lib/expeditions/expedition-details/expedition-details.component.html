@@ -216,6 +216,7 @@
                         <ul
                             class="list-group list-group-flush"
                             style="background-color: #1c2331; color: white"
+                            id="participantsList"
                         >
                             <li
                                 class="list-group-item"
@@ -228,10 +229,59 @@
                                     color: white;
                                 "
                             >
-                                <i
-                                    class="bi bi-person-circle text-primary me-2"
-                                ></i>
-                                {{ getParticipantName(participant) }}
+                                <div
+                                    class="d-flex justify-content-between align-items-center"
+                                >
+                                    <div>
+                                        <i
+                                            class="bi bi-person-circle text-primary me-2"
+                                        ></i>
+                                        {{ getParticipantName(participant) }}
+                                    </div>
+                                    <!-- Only show dropdown toggle if this participant has one or more roles -->
+                                    <ng-container
+                                        *ngIf="
+                                            getRolesForParticipant(participant)
+                                                .length > 0
+                                        "
+                                    >
+                                        <button
+                                            class="btn btn-outline-light btn-sm"
+                                            (click)="
+                                                toggleRoleDropdown(participant)
+                                            "
+                                        >
+                                            Toggle Roles
+                                        </button>
+                                    </ng-container>
+                                </div>
+                                <!-- Dropdown: show roles if the participant has roles and the dropdown is open -->
+                                <div
+                                    *ngIf="
+                                        getRolesForParticipant(participant)
+                                            .length > 0 &&
+                                        isRoleDropdownOpen(participant)
+                                    "
+                                    class="mt-2"
+                                >
+                                    <ul class="list-group">
+                                        <li
+                                            *ngFor="
+                                                let role of getRolesForParticipant(
+                                                    participant
+                                                )
+                                            "
+                                            class="list-group-item"
+                                            style="
+                                                background-color: #003366;
+                                                color: white;
+                                            "
+                                        >
+                                            <strong>{{ role.title }}</strong> -
+                                            {{ role.responsibilities }}
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                             <li
                                 *ngIf="
