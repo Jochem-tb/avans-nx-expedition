@@ -1,0 +1,34 @@
+/* Container for the horizontal scrolling */
+.scrolling-container {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 0;
+    gap: 15px;
+}
+
+.expedition-card {
+    width: 300px; /* Adjust card width */
+    height: 400px; /* Adjust card height */
+    flex-shrink: 0;
+    /* Optionally, you can use flex-grow to make them expand to fill remaining space */
+}
+
+/* Style for the card if needed */
+.card {
+    width: 100%; /* Ensures that cards are not stretched or squished */
+    height: 100%; /* Ensures that cards are not stretched or squished */
+}
+
+/* Optional styling for the scroll bar (can be customized) */
+.scrolling-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.scrolling-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+.scrolling-container::-webkit-scrollbar-track {
+    background: transparent;
+}

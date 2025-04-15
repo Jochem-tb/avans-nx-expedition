@@ -33,7 +33,7 @@ export class AuthController {
     @UseGuards(UserExistGuard)
     @Post('register')
     async register(@Body() user: CreateUserDto): Promise<IUserIdentity> {
-        this.logger.log('Register');
+        this.logger.log(`Register attempt for new user`);
         return await this.authService.register(user);
     }
 }

@@ -39,34 +39,36 @@ export class AuthService {
     }
 
     async login(credentials: IUserCredentials): Promise<IUserIdentity> {
-        this.logger.log('login ' + credentials.emailAddress);
-        return await this.userModel
-            .findOne({
-                emailAddress: credentials.emailAddress
-            })
+        this.logger.log(`login ${credentials.emailAddress}`);
+
+        const user = await this.userModel
+            .findOne({ emailAddress: credentials.emailAddress })
             .select('+password')
-            .exec()
-            .then((user) => {
-                if (user && user.password === credentials.password) {
-                    const payload = {
-                        user_id: user._id
-                    };
-                    return {
-                        _id: user._id,
-                        name: user.name,
-                        emailAddress: user.emailAddress,
-                        profileImgUrl: user.profileImgUrl,
-                        token: this.jwtService.sign(payload)
-                    };
-                } else {
-                    const errMsg = 'Email not found or password invalid';
-                    this.logger.debug(errMsg);
-                    throw new UnauthorizedException(errMsg);
-                }
-            })
-            .catch((error) => {
-                return error;
-            });
+            .exec();
+
+        if (!user) {
+            throw new UnauthorizedException(
+                'Email not found or password invalid'
+            );
+        }
+
+        const passwordMatches = credentials.password === user.password;
+
+        if (!passwordMatches) {
+            throw new UnauthorizedException(
+                'Email not found or password invalid'
+            );
+        }
+
+        const payload = { user_id: user._id };
+        return {
+            _id: user._id,
+            name: user.name,
+            emailAddress: user.emailAddress,
+            profileImgUrl: user.profileImgUrl,
+            role: user.role,
+            token: this.jwtService.sign(payload)
+        };
     }
 
     async register(user: CreateUserDto): Promise<IUserIdentity> {

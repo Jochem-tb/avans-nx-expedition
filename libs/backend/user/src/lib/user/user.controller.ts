@@ -5,20 +5,33 @@ import {
     Param,
     Post,
     Put,
+    Delete,
     UseGuards
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { IUserInfo, IUser } from '@avans-nx-expedition/shared/api';
+import {
+    IUserInfo,
+    IUser,
+    UserExperienceLevel
+} from '@avans-nx-expedition/shared/api';
 import { CreateUserDto, UpdateUserDto } from '@avans-nx-expedition/backend/dto';
 import { UserExistGuard } from './user-exists.guard';
+// import { TokenGuard } from '@avans-nx-expedition/backend/shared';
 
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Get()
-    async findAll(): Promise<IUserInfo[]> {
-        return this.userService.findAll();
+    async findAll() {
+        return await this.userService.findAll();
+    }
+
+    @Get('exp/:experience')
+    async findByExperience(
+        @Param('experience') experience: UserExperienceLevel
+    ): Promise<IUserInfo[]> {
+        return this.userService.findManyByExperienceLevel(experience);
     }
 
     // this method should precede the general getOne method, otherwise it never matches
@@ -45,5 +58,11 @@ export class UserController {
         @Body() user: UpdateUserDto
     ): Promise<IUserInfo | null> {
         return this.userService.update(id, user);
+    }
+
+    @Delete(':id')
+    delete(@Param('id') id: string): any {
+        console.log('FAKE delete user with id', id);
+        // return this.userService.delete(id);
     }
 }

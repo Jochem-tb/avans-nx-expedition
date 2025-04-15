@@ -1,0 +1,115 @@
+<div class="container p-3">
+    <h1>Expeditions</h1>
+
+    <!-- Recommended Expeditions -->
+    <h2>Recommended</h2>
+    <div class="scrolling-container mb-4">
+        <ng-container
+            *ngIf="recommendedExpeditions?.length; else recommendedEmpty"
+        >
+            <div
+                class="expedition-card"
+                *ngFor="let expedition of recommendedExpeditions"
+            >
+                <div class="card shadow-sm">
+                    <img
+                        [src]="expedition.imageUrl"
+                        alt="{{ expedition.title }}"
+                        class="card-img-top"
+                        style="height: 200px; object-fit: cover"
+                    />
+                    <div class="card-body p-4">
+                        <h5 class="card-title">{{ expedition.title }}</h5>
+                        <div
+                            class="d-flex justify-content-between align-items-center"
+                        >
+                            <a
+                                [routerLink]="['/expeditions', expedition._id]"
+                                class="btn btn-outline-primary"
+                            >
+                                Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #recommendedEmpty>
+            <p>{{ recommendedString }}</p>
+        </ng-template>
+    </div>
+
+    <!-- Joined Expeditions -->
+    <h2>Joined</h2>
+    <div class="scrolling-container mb-4">
+        <ng-container *ngIf="joinedExpeditions?.length; else joinedEmpty">
+            <div
+                class="expedition-card"
+                *ngFor="let expedition of joinedExpeditions"
+            >
+                <div class="card shadow-sm">
+                    <img
+                        [src]="expedition.imageUrl"
+                        alt="{{ expedition.title }}"
+                        class="card-img-top"
+                        style="height: 200px; object-fit: cover"
+                    />
+                    <div class="card-body p-4">
+                        <h5 class="card-title">{{ expedition.title }}</h5>
+                        <div
+                            class="d-flex justify-content-between align-items-center"
+                        >
+                            <a
+                                [routerLink]="['/expeditions', expedition._id]"
+                                class="btn btn-outline-primary"
+                            >
+                                Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #joinedEmpty>
+            <p>{{ joinedString }}</p>
+        </ng-template>
+    </div>
+
+    <!-- Organising Expeditions -->
+    <h2>Organising</h2>
+    <div class="scrolling-container mb-4">
+        <ng-container
+            *ngIf="organisingExpeditions?.length; else organisingEmpty"
+        >
+            <div
+                class="expedition-card"
+                *ngFor="let expedition of organisingExpeditions"
+            >
+                <div class="card shadow-sm">
+                    <img
+                        [src]="expedition.imageUrl"
+                        alt="{{ expedition.title }}"
+                        class="card-img-top"
+                        style="height: 200px; object-fit: cover"
+                    />
+                    <div class="card-body p-4">
+                        <h5 class="card-title">{{ expedition.title }}</h5>
+                        <div
+                            class="d-flex justify-content-between align-items-center"
+                        >
+                            <a
+                                [routerLink]="['/expeditions', expedition._id]"
+                                class="btn btn-outline-primary"
+                            >
+                                Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #organisingEmpty>
+            <p>{{ organisingString }}</p>
+        </ng-template>
+    </div>
+</div>

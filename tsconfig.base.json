@@ -27,29 +27,28 @@
             "@avans-nx-expedition/backend/neo4j": [
                 "libs/backend/neo4j/src/index.ts"
             ],
+            "@avans-nx-expedition/backend/shared": [
+                "libs/backend/shared/src/index.ts"
+            ],
+
             "@avans-nx-expedition/backend/user": [
                 "libs/backend/user/src/index.ts"
             ],
+            "@avans-nx-expedition/backend/expedition": [
+                "libs/backend/expedition/src/index.ts"
+            ],
+            "@avans-nx-expedition/frontend/account": [
+                "libs/frontend/account/src/index.ts"
+            ],
+            "@avans-nx-expedition/frontend/features": [
+                "libs/frontend/features/src/index.ts"
+            ],
+
             "@avans-nx-expedition/common": [
                 "libs/frontend/common/src/index.ts"
             ],
             "@avans-nx-expedition/features": [
                 "libs/frontend/features/src/index.ts"
-            ],
-            "@avans-nx-expedition/share-a-meal/auth": [
-                "libs/share-a-meal/auth/src/index.ts"
-            ],
-            "@avans-nx-expedition/share-a-meal/common": [
-                "libs/share-a-meal/common/src/index.ts"
-            ],
-            "@avans-nx-expedition/share-a-meal/features": [
-                "libs/share-a-meal/features/src/index.ts"
-            ],
-            "@avans-nx-expedition/share-a-meal/ui": [
-                "libs/share-a-meal/ui/src/index.ts"
-            ],
-            "@avans-nx-expedition/share-a-meal/user": [
-                "libs/share-a-meal/user/src/index.ts"
             ],
             "@avans-nx-expedition/shared/api": ["libs/shared/api/src/index.ts"],
             "@avans-nx-expedition/shared/util-env": [

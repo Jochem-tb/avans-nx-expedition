@@ -7,6 +7,6 @@ import { Neo4JUserService } from './neo4j-users.service';
     imports: [Neo4jModule],
     controllers: [Neo4JExampleController],
     providers: [Neo4JUserService],
-    exports: []
+    exports: [Neo4JUserService]
 })
 export class Neo4jBackendModule {}

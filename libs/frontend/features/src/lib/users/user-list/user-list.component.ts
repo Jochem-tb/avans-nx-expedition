@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
-import { IUserInfo } from '@avans-nx-expedition/shared/api';
+import { IUser, IUserInfo } from '@avans-nx-expedition/shared/api';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
     styles: []
 })
 export class UserListComponent implements OnInit, OnDestroy {
-    users: IUserInfo[] | undefined = undefined;
+    users: IUser[] | undefined = undefined;
     sub: Subscription = new Subscription();
 
     constructor(private userService: UserService) {}
@@ -17,13 +17,30 @@ export class UserListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         console.log('UserListComponent.ngOnInit() aangeroepen');
         this.sub.add(
-            this.userService.getUsersAsync().subscribe(
+            this.userService.getUsersAsyncApi().subscribe(
                 (users) => {
                     this.users = users;
                     console.log('Users loaded:', users);
                 },
                 (error) => {
                     console.error('Error loading users:', error);
+                }
+            )
+        );
+    }
+
+    deleteUser(userId: string): void {
+        console.log('Deleting user:', userId);
+        this.sub.add(
+            this.userService.deleteUser(userId).subscribe(
+                () => {
+                    console.log('User deleted successfully');
+                    this.users = this.users?.filter(
+                        (user) => user._id !== userId
+                    );
+                },
+                (error) => {
+                    console.error('Error deleting user:', error);
                 }
             )
         );

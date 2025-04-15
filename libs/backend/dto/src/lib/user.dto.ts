@@ -24,6 +24,11 @@ export class CreateUserDto implements IUserRegistration {
     @IsString()
     @IsNotEmpty()
     emailAddress!: string;
+
+    profileImgUrl!: string;
+    phoneNumber!: string;
+    experienceLevel!: UserExperienceLevel;
+    skills: UserSkills[] = [];
 }
 
 export class UpsertUserDto implements IUpsertUser {
@@ -67,11 +72,11 @@ export class UpsertUserDto implements IUpsertUser {
 
     @IsString()
     @IsNotEmpty()
-    ExperienceLevel: UserExperienceLevel = UserExperienceLevel.Unknown;
+    experienceLevel: UserExperienceLevel = UserExperienceLevel.Unknown;
 
     @IsString()
     @IsNotEmpty()
-    Skills: UserSkills[] = [];
+    skills: UserSkills[] = [];
 }
 
 export class UpdateUserDto implements IUpdateUser {

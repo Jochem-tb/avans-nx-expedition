@@ -4,12 +4,20 @@ import { Neo4jModule } from 'nest-neo4j/dist';
 
 @Module({
     imports: [
+        // Neo4jModule.forRoot({
+        //     scheme: 'bolt+s',
+        //     host: 'd5e40bc7.databases.neo4j.io',
+        //     port: 7687,
+        //     username: process.env.NEO4J_USER,
+        //     password: process.env.NEO4J_PASSWORD
+        // }),
         Neo4jModule.forRoot({
-            scheme: 'bolt+s',
-            host: 'd5e40bc7.databases.neo4j.io',
+            scheme: 'neo4j',
+            host: 'localhost',
             port: 7687,
-            username: process.env.NEO4J_USER,
-            password: process.env.NEO4J_PASSWORD
+            username: 'neo4j',
+            password: 'password',
+            database: 'expeditionrec'
         }),
         Neo4jBackendModule
     ],

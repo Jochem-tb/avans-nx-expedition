@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthController } from './auth/auth.controller';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import {
     User,
     UserSchema,
     UsersModule
 } from '@avans-nx-expedition/backend/user';
 import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth/auth.guards';
 
 @Module({
     imports: [
