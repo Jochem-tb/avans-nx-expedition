@@ -9,6 +9,7 @@ import {
 } from '../../../../../../libs/shared/api/src';
 import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '@avans-nx-expedition/shared/util-env';
 
 @Injectable({
     providedIn: 'root'
@@ -32,14 +33,14 @@ export class UserService {
 
     getUsersAsyncApi(): Observable<IUser[]> {
         return this.httpClient
-            .get<{ results: IUser[] }>('http://localhost:3000/api/user')
+            .get<{ results: IUser[] }>(environment.dataApiUrl + '/user')
             .pipe(map((response) => response.results)); // Extract 'results' array
     }
 
     getUserByIdApi(id: string | null): Observable<IUser> {
         console.log('getUserById aanroepen');
         return this.httpClient.get<IUser>(
-            `http://localhost:3000/api/user/${id}`
+            environment.dataApiUrl + `/user/${id}`
         );
     }
 
@@ -59,14 +60,14 @@ export class UserService {
 
     updateUser(user: IUpdateUser): Observable<IUser> {
         return this.httpClient.put<IUser>(
-            `http://localhost:3000/api/user/${user._id}`,
+            environment.dataApiUrl + `/user/${user._id}`,
             user
         );
     }
 
     deleteUser(userId: string): Observable<void> {
         return this.httpClient.delete<void>(
-            `http://localhost:3000/api/user/${userId}`
+            environment.dataApiUrl + `/user/${userId}`
         );
     }
 }

@@ -8,6 +8,7 @@ import {
     IUserInfo
 } from '@avans-nx-expedition/shared/api';
 import { jwtDecode } from 'jwt-decode';
+import { environment } from '@avans-nx-expedition/shared/util-env';
 
 @Injectable({
     providedIn: 'root'
@@ -100,7 +101,7 @@ export class AccountService {
         const response = this.httpClient.post<{
             results: IUserIdentity;
             info: any;
-        }>('http://localhost:3000/api/auth/login', credentials);
+        }>(environment.dataApiUrl + '/auth/login', credentials);
 
         console.log('response', response);
 
@@ -165,7 +166,7 @@ export class AccountService {
         // debugger;
         console.log('Registering user', user);
         return this.httpClient.post<IUserInfo>(
-            `http://localhost:3000/api/auth/register`,
+            environment.dataApiUrl + `/auth/register`,
             user
         );
     }

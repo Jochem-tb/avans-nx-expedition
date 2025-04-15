@@ -5,12 +5,19 @@ export const environment: IEnvironment = {
     production: true,
 
     ROOT_DOMAIN_URL: 'NOT_IMPLEMENTED_YET',
-    dataApiUrl: 'NOT_IMPLEMENTED_YET',
+    dataApiUrl: 'avans-nx-expedition-production.up.railway.app/api',
+    neo4J_URL: 'neo4j+s://ebdc050a.databases.neo4j.io',
 
     MONGO_DB_CONNECTION_STRING:
-        'mongodb+srv://' +
-        env.MONGO_DB_USERNAME +
-        ':' +
-        env.MONGO_DB_PASSWORD +
-        '@expeditionwebapp.guoil.mongodb.net/?retryWrites=true&w=majority&appName=ExpeditionWebApp'
+        'mongodb+srv://admin:admin@spellendoos.wh96y.mongodb.net/',
+    MONGO_DB_NAME: 'expeditionPlanner',
+
+    NEO4J_URI: 'neo4j+s://ebdc050a.databases.neo4j.io',
+    NEO4J_USERNAME: 'neo4j',
+    NEO4J_PASSWORD: 'kKtUzjK86uYPR2DEyYUbknxoo83sMmK40GQx_8t7qNE',
+    AURA_INSTANCEID: 'ebdc050a',
+    AURA_INSTANCENAME: 'Free instance',
+
+    port: 'NOT_IMPLEMENTED_YET',
+    database: 'NOT_IMPLEMENTED_YET'
 };

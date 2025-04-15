@@ -2209,10 +2209,11 @@ tslib_1.__exportStar(__webpack_require__(53), exports);
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.environment = void 0;
 exports.environment = {
-    production: false,
-    ROOT_DOMAIN_URL: 'http://localhost:3000',
-    dataApiUrl: 'http://localhost:3000/api',
-    MONGO_DB_CONNECTION_STRING: 'mongodb://localhost:27017/expeditionPlanner'
+    production: true,
+    ROOT_DOMAIN_URL: 'NOT_IMPLEMENTED_YET',
+    dataApiUrl: 'avans-nx-expedition-production.up.railway.app',
+    neo4J_URL: 'NOT_IMPLEMENTED_YET',
+    MONGO_DB_CONNECTION_STRING: 'mongodb+srv://admin:admin@spellendoos.wh96y.mongodb.net/'
 };
 
 

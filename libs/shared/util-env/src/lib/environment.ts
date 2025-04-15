@@ -1,10 +1,8 @@
+// libs/util-env/src/lib/environment.ts
 import { IEnvironment } from './environment.interface';
+import { environment as dev } from './environment.development';
+import { environment as prod } from './environment.production';
 
-export const environment: IEnvironment = {
-    production: false,
+const isProduction = process.env['NODE_ENV'] === 'production';
 
-    ROOT_DOMAIN_URL: 'dummy',
-    dataApiUrl: 'dummy',
-
-    MONGO_DB_CONNECTION_STRING: 'dummy'
-};
+export const environment: IEnvironment = isProduction ? prod : dev;

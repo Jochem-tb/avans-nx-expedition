@@ -8,6 +8,7 @@ import {
 import { delay, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Logger } from '@nestjs/common';
+import { environment } from '@avans-nx-expedition/shared/util-env';
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +23,7 @@ export class ExpeditionService {
     getExpeditionsAsyncApi(): Observable<IExpedition[]> {
         return this.httpClient
             .get<{ results: IExpedition[] }>(
-                'http://localhost:3000/api/expedition'
+                environment.dataApiUrl + '/expedition'
             )
             .pipe(map((response) => response.results)); // Extract 'results' array
     }
@@ -33,7 +34,7 @@ export class ExpeditionService {
         console.log('getExpeditionById aanroepen');
         return this.httpClient
             .get<{ results: IExpedition }>(
-                `http://localhost:3000/api/expedition/${id}`
+                environment.dataApiUrl + `/expedition/${id}`
             )
             .pipe(
                 map((response) => response?.results) // Extract the 'results' property from the response
@@ -47,7 +48,7 @@ export class ExpeditionService {
         // Step 1: Save all activities separately
         const activitySaves$ = expedition.activities.map((activity) => {
             return this.httpClient.post<{ results: IActivity }>(
-                `http://localhost:3000/api/expedition/activity`,
+                environment.dataApiUrl + `/expedition/activity`,
                 activity
             );
         });
@@ -55,7 +56,7 @@ export class ExpeditionService {
         console.log('Save roles:', expedition.roles);
         const roleSaves$ = expedition.roles.map((role) => {
             return this.httpClient.post<{ results: IRole }>(
-                `http://localhost:3000/api/expedition/role`,
+                environment.dataApiUrl + `/expedition/role`,
                 role
             );
         });
@@ -90,7 +91,7 @@ export class ExpeditionService {
 
                 // Step 3: Update the expedition with the new references
                 return this.httpClient.put<{ results: IExpedition }>(
-                    `http://localhost:3000/api/expedition/${expedition._id}`,
+                    environment.dataApiUrl + `/expedition/${expedition._id}`,
                     updatedExpedition
                 );
             }),
@@ -101,7 +102,8 @@ export class ExpeditionService {
                 // Optional: Notify other systems (e.g., Neo4J)
                 this.httpClient
                     .put(
-                        `http://localhost:3100/api/recommendations/expedition/${expedition._id}`,
+                        environment.dataApiUrl +
+                            `/recommendations/expedition/${expedition._id}`,
                         { expedition: expeditionObject }
                     )
                     .subscribe();
@@ -115,7 +117,7 @@ export class ExpeditionService {
         expedition: ICreateExpedition
     ): Observable<ICreateExpedition> {
         return this.httpClient.post<ICreateExpedition>(
-            `http://localhost:3000/api/expedition`,
+            environment.dataApiUrl + `/expedition`,
             expedition
         );
     }
@@ -123,7 +125,7 @@ export class ExpeditionService {
     deleteExpedition(id: string): Observable<any> {
         console.log('deleteExpedition aanroepen');
         return this.httpClient
-            .delete<any>(`http://localhost:3000/api/expedition/${id}`)
+            .delete<any>(environment.dataApiUrl + `/expedition/${id}`)
             .pipe(
                 switchMap((response) => {
                     const expeditionObject = response?.results; // Extract the expedition object from the first API response
@@ -131,7 +133,8 @@ export class ExpeditionService {
                     console.log('deleteExpedition neo4J');
                     this.httpClient
                         .delete(
-                            `http://localhost:3100/api/recommendations/expedition/${id}`
+                            environment.dataApiUrl +
+                                `/recommendations/expedition/${id}`
                         )
                         .subscribe();
 
@@ -162,7 +165,7 @@ export class ExpeditionService {
         // Send the GET request to fetch the expedition and send the POST request in parallel
         return this.httpClient
             .get<{ results: IExpedition }>(
-                `http://localhost:3000/api/expedition/${id}/join/${userId}`
+                environment.dataApiUrl + `/expedition/${id}/join/${userId}`
             )
             .pipe(
                 switchMap((response) => {
@@ -171,7 +174,8 @@ export class ExpeditionService {
                     // Send the POST request (this won't return anything)
                     this.httpClient
                         .post(
-                            `http://localhost:3100/api/recommendations/joinExpedition`,
+                            environment.dataApiUrl +
+                                `/recommendations/joinExpedition`,
                             {
                                 expeditionId: id,
                                 userId: userId,
@@ -195,10 +199,10 @@ export class ExpeditionService {
         // Send both requests in parallel using forkJoin
         return forkJoin({
             expedition: this.httpClient.get<{ results: IExpedition }>(
-                `http://localhost:3000/api/expedition/${id}/leave/${userId}`
+                environment.dataApiUrl + `/expedition/${id}/leave/${userId}`
             ),
             user: this.httpClient.post<{ results: IExpedition }>(
-                `http://localhost:3100/api/recommendations/leaveExpedition`,
+                environment.dataApiUrl + `/recommendations/leaveExpedition`,
                 { expeditionId: id, userId: userId }
             )
         }).pipe(
@@ -209,7 +213,7 @@ export class ExpeditionService {
     getRecommendedExpeditions(userId: string): Observable<IExpedition[]> {
         return this.httpClient
             .get<{ results: any[] }>(
-                `http://localhost:3100/api/recommendations/${userId}`
+                environment.dataApiUrl + `/recommendations/${userId}`
             )
             .pipe(
                 map((response) => response.results), // Extract 'results' array
@@ -233,14 +237,14 @@ export class ExpeditionService {
     getOrganisingExpeditions(userId: string): Observable<IExpedition[]> {
         return this.httpClient
             .get<{ results: IExpedition[] }>(
-                `http://localhost:3000/api/expedition/organising/${userId}`
+                environment.dataApiUrl + `/expedition/organising/${userId}`
             )
             .pipe(map((response) => response.results)); // Extract 'results' array
     }
     getJoinedExpeditions(userId: string): Observable<IExpedition[]> {
         return this.httpClient
             .get<{ results: IExpedition[] }>(
-                `http://localhost:3000/api/expedition/joined/${userId}`
+                environment.dataApiUrl + `/expedition/joined/${userId}`
             )
             .pipe(map((response) => response.results)); // Extract 'results' array
     }
