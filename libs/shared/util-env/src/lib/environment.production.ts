@@ -5,8 +5,8 @@ export const environment: IEnvironment = {
     production: true,
 
     ROOT_DOMAIN_URL: 'NOT_IMPLEMENTED_YET',
-    dataApiUrl: 'avans-nx-expedition-production.up.railway.app/api',
-    neo4J_URL: 'neo4j+s://ebdc050a.databases.neo4j.io',
+    dataApiUrl: 'https://avans-nx-expedition-production.up.railway.app/api',
+    neo4J_URL: 'https://neo4j+s://ebdc050a.databases.neo4j.io',
 
     MONGO_DB_CONNECTION_STRING:
         'mongodb+srv://admin:admin@spellendoos.wh96y.mongodb.net/',
