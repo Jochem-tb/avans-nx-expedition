@@ -24,6 +24,7 @@ import { AuthService } from 'libs/backend/auth/src/lib/auth/auth.service';
                 return connection;
             }
         }),
+        
         UsersModule,
         ExpeditionModule,
         BackendFeaturesMealModule,

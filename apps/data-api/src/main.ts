@@ -12,6 +12,7 @@ import {
 } from '@avans-nx-expedition/backend/dto';
 import { AppModule } from './app/app.module';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { environment } from '@avans-nx-expedition/shared/util-env';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -19,7 +20,12 @@ async function bootstrap() {
     app.setGlobalPrefix(globalPrefix);
 
     const corsOptions: CorsOptions = {};
-    app.enableCors(corsOptions);
+    app.enableCors({
+        origin: environment.ROOT_DOMAIN_URL, // Allow specific frontend URL
+        methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
+        allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+        credentials: true // Allow cookies to be sent with the request
+    });
 
     app.useGlobalInterceptors(new ApiResponseInterceptor());
     app.useGlobalPipes(new ValidationPipe());
