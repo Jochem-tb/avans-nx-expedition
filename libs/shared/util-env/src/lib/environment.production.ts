@@ -5,7 +5,7 @@ export const environment: IEnvironment = {
     production: true,
 
     ROOT_DOMAIN_URL: 'https://avans-nx-expedition-webapp.netlify.app',
-    dataApiUrl: 'https://avans-nx-expedition-production.up.railway.app/api',
+    dataApiUrl: 'https://avans-nx-expedition-data-api.onrender.com',
     neo4J_URL: 'https://neo4j+s://ebdc050a.databases.neo4j.io',
 
     MONGO_DB_CONNECTION_STRING:
