@@ -30,6 +30,7 @@ export class ExpeditionController {
 
     @Get()
     async findAll() {
+        // return [];
         return await this.expeditionService.findAll();
     }
 

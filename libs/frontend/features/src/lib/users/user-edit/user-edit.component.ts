@@ -9,6 +9,10 @@ import {
 import { Subscription } from 'rxjs';
 import { UserService } from '../user.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import {
+    AccountModule,
+    AccountService
+} from '@avans-nx-expedition/frontend/account';
 
 @Component({
     selector: 'avans-nx-expedition-user-edit',
@@ -27,7 +31,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
     constructor(
         private userService: UserService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private accountService: AccountService
     ) {}
 
     ngOnInit(): void {
@@ -38,6 +43,19 @@ export class UserEditComponent implements OnInit, OnDestroy {
                 .subscribe((user) => {
                     this.user = user;
                 });
+        });
+
+        //check if logged in user is expedition organiser
+        this.accountService.getLoggedInUserId().subscribe((userId) => {
+            if (this.user) {
+                if (this.user._id === userId) {
+                    console.log('User is the logged in user.');
+                } else {
+                    this.router.navigate(['/users']);
+                    console.error('User is not the logged in user.');
+                    return;
+                }
+            }
         });
     }
 

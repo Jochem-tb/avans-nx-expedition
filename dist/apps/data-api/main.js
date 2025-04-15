@@ -1618,6 +1618,7 @@ let ExpeditionController = class ExpeditionController {
         this.expeditionService = expeditionService;
     }
     async findAll() {
+        // return [];
         return await this.expeditionService.findAll();
     }
     async findByDifficulty(difficulty) {
@@ -2209,19 +2210,21 @@ tslib_1.__exportStar(__webpack_require__(53), exports);
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.environment = void 0;
 exports.environment = {
-    production: true,
-    ROOT_DOMAIN_URL: 'https://avans-nx-expedition-webapp.netlify.app',
-    dataApiUrl: 'https://avans-nx-expedition-production.up.railway.app/api',
-    neo4J_URL: 'https://neo4j+s://ebdc050a.databases.neo4j.io',
-    MONGO_DB_CONNECTION_STRING: 'mongodb+srv://admin:admin@spellendoos.wh96y.mongodb.net/',
+    production: false,
+    ROOT_DOMAIN_URL: 'http://localhost:3000',
+    dataApiUrl: 'http://localhost:3000',
+    neo4J_URL: 'http://localhost:3100/api',
+    MONGO_DB_CONNECTION_STRING: 'mongodb://localhost:27017/expeditionPlanner',
     MONGO_DB_NAME: 'expeditionPlanner',
-    NEO4J_URI: 'neo4j+s://ebdc050a.databases.neo4j.io',
+    NEO4J_SCHEME: 'neo4j',
+    NEO4J_URI: 'neo4j',
+    NEO4J_HOST: 'localhost',
     NEO4J_USERNAME: 'neo4j',
-    NEO4J_PASSWORD: 'kKtUzjK86uYPR2DEyYUbknxoo83sMmK40GQx_8t7qNE',
-    AURA_INSTANCEID: 'ebdc050a',
-    AURA_INSTANCENAME: 'Free instance',
-    port: 'NOT_IMPLEMENTED_YET',
-    database: 'NOT_IMPLEMENTED_YET'
+    NEO4J_PASSWORD: 'password',
+    AURA_INSTANCEID: 'NOT_IMPLEMENTED_YET',
+    AURA_INSTANCENAME: 'NOT_IMPLEMENTED_YET',
+    PORT: '7687',
+    NEO4J_DATABASE: 'expeditionrec'
 };
 
 
@@ -2278,16 +2281,16 @@ async function bootstrap() {
         const globalPrefix = 'api';
         common_1.Logger.log('VERSION 2.0:');
         // Debug: Log the environment data API URL and port
-        console.log('Environment Data API URL:', util_env_1.environment.dataApiUrl);
+        common_1.Logger.log('Environment Data API URL: ' + util_env_1.environment.dataApiUrl);
         const port = process.env.PORT || 3000;
-        console.log('Port being used:', port);
+        common_1.Logger.log('Port being used: ' + port);
         // Enable CORS for all origins
         app.enableCors({ origin: '*' });
         // Global interceptors and pipes
         app.useGlobalInterceptors(new dto_1.ApiResponseInterceptor());
         app.useGlobalPipes(new common_1.ValidationPipe());
         // Debug: Log the server address before starting
-        console.log(`About to start the server on http://0.0.0.0:${port}/${globalPrefix}`);
+        common_1.Logger.log(`About to start the server on http://0.0.0.0:${port}/${globalPrefix}`);
         // Start the server and listen on port with '0.0.0.0' as the host to allow external requests
         await app.listen(port, '0.0.0.0');
         common_1.Logger.log('TEST IF SUCCESFULL LOG');
@@ -2298,7 +2301,7 @@ async function bootstrap() {
     }
     catch (error) {
         // Log any errors during bootstrap
-        console.error('Error starting the server:', error);
+        common_1.Logger.error('Error starting the server:', error);
     }
 }
 bootstrap();

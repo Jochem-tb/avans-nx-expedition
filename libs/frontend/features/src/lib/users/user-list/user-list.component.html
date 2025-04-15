@@ -12,7 +12,7 @@
                 <th>Email</th>
                 <th>NumSkills</th>
                 <th>ExperienceLevel</th>
-                <th>Edit</th>
+                <!-- <th>Edit</th> -->
             </tr>
         </thead>
         <tbody>
@@ -33,12 +33,18 @@
                 <td>{{ user.emailAddress }}</td>
                 <td>{{ user.skills.length }}</td>
                 <td>{{ user.experienceLevel }}</td>
-                <td>
+                <td
+                    *ngIf="user._id === loggedInUserId"
+                    class="text-center align-middle"
+                >
                     <a routerLink="{{ user._id }}/edit" class="btn btn-primary">
                         Edit
                     </a>
                 </td>
-                <td>
+                <td
+                    *ngIf="user._id === loggedInUserId"
+                    class="text-center align-middle"
+                >
                     <a (click)="deleteUser(user._id)" class="btn btn-primary">
                         Delete
                     </a>

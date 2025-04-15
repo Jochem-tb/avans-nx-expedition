@@ -148,14 +148,14 @@
                     </div>
                 </div>
                 <div class="row mt-4 p-4">
-                    <div class="activityContainer p-0 col">
+                    <div class="activityContainer pe-3 col">
                         <h5 class="fw-bold">Activities</h5>
                         <ul
                             class="list-group list-group-flush"
                             style="background-color: #1c2331; color: white"
                         >
                             <li
-                                class="list-group-item"
+                                class="list-group-item mb-1"
                                 *ngFor="let activity of expedition?.activities"
                                 style="
                                     background-color: #1c2331;
@@ -165,7 +165,7 @@
                             >
                                 <ng-container *ngIf="isActivity(activity)">
                                     <div>
-                                        <strong>{{ activity.title }}</strong>
+                                        <strong><u>{{ activity.title }}</u></strong>
                                     </div>
                                     <div>
                                         {{
@@ -188,7 +188,7 @@
                                     </div>
                                     <div
                                         *ngIf="activity.gear?.length"
-                                        class="mt-2"
+                                        class="mt-1"
                                     >
                                         <small class="text-muted"
                                             >Gear Items:</small

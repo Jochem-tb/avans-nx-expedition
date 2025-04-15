@@ -157,14 +157,22 @@ export class ExpeditionDetailsComponent implements OnInit {
     }
 
     deleteExpedition(): void {
-        if (this.expedition && this.expedition._id) {
-            this.expeditionService
-                .deleteExpedition(this.expedition._id)
-                .subscribe(() => {
-                    console.log('Expedition deleted successfully');
-                    this.router.navigate(['/expeditions']); // Navigate to the expeditions list or any other page
-                    // Optionally navigate away or show a success message
-                });
+        if (confirm('Are you sure you want to delete this expedition?')) {
+            if (this.expedition && this.expedition._id) {
+                if (this.loggedUserId == this.expedition.organizer) {
+                    console.error(
+                        'You are not authorized to delete this expedition.'
+                    );
+                    return;
+                }
+                this.expeditionService
+                    .deleteExpedition(this.expedition._id)
+                    .subscribe(() => {
+                        console.log('Expedition deleted successfully');
+                        this.router.navigate(['/expeditions']); // Navigate to the expeditions list or any other page
+                        // Optionally navigate away or show a success message
+                    });
+            }
         }
     }
 }

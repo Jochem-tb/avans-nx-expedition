@@ -615,22 +615,6 @@ const tslib_1 = __webpack_require__(4);
 const neo4j_1 = __webpack_require__(22);
 const common_1 = __webpack_require__(1);
 const dist_1 = __webpack_require__(27);
-const util_env_1 = __webpack_require__(28);
-// @Module({
-//     imports: [
-//         Neo4jModule.forRoot({
-//             scheme: 'neo4j',
-//             host: 'localhost',
-//             port: 7687,
-//             username: 'neo4j',
-//             password: 'password',
-//             database: 'expeditionrec'
-//         }),
-//         Neo4jBackendModule
-//     ],
-//     controllers: [],
-//     providers: []
-// })
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -638,20 +622,40 @@ exports.AppModule = AppModule = tslib_1.__decorate([
     (0, common_1.Module)({
         imports: [
             dist_1.Neo4jModule.forRoot({
-                scheme: util_env_1.environment.NEO4J_URI.startsWith('neo4j+s')
-                    ? 'neo4j+s'
-                    : 'neo4j',
-                host: util_env_1.environment.NEO4J_URI,
-                port: parseInt(util_env_1.environment.port || '7687', 10),
-                username: util_env_1.environment.NEO4J_USERNAME,
-                password: util_env_1.environment.NEO4J_PASSWORD,
-                database: util_env_1.environment.database
+                scheme: 'neo4j',
+                host: 'localhost',
+                port: 7687,
+                username: 'neo4j',
+                password: 'password',
+                database: 'expeditionrec'
             }),
             neo4j_1.Neo4jBackendModule
         ],
         controllers: [],
         providers: []
     })
+    // @Module({
+    //     imports: [
+    //         Neo4jModule.forRoot({
+    //             // Use the secure scheme (based on your environment value)
+    //             scheme: environment.NEO4J_URI === 'bolt+s' ? 'bolt+s' : 'neo4j',
+    //             host: environment.NEO4J_HOST, // "ebdc050a.databases.neo4j.io"
+    //             port: 7687, // For Aura, this is always 7687
+    //             username: environment.NEO4J_USERNAME, // "neo4j"
+    //             password: environment.NEO4J_PASSWORD, // "secret"
+    //             database: environment.NEO4J_DATABASE || 'neo4j', // default database is "neo4j"
+    //             // Include additional configuration required for Aura:
+    //             config: {
+    //                 encrypted: 'ENCRYPTION_ON', // Enable TLS encryption
+    //                 trust: 'TRUST_SYSTEM_CA_SIGNED_CERTIFICATES' // Trust system CA-signed certificates
+    //             }
+    //         }),
+    //         // Only import the Neo4jBackendModule once.
+    //         Neo4jBackendModule
+    //     ],
+    //     controllers: [],
+    //     providers: []
+    // })
 ], AppModule);
 
 
@@ -927,17 +931,19 @@ exports.environment = void 0;
 exports.environment = {
     production: false,
     ROOT_DOMAIN_URL: 'http://localhost:3000',
-    dataApiUrl: 'http://localhost:3000/api',
-    neo4J_URL: 'bolt://localhost:7687',
+    dataApiUrl: 'http://localhost:3000',
+    neo4J_URL: 'http://localhost:3100/api',
     MONGO_DB_CONNECTION_STRING: 'mongodb://localhost:27017/expeditionPlanner',
     MONGO_DB_NAME: 'expeditionPlanner',
-    NEO4J_URI: 'localhost',
+    NEO4J_SCHEME: 'neo4j',
+    NEO4J_URI: 'neo4j',
+    NEO4J_HOST: 'localhost',
     NEO4J_USERNAME: 'neo4j',
     NEO4J_PASSWORD: 'password',
     AURA_INSTANCEID: 'NOT_IMPLEMENTED_YET',
     AURA_INSTANCENAME: 'NOT_IMPLEMENTED_YET',
-    port: '7687',
-    database: 'expeditionrec'
+    PORT: '7687',
+    NEO4J_DATABASE: 'expeditionrec'
 };
 
 
@@ -951,17 +957,28 @@ exports.environment = void 0;
 exports.environment = {
     production: true,
     ROOT_DOMAIN_URL: 'https://avans-nx-expedition-webapp.netlify.app',
-    dataApiUrl: 'https://avans-nx-expedition-production.up.railway.app/api',
-    neo4J_URL: 'https://neo4j+s://ebdc050a.databases.neo4j.io',
+    dataApiUrl: 'https://avans-nx-expedition-data-api.onrender.com',
+    neo4J_URL: 'https://ebdc050a.databases.neo4j.io/db/expeditionrec/query/v2/api',
     MONGO_DB_CONNECTION_STRING: 'mongodb+srv://admin:admin@spellendoos.wh96y.mongodb.net/',
     MONGO_DB_NAME: 'expeditionPlanner',
-    NEO4J_URI: 'neo4j+s://ebdc050a.databases.neo4j.io',
+    // NEO4J_SCHEME: 'bolt+s',
+    // NEO4J_URI: 'bolt+s://ebdc050a.databases.neo4j.io',
+    // NEO4J_HOST: 'ebdc050a.databases.neo4j.io',
+    // NEO4J_USERNAME: 'neo4j',
+    // NEO4J_PASSWORD: 'kKtUzjK86uYPR2DEyYUbknxoo83sMmK40GQx_8t7qNE',
+    // AURA_INSTANCEID: 'ebdc050a',
+    // AURA_INSTANCENAME: 'Free instance',
+    // PORT: '7687',
+    // NEO4J_DATABASE: 'neo4j'
+    NEO4J_SCHEME: 'neo4j',
+    NEO4J_URI: 'neo4j',
+    NEO4J_HOST: 'localhost',
     NEO4J_USERNAME: 'neo4j',
-    NEO4J_PASSWORD: 'kKtUzjK86uYPR2DEyYUbknxoo83sMmK40GQx_8t7qNE',
-    AURA_INSTANCEID: 'ebdc050a',
-    AURA_INSTANCENAME: 'Free instance',
-    port: 'NOT_IMPLEMENTED_YET',
-    database: 'NOT_IMPLEMENTED_YET'
+    NEO4J_PASSWORD: 'password',
+    AURA_INSTANCEID: 'NOT_IMPLEMENTED_YET',
+    AURA_INSTANCENAME: 'NOT_IMPLEMENTED_YET',
+    PORT: '7687',
+    NEO4J_DATABASE: 'expeditionrec'
 };
 
 
@@ -1024,9 +1041,7 @@ async function bootstrap() {
     app.useGlobalInterceptors(new dto_1.ApiResponseInterceptor());
     const port = process.env.PORT || 3100;
     await app.listen(port, '0.0.0.0');
-    common_1.Logger.log(`🚀 RCMND server is running on: ` +
-        util_env_1.environment.neo4J_URL +
-        ` :${port}/${globalPrefix}`);
+    common_1.Logger.log(`🚀 RCMND server is running on: ` + util_env_1.environment.neo4J_URL + ` :${port}`);
 }
 bootstrap();
 

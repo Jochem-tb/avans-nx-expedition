@@ -1,7 +1,12 @@
 @if (!expeditions) {
 <p>Loading data...</p>
 } @else if (expeditions && expeditions.length === 0) {
-<p>No expeditions were found.</p>
+<div class="container p-3">
+    <h1>Expeditions</h1>
+    <a routerLink="new" class="btn btn-primary mb-3">Create Expedition</a>
+    <p>No expeditions were found.</p>
+</div>
+
 } @else {
 
 <div class="container p-3">

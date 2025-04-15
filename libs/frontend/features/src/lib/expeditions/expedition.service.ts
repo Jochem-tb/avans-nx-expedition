@@ -5,7 +5,15 @@ import {
     IExpedition,
     IRole
 } from '../../../../../shared/api/src';
-import { delay, forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import {
+    catchError,
+    delay,
+    forkJoin,
+    map,
+    Observable,
+    of,
+    switchMap
+} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Logger } from '@nestjs/common';
 import { environment } from '@avans-nx-expedition/shared/util-env';
@@ -162,30 +170,36 @@ export class ExpeditionService {
     ): Observable<IExpedition | undefined> {
         console.log('joinExpedition aanroepen');
 
-        // Send the GET request to fetch the expedition and send the POST request in parallel
         return this.httpClient
             .get<{ results: IExpedition }>(
-                environment.dataApiUrl + `/expedition/${id}/join/${userId}`
+                `${environment.dataApiUrl}/expedition/${id}/join/${userId}`
             )
             .pipe(
                 switchMap((response) => {
-                    const expeditionObject = response?.results; // Extract the expedition object from the first API response
+                    const expeditionObject = response?.results;
 
-                    // Send the POST request (this won't return anything)
+                    // Send the POST request but don't let it affect the result
                     this.httpClient
                         .post(
-                            environment.dataApiUrl +
-                                `/recommendations/joinExpedition`,
+                            `${environment.neo4J_URL}/recommendations/joinExpedition`,
                             {
                                 expeditionId: id,
-                                userId: userId,
-                                expeditionObject: expeditionObject // Include the expedition object in the request body
+                                userId,
+                                expeditionObject
                             }
                         )
-                        .subscribe(); // We don't need to handle the response from the POST request
+                        .pipe(
+                            catchError((err) => {
+                                // console.warn(
+                                //     'joinExpedition Neo4j failed silently',
+                                //     err
+                                // );
+                                return of(null);
+                            })
+                        )
+                        .subscribe(); // fire-and-forget
 
-                    // Return the expedition object from the first GET request
-                    return of(expeditionObject); // Return the expedition object to the subscriber
+                    return of(expeditionObject);
                 })
             );
     }
@@ -196,32 +210,50 @@ export class ExpeditionService {
     ): Observable<IExpedition | undefined> {
         console.log('leaveExpedition aanroepen');
 
-        // Send both requests in parallel using forkJoin
-        return forkJoin({
-            expedition: this.httpClient.get<{ results: IExpedition }>(
-                environment.dataApiUrl + `/expedition/${id}/leave/${userId}`
-            ),
-            user: this.httpClient.post<{ results: IExpedition }>(
-                environment.dataApiUrl + `/recommendations/leaveExpedition`,
-                { expeditionId: id, userId: userId }
-            )
-        }).pipe(
-            map((response) => response.expedition?.results) // Extract the 'results' property from the first API response
+        const dataApi$ = this.httpClient.get<{ results: IExpedition }>(
+            `${environment.dataApiUrl}/expedition/${id}/leave/${userId}`
+        );
+
+        const rcmndApi$ = this.httpClient
+            .post(`${environment.neo4J_URL}/recommendations/leaveExpedition`, {
+                expeditionId: id,
+                userId
+            })
+            .pipe(
+                catchError((err) => {
+                    // console.warn('leaveExpedition Neo4j failed silently', err);
+                    return of(null);
+                })
+            );
+
+        return forkJoin({ expedition: dataApi$, rcmnd: rcmndApi$ }).pipe(
+            map((response) => response.expedition?.results)
         );
     }
 
     getRecommendedExpeditions(userId: string): Observable<IExpedition[]> {
         return this.httpClient
             .get<{ results: any[] }>(
-                environment.dataApiUrl + `/recommendations/${userId}`
+                `${environment.dataApiUrl}/recommendations/${userId}`
             )
             .pipe(
-                map((response) => response.results), // Extract 'results' array
-                switchMap((neoExpeditionObject) => {
-                    const expeditionRequests = neoExpeditionObject.map(
-                        (neoExpeditionObject) =>
-                            this.getExpeditionByIdApi(neoExpeditionObject.id) // Assuming you have a method to fetch expeditions by ID
+                catchError((err) => {
+                    // console.warn(
+                    //     'Failed to fetch recommendations, returning empty array',
+                    //     err
+                    // );
+                    return of({ results: [] }); // Return empty list if the first GET fails
+                }),
+                map((response) => response.results),
+                switchMap((neoExpeditionObjects) => {
+                    if (!neoExpeditionObjects.length) {
+                        return of([]); // Return early if no recommendations
+                    }
+
+                    const expeditionRequests = neoExpeditionObjects.map((obj) =>
+                        this.getExpeditionByIdApi(obj.id)
                     );
+
                     return forkJoin(expeditionRequests).pipe(
                         map((results) =>
                             results.filter(
