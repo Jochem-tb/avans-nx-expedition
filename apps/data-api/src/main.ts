@@ -19,12 +19,7 @@ async function bootstrap() {
     const globalPrefix = 'api';
     app.setGlobalPrefix(globalPrefix);
 
-    app.enableCors({
-        origin: 'https://avans-nx-expedition-webapp.netlify.app', // ✅ your frontend URL
-        credentials: true,
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization']
-    });
+    app.enableCors({ origin: '*' });
 
     app.useGlobalInterceptors(new ApiResponseInterceptor());
     app.useGlobalPipes(new ValidationPipe());
@@ -33,9 +28,11 @@ async function bootstrap() {
     // app.useGlobalFilters(new HttpExceptionFilter());
 
     const port = process.env.PORT || 3000;
-    await app.listen(port);
+    await app.listen(port, '0.0.0.0');
     Logger.log(
-        `🚀 DATA-API server is running on: http://localhost:${port}/${globalPrefix}`
+        `🚀 DATA-API server is running on: ` +
+            environment.dataApiUrl +
+            ` :${port}/${globalPrefix}`
     );
 }
 

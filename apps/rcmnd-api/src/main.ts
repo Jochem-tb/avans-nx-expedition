@@ -14,17 +14,12 @@ async function bootstrap() {
     const globalPrefix = 'api';
     app.setGlobalPrefix(globalPrefix);
 
-    app.enableCors({
-        origin: 'https://avans-nx-expedition-webapp.netlify.app', // ✅ your frontend URL
-        credentials: true,
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization']
-    });
+    app.enableCors({ origin: '*' });
 
     app.useGlobalInterceptors(new ApiResponseInterceptor());
 
     const port = process.env.PORT || 3100;
-    await app.listen(port);
+    await app.listen(port, '0.0.0.0');
     Logger.log(
         `🚀 RCMND server is running on: ` +
             environment.neo4J_URL +
