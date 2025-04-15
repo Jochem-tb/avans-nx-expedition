@@ -1365,6 +1365,10 @@ let AuthController = AuthController_1 = class AuthController {
         this.logger.log(`Register attempt for new user`);
         return await this.authService.register(user);
     }
+    getApiInfo(req) {
+        this.logger.log(`Getting api info`);
+        return { info: 'Running', version: 2.2 };
+    }
 };
 exports.AuthController = AuthController;
 tslib_1.__decorate([
@@ -1384,6 +1388,14 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", [typeof (_d = typeof dto_1.CreateUserDto !== "undefined" && dto_1.CreateUserDto) === "function" ? _d : Object]),
     tslib_1.__metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
 ], AuthController.prototype, "register", null);
+tslib_1.__decorate([
+    (0, decorators_1.Public)(),
+    (0, common_1.Get)('info'),
+    tslib_1.__param(0, (0, common_1.Request)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [Object]),
+    tslib_1.__metadata("design:returntype", Object)
+], AuthController.prototype, "getApiInfo", null);
 exports.AuthController = AuthController = AuthController_1 = tslib_1.__decorate([
     (0, common_1.Controller)('auth'),
     tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof auth_service_1.AuthService !== "undefined" && auth_service_1.AuthService) === "function" ? _a : Object])

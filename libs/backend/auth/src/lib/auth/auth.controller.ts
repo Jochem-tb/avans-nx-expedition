@@ -4,7 +4,8 @@ import {
     Post,
     UseGuards,
     Logger,
-    Body
+    Body,
+    Get
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from '../decorators/decorators';
@@ -15,6 +16,7 @@ import {
 } from '@avans-nx-expedition/shared/api';
 import { CreateUserDto } from '@avans-nx-expedition/backend/dto';
 import { UserExistGuard } from '@avans-nx-expedition/backend/user';
+import { version } from 'os';
 
 @Controller('auth')
 export class AuthController {
@@ -35,5 +37,12 @@ export class AuthController {
     async register(@Body() user: CreateUserDto): Promise<IUserIdentity> {
         this.logger.log(`Register attempt for new user`);
         return await this.authService.register(user);
+    }
+
+    @Public()
+    @Get('info')
+    getApiInfo(@Request() req: any): { info: string; version: number } {
+        this.logger.log(`Getting api info`);
+        return { info: 'Running', version: 2.2 };
     }
 }
