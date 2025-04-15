@@ -19,12 +19,11 @@ async function bootstrap() {
     const globalPrefix = 'api';
     app.setGlobalPrefix(globalPrefix);
 
-    const corsOptions: CorsOptions = {};
     app.enableCors({
-        origin: environment.ROOT_DOMAIN_URL, // Allow specific frontend URL
-        methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
-        allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
-        credentials: true // Allow cookies to be sent with the request
+        origin: 'https://avans-nx-expedition-webapp.netlify.app', // ✅ your frontend URL
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization']
     });
 
     app.useGlobalInterceptors(new ApiResponseInterceptor());
