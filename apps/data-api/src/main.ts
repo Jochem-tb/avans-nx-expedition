@@ -1,8 +1,3 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -15,25 +10,42 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 import { environment } from '@avans-nx-expedition/shared/util-env';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
-    const globalPrefix = 'api';
-    app.setGlobalPrefix(globalPrefix);
+    try {
+        const app = await NestFactory.create(AppModule);
+        const globalPrefix = 'api';
 
-    app.enableCors({ origin: '*' });
+        console.log('VERSION 2.0:');
 
-    app.useGlobalInterceptors(new ApiResponseInterceptor());
-    app.useGlobalPipes(new ValidationPipe());
+        // Debug: Log the environment data API URL and port
+        console.log('Environment Data API URL:', environment.dataApiUrl);
+        const port = process.env.PORT || 3000;
+        console.log('Port being used:', port);
 
-    // General exception handling
-    // app.useGlobalFilters(new HttpExceptionFilter());
+        // Enable CORS for all origins
+        app.enableCors({ origin: '*' });
 
-    const port = process.env.PORT || 3000;
-    await app.listen(port, '0.0.0.0');
-    Logger.log(
-        `🚀 DATA-API server is running on: ` +
-            environment.dataApiUrl +
-            ` :${port}/${globalPrefix}`
-    );
+        // Global interceptors and pipes
+        app.useGlobalInterceptors(new ApiResponseInterceptor());
+        app.useGlobalPipes(new ValidationPipe());
+
+        // Debug: Log the server address before starting
+        console.log(
+            `About to start the server on http://0.0.0.0:${port}/${globalPrefix}`
+        );
+
+        // Start the server and listen on port with '0.0.0.0' as the host to allow external requests
+        await app.listen(port, '0.0.0.0');
+
+        // Log the successful start with URL
+        Logger.log(
+            `🚀 DATA-API server is running on: ` +
+                environment.dataApiUrl +
+                ` :${port}/${globalPrefix}`
+        );
+    } catch (error) {
+        // Log any errors during bootstrap
+        console.error('Error starting the server:', error);
+    }
 }
 
 bootstrap();
