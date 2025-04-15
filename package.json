@@ -3,10 +3,10 @@
     "version": "0.0.0",
     "license": "MIT",
     "scripts": {
-        "deploy": "nx run share-a-meal-web:build",
         "build": "nx run-many -t build",
         "build:my-app": "nx run my-app:build:production --skip-nx-cache",
         "build:data-api": "nx run data-api:build:production --skip-nx-cache",
+        "start:data-api": "nx serve data-api",
         "build:rcmnd-api": "nx run rcmnd-api:build:production --skip-nx-cache",
         "build:prod": "nx build --configuartion=production --skip-nx-cache",
         "test": "nx run-many -t test"
