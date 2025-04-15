@@ -14,12 +14,12 @@ async function bootstrap() {
         const app = await NestFactory.create(AppModule);
         const globalPrefix = 'api';
 
-        console.log('VERSION 2.0:');
+        Logger.log('VERSION 2.0:');
 
         // Debug: Log the environment data API URL and port
-        console.log('Environment Data API URL:', environment.dataApiUrl);
+        Logger.log('Environment Data API URL: ' + environment.dataApiUrl);
         const port = process.env.PORT || 3000;
-        console.log('Port being used:', port);
+        Logger.log('Port being used: ' + port);
 
         // Enable CORS for all origins
         app.enableCors({ origin: '*' });
@@ -29,13 +29,14 @@ async function bootstrap() {
         app.useGlobalPipes(new ValidationPipe());
 
         // Debug: Log the server address before starting
-        console.log(
+        Logger.log(
             `About to start the server on http://0.0.0.0:${port}/${globalPrefix}`
         );
 
         // Start the server and listen on port with '0.0.0.0' as the host to allow external requests
         await app.listen(port, '0.0.0.0');
 
+        Logger.log('TEST IF SUCCESFULL LOG');
         // Log the successful start with URL
         Logger.log(
             `🚀 DATA-API server is running on: ` +
@@ -44,7 +45,7 @@ async function bootstrap() {
         );
     } catch (error) {
         // Log any errors during bootstrap
-        console.error('Error starting the server:', error);
+        Logger.error('Error starting the server:', error);
     }
 }
 

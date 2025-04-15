@@ -615,26 +615,37 @@ const tslib_1 = __webpack_require__(4);
 const neo4j_1 = __webpack_require__(22);
 const common_1 = __webpack_require__(1);
 const dist_1 = __webpack_require__(27);
+const util_env_1 = __webpack_require__(28);
+// @Module({
+//     imports: [
+//         Neo4jModule.forRoot({
+//             scheme: 'neo4j',
+//             host: 'localhost',
+//             port: 7687,
+//             username: 'neo4j',
+//             password: 'password',
+//             database: 'expeditionrec'
+//         }),
+//         Neo4jBackendModule
+//     ],
+//     controllers: [],
+//     providers: []
+// })
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = tslib_1.__decorate([
     (0, common_1.Module)({
         imports: [
-            // Neo4jModule.forRoot({
-            //     scheme: 'bolt+s',
-            //     host: 'd5e40bc7.databases.neo4j.io',
-            //     port: 7687,
-            //     username: process.env.NEO4J_USER,
-            //     password: process.env.NEO4J_PASSWORD
-            // }),
             dist_1.Neo4jModule.forRoot({
-                scheme: 'neo4j',
-                host: 'localhost',
-                port: 7687,
-                username: 'neo4j',
-                password: 'password',
-                database: 'expeditionrec'
+                scheme: util_env_1.environment.NEO4J_URI.startsWith('neo4j+s')
+                    ? 'neo4j+s'
+                    : 'neo4j',
+                host: util_env_1.environment.NEO4J_URI,
+                port: parseInt(util_env_1.environment.port || '7687', 10),
+                username: util_env_1.environment.NEO4J_USERNAME,
+                password: util_env_1.environment.NEO4J_PASSWORD,
+                database: util_env_1.environment.database
             }),
             neo4j_1.Neo4jBackendModule
         ],
@@ -882,6 +893,86 @@ exports.Neo4JUserService = Neo4JUserService = Neo4JUserService_1 = tslib_1.__dec
 
 module.exports = require("nest-neo4j/dist");
 
+/***/ }),
+/* 28 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const tslib_1 = __webpack_require__(4);
+tslib_1.__exportStar(__webpack_require__(29), exports);
+tslib_1.__exportStar(__webpack_require__(32), exports);
+
+
+/***/ }),
+/* 29 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.environment = void 0;
+const environment_development_1 = __webpack_require__(30);
+const environment_production_1 = __webpack_require__(31);
+const isProduction = process.env['NODE_ENV'] === 'production';
+exports.environment = isProduction ? environment_production_1.environment : environment_development_1.environment;
+
+
+/***/ }),
+/* 30 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.environment = void 0;
+exports.environment = {
+    production: false,
+    ROOT_DOMAIN_URL: 'http://localhost:3000',
+    dataApiUrl: 'http://localhost:3000/api',
+    neo4J_URL: 'bolt://localhost:7687',
+    MONGO_DB_CONNECTION_STRING: 'mongodb://localhost:27017/expeditionPlanner',
+    MONGO_DB_NAME: 'expeditionPlanner',
+    NEO4J_URI: 'localhost',
+    NEO4J_USERNAME: 'neo4j',
+    NEO4J_PASSWORD: 'password',
+    AURA_INSTANCEID: 'NOT_IMPLEMENTED_YET',
+    AURA_INSTANCENAME: 'NOT_IMPLEMENTED_YET',
+    port: '7687',
+    database: 'expeditionrec'
+};
+
+
+/***/ }),
+/* 31 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.environment = void 0;
+exports.environment = {
+    production: true,
+    ROOT_DOMAIN_URL: 'https://avans-nx-expedition-webapp.netlify.app',
+    dataApiUrl: 'https://avans-nx-expedition-production.up.railway.app/api',
+    neo4J_URL: 'https://neo4j+s://ebdc050a.databases.neo4j.io',
+    MONGO_DB_CONNECTION_STRING: 'mongodb+srv://admin:admin@spellendoos.wh96y.mongodb.net/',
+    MONGO_DB_NAME: 'expeditionPlanner',
+    NEO4J_URI: 'neo4j+s://ebdc050a.databases.neo4j.io',
+    NEO4J_USERNAME: 'neo4j',
+    NEO4J_PASSWORD: 'kKtUzjK86uYPR2DEyYUbknxoo83sMmK40GQx_8t7qNE',
+    AURA_INSTANCEID: 'ebdc050a',
+    AURA_INSTANCENAME: 'Free instance',
+    port: 'NOT_IMPLEMENTED_YET',
+    database: 'NOT_IMPLEMENTED_YET'
+};
+
+
+/***/ }),
+/* 32 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
 /***/ })
 /******/ 	]);
 /************************************************************************/
@@ -924,16 +1015,18 @@ const common_1 = __webpack_require__(1);
 const core_1 = __webpack_require__(2);
 const dto_1 = __webpack_require__(3);
 const app_module_1 = __webpack_require__(21);
+const util_env_1 = __webpack_require__(28);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const globalPrefix = 'api';
     app.setGlobalPrefix(globalPrefix);
-    const corsOptions = {};
-    app.enableCors(corsOptions);
+    app.enableCors({ origin: '*' });
     app.useGlobalInterceptors(new dto_1.ApiResponseInterceptor());
     const port = process.env.PORT || 3100;
-    await app.listen(port);
-    common_1.Logger.log(`🚀 RCMND server is running on: http://localhost:${port}/${globalPrefix}`);
+    await app.listen(port, '0.0.0.0');
+    common_1.Logger.log(`🚀 RCMND server is running on: ` +
+        util_env_1.environment.neo4J_URL +
+        ` :${port}/${globalPrefix}`);
 }
 bootstrap();
 

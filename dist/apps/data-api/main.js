@@ -2210,10 +2210,18 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.environment = void 0;
 exports.environment = {
     production: true,
-    ROOT_DOMAIN_URL: 'NOT_IMPLEMENTED_YET',
-    dataApiUrl: 'avans-nx-expedition-production.up.railway.app',
-    neo4J_URL: 'NOT_IMPLEMENTED_YET',
-    MONGO_DB_CONNECTION_STRING: 'mongodb+srv://admin:admin@spellendoos.wh96y.mongodb.net/'
+    ROOT_DOMAIN_URL: 'https://avans-nx-expedition-webapp.netlify.app',
+    dataApiUrl: 'https://avans-nx-expedition-production.up.railway.app/api',
+    neo4J_URL: 'https://neo4j+s://ebdc050a.databases.neo4j.io',
+    MONGO_DB_CONNECTION_STRING: 'mongodb+srv://admin:admin@spellendoos.wh96y.mongodb.net/',
+    MONGO_DB_NAME: 'expeditionPlanner',
+    NEO4J_URI: 'neo4j+s://ebdc050a.databases.neo4j.io',
+    NEO4J_USERNAME: 'neo4j',
+    NEO4J_PASSWORD: 'kKtUzjK86uYPR2DEyYUbknxoo83sMmK40GQx_8t7qNE',
+    AURA_INSTANCEID: 'ebdc050a',
+    AURA_INSTANCENAME: 'Free instance',
+    port: 'NOT_IMPLEMENTED_YET',
+    database: 'NOT_IMPLEMENTED_YET'
 };
 
 
@@ -2258,28 +2266,40 @@ var __webpack_exports__ = {};
 (() => {
 var exports = __webpack_exports__;
 
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const common_1 = __webpack_require__(1);
 const core_1 = __webpack_require__(2);
 const dto_1 = __webpack_require__(3);
 const app_module_1 = __webpack_require__(21);
+const util_env_1 = __webpack_require__(51);
 async function bootstrap() {
-    const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    const globalPrefix = 'api';
-    app.setGlobalPrefix(globalPrefix);
-    const corsOptions = {};
-    app.enableCors(corsOptions);
-    app.useGlobalInterceptors(new dto_1.ApiResponseInterceptor());
-    app.useGlobalPipes(new common_1.ValidationPipe());
-    // General exception handling
-    // app.useGlobalFilters(new HttpExceptionFilter());
-    const port = process.env.PORT || 3000;
-    await app.listen(port);
-    common_1.Logger.log(`🚀 DATA-API server is running on: http://localhost:${port}/${globalPrefix}`);
+    try {
+        const app = await core_1.NestFactory.create(app_module_1.AppModule);
+        const globalPrefix = 'api';
+        common_1.Logger.log('VERSION 2.0:');
+        // Debug: Log the environment data API URL and port
+        console.log('Environment Data API URL:', util_env_1.environment.dataApiUrl);
+        const port = process.env.PORT || 3000;
+        console.log('Port being used:', port);
+        // Enable CORS for all origins
+        app.enableCors({ origin: '*' });
+        // Global interceptors and pipes
+        app.useGlobalInterceptors(new dto_1.ApiResponseInterceptor());
+        app.useGlobalPipes(new common_1.ValidationPipe());
+        // Debug: Log the server address before starting
+        console.log(`About to start the server on http://0.0.0.0:${port}/${globalPrefix}`);
+        // Start the server and listen on port with '0.0.0.0' as the host to allow external requests
+        await app.listen(port, '0.0.0.0');
+        common_1.Logger.log('TEST IF SUCCESFULL LOG');
+        // Log the successful start with URL
+        common_1.Logger.log(`🚀 DATA-API server is running on: ` +
+            util_env_1.environment.dataApiUrl +
+            ` :${port}/${globalPrefix}`);
+    }
+    catch (error) {
+        // Log any errors during bootstrap
+        console.error('Error starting the server:', error);
+    }
 }
 bootstrap();
 
