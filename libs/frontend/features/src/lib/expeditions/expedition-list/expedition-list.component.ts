@@ -5,6 +5,7 @@ import { filter, Subscription } from 'rxjs';
 import { ExpeditionEditComponent } from '../expedition-edit/expedition-edit.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NavigationEnd, Router } from '@angular/router';
+import { AccountService } from '@avans-nx-expedition/frontend/account';
 
 @Component({
     selector: 'avans-nx-expedition-expedition-list',
@@ -14,11 +15,13 @@ import { NavigationEnd, Router } from '@angular/router';
 export class ExpeditionListComponent implements OnInit, OnDestroy {
     expeditions?: IExpedition[] = undefined;
     sub: Subscription = new Subscription();
+    isLoggedIn = false;
 
     constructor(
         private expeditionService: ExpeditionService,
         public dialog: MatDialog,
-        private router: Router
+        private router: Router,
+        private accountService: AccountService
     ) {}
 
     ngOnInit(): void {
@@ -34,6 +37,11 @@ export class ExpeditionListComponent implements OnInit, OnDestroy {
             });
 
         this.sub.add(routerSub);
+
+        this.accountService.checkToken().subscribe((isLoggedIn) => {
+            this.isLoggedIn = isLoggedIn;
+            console.log('User logged in:', isLoggedIn);
+        });
     }
 
     ngOnDestroy(): void {

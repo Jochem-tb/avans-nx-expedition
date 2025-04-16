@@ -988,8 +988,8 @@ let UserController = class UserController {
         return this.userService.update(id, user);
     }
     delete(id) {
-        console.log('FAKE delete user with id', id);
-        // return this.userService.delete(id);
+        // console.log('FAKE delete user with id', id);
+        return this.userService.delete(id);
     }
 };
 exports.UserController = UserController;

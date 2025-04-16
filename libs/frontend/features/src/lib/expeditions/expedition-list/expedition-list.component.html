@@ -3,7 +3,9 @@
 } @else if (expeditions && expeditions.length === 0) {
 <div class="container p-3">
     <h1>Expeditions</h1>
-    <a routerLink="new" class="btn btn-primary mb-3">Create Expedition</a>
+    <a *ngIf="isLoggedIn" routerLink="new" class="btn btn-primary mb-3"
+        >Create Expedition</a
+    >
     <p>No expeditions were found.</p>
 </div>
 
@@ -11,7 +13,9 @@
 
 <div class="container p-3">
     <h1>Expeditions</h1>
-    <a routerLink="new" class="btn btn-primary mb-3">Create Expedition</a>
+    <a *ngIf="isLoggedIn" routerLink="new" class="btn btn-primary mb-3"
+        >Create Expedition</a
+    >
     <div class="row">
         <div class="col-md-4 mb-4" *ngFor="let expedition of expeditions">
             <div class="card shadow-sm">
