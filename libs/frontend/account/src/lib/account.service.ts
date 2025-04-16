@@ -33,7 +33,7 @@ export class AccountService {
             this.apiToken = token;
             try {
                 console.warn('Attempting to decode token:', token);
-                const decodedToken: any = jwtDecode(token);
+                const decodedToken: any = jwtDecode(token!);
                 console.log('Decoded JWT:', decodedToken);
 
                 // Check token expiration
@@ -107,25 +107,31 @@ export class AccountService {
 
         return response.pipe(
             map((apiResponse) => {
-                console.log('return from logging in', apiResponse);
-                // Extract the 'results' object from the response
                 const { results } = apiResponse;
-                // Destructure token from the results
                 const { token, ...userWithoutToken } = results;
 
                 this.loggedInUser = userWithoutToken;
                 this.apiToken = token;
-                this.loggedInUserId = userWithoutToken._id;
 
-                // Save token in localStorage
+                // ✅ Decode the token and extract user_id properly
+                const decodedToken: any = jwtDecode(token!);
+                this.loggedInUserId = decodedToken.user_id;
+
                 console.log('Saving token to localStorage');
-                localStorage.setItem('apiToken', this.apiToken!);
 
-                // Update the login state so all subscribers (like the header) know the user is logged in.
+                try {
+                    localStorage.setItem('apiToken', this.apiToken!);
+                } catch (error) {
+                    console.error(
+                        'Error removing token from localStorage:',
+                        error
+                    );
+                }
+
                 this.loggedInSubject.next(true);
 
                 console.log('Logged in user', this.loggedInUser);
-                console.log('Token', this.apiToken);
+                console.log('Decoded user_id from token:', this.loggedInUserId);
                 return userWithoutToken;
             })
         );
@@ -138,7 +144,15 @@ export class AccountService {
                 this.apiToken = undefined;
                 this.loggedInUserId = null;
                 // Remove the token from localStorage
-                localStorage.removeItem('apiToken');
+                try {
+                    localStorage.removeItem('apiToken');
+                } catch (error) {
+                    console.error(
+                        'Error removing token from localStorage:',
+                        error
+                    );
+                }
+
                 console.log('Logged out user', this.loggedInUser);
                 this.loggedInUser = null;
                 // Update the login state so that subscribers know the user is logged out.

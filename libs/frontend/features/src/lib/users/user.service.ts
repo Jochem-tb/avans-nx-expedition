@@ -59,15 +59,35 @@ export class UserService {
     }
 
     updateUser(user: IUpdateUser): Observable<IUser> {
+        const token = localStorage.getItem('apiToken');
+        if (token) {
+            console.log('Token found:', token);
+        }
         return this.httpClient.put<IUser>(
             environment.dataApiUrl + `/user/${user._id}`,
-            user
+            user,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
         );
     }
 
     deleteUser(userId: string): Observable<void> {
+        console.log('Deleting user with ID:', userId);
+        const token = localStorage.getItem('apiToken');
+
+        if (token) {
+            console.log('Token found:', token);
+        }
         return this.httpClient.delete<void>(
-            environment.dataApiUrl + `/user/${userId}`
+            environment.dataApiUrl + `/user/${userId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
         );
     }
 }

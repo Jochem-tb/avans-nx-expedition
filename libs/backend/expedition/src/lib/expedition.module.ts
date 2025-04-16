@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Expedition, ExpeditionSchema } from './expedition/expedition.schema';
 import { ActivitySchema } from './expedition/activity.schema';
 import { RoleSchema } from './expedition/role.schema';
+import { AuthModule } from '@avans-nx-expedition/backend/auth';
 // import { Meal, MealSchema } from '@avans-nx-expedition/backend/features';
 
 @Module({
@@ -13,7 +14,8 @@ import { RoleSchema } from './expedition/role.schema';
             { name: Expedition.name, schema: ExpeditionSchema },
             { name: 'Activity', schema: ActivitySchema }, // Assuming Activity is also an ExpeditionSchema for this example,
             { name: 'Role', schema: RoleSchema } // Assuming Meal is also an ExpeditionSchema for this example
-        ])
+        ]),
+        AuthModule
     ],
     controllers: [ExpeditionController],
     providers: [ExpeditionService],

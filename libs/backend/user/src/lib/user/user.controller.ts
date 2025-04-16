@@ -6,7 +6,8 @@ import {
     Post,
     Put,
     Delete,
-    UseGuards
+    UseGuards,
+    Req
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
@@ -16,6 +17,7 @@ import {
 } from '@avans-nx-expedition/shared/api';
 import { CreateUserDto, UpdateUserDto } from '@avans-nx-expedition/backend/dto';
 import { UserExistGuard } from './user-exists.guard';
+import { AuthGuard } from '@avans-nx-expedition/backend/auth';
 // import { TokenGuard } from '@avans-nx-expedition/backend/shared';
 
 @Controller('user')
@@ -55,14 +57,31 @@ export class UserController {
     @Put(':id')
     update(
         @Param('id') id: string,
-        @Body() user: UpdateUserDto
+        @Body() user: UpdateUserDto,
+        @Req() req: Request
     ): Promise<IUserInfo | null> {
+        const currentUser = (req as any)['user'];
+        const userId = currentUser.user_id;
+
+        if (userId !== id) {
+            console.log('User not authorized to update this user');
+            return Promise.resolve(null);
+        }
+        console.log('User is authorized to update this user');
         return this.userService.update(id, user);
     }
 
+    @UseGuards(AuthGuard)
     @Delete(':id')
-    delete(@Param('id') id: string): any {
-        console.log('FAKE delete user with id', id);
-        // return this.userService.delete(id);
+    delete(@Param('id') id: string, @Req() req: Request): any {
+        const user = (req as any)['user'];
+        const userId = user.user_id;
+
+        if (userId !== id) {
+            console.log('User not authorized to delete this user');
+            return null;
+        }
+        console.log('User is authorized to delete this user');
+        return this.userService.delete(id);
     }
 }

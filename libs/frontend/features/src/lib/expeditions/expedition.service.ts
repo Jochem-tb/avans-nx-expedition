@@ -52,6 +52,11 @@ export class ExpeditionService {
     updateExpedition(expedition: IExpedition): Observable<IExpedition> {
         console.log('updateExpedition aanroepen');
 
+        const token = localStorage.getItem('apiToken');
+        if (token) {
+            console.log('Token found:', token);
+        }
+
         console.log('Save activities:', expedition.activities);
         // Step 1: Save all activities separately
         const activitySaves$ = expedition.activities.map((activity) => {
@@ -100,7 +105,12 @@ export class ExpeditionService {
                 // Step 3: Update the expedition with the new references
                 return this.httpClient.put<{ results: IExpedition }>(
                     environment.dataApiUrl + `/expedition/${expedition._id}`,
-                    updatedExpedition
+                    updatedExpedition,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
                 );
             }),
             switchMap((response) => {
@@ -132,8 +142,17 @@ export class ExpeditionService {
 
     deleteExpedition(id: string): Observable<any> {
         console.log('deleteExpedition aanroepen');
+
+        const token = localStorage.getItem('apiToken');
+        if (token) {
+            console.log('Token found:', token);
+        }
         return this.httpClient
-            .delete<any>(environment.dataApiUrl + `/expedition/${id}`)
+            .delete<any>(environment.dataApiUrl + `/expedition/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
             .pipe(
                 switchMap((response) => {
                     const expeditionObject = response?.results; // Extract the expedition object from the first API response
