@@ -62,7 +62,7 @@ export class UserController {
 
     @Delete(':id')
     delete(@Param('id') id: string): any {
-        console.log('FAKE delete user with id', id);
-        // return this.userService.delete(id);
+        // console.log('FAKE delete user with id', id);
+        return this.userService.delete(id);
     }
 }
